@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 540" role="img" aria-label="Digital Duel cover art">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#1d3a2c"/>
+      <stop offset="100%" stop-color="#0f1d18"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="540" fill="url(#bg)"/>
+  <rect x="80" y="90" width="640" height="360" rx="18" fill="#0b1714" stroke="#5e8f77" stroke-width="2"/>
+  <circle cx="260" cy="240" r="54" fill="#d3e8a5"/>
+  <circle cx="540" cy="240" r="54" fill="#d7a867"/>
+  <path d="M260 200 L240 250 L280 250 Z" fill="#214e3d"/>
+  <path d="M540 200 L520 250 L560 250 Z" fill="#5c4330"/>
+  <rect x="200" y="330" width="180" height="16" rx="8" fill="#2b5a48"/>
+  <rect x="420" y="330" width="180" height="16" rx="8" fill="#8a674a"/>
+  <text x="400" y="170" text-anchor="middle" fill="#edf4d6" font-size="54" font-family="Georgia, serif">Digital Duel</text>
+  <text x="400" y="425" text-anchor="middle" fill="#bdd3a2" font-size="24" font-family="Segoe UI, sans-serif" letter-spacing="6">LOCAL 2P SHOOTER</text>
+</svg>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 540" role="img" aria-label="JTC Property Services cover art">
+  <rect width="800" height="540" fill="#f5f1e9"/>
+  <rect x="110" y="110" width="580" height="320" rx="18" fill="#fffdfb" stroke="#e3d8ca"/>
+  <path d="M190 330 L270 180 L390 330 Z" fill="#285c42"/>
+  <rect x="320" y="220" width="220" height="18" rx="9" fill="#d5b06d"/>
+  <rect x="320" y="260" width="180" height="12" rx="6" fill="#ddd8d0"/>
+  <rect x="320" y="286" width="200" height="12" rx="6" fill="#ddd8d0"/>
+  <text x="400" y="425" text-anchor="middle" fill="#2b332c" font-size="36" font-family="Georgia, serif">JTC Property</text>
+</svg>

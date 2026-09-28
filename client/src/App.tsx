@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 
-type Page = 'home' | 'experience' | 'projects' | 'about' | 'contact'
+type Page = 'home' | 'experience' | 'projects' | 'freelance' | 'about' | 'contact'
 
 const pages: { id: Page; label: string }[] = [
   { id: 'home', label: 'Home' },
   { id: 'experience', label: 'Experience' },
   { id: 'projects', label: 'Projects' },
+  { id: 'freelance', label: 'Freelance' },
   { id: 'about', label: 'About' },
   { id: 'contact', label: 'Contact' },
 ]
@@ -62,6 +63,7 @@ function App() {
         {page === 'home' && <HomePage />}
         {page === 'projects' && <ProjectsPage />}
         {page === 'experience' && <ExperiencePage />}
+        {page === 'freelance' && <FreelancePage />}
         {page === 'about' && <AboutPage />}
         {page === 'contact' && <ContactPage />}
       </main>
@@ -121,6 +123,101 @@ function HomePage() {
   )
 }
 
+const projectEntries = [
+  {
+    title: 'Digital Duel',
+    type: 'Game project',
+    summary: 'A local two-player shooter built in C with SDL2, including combat, collision detection, and the full game loop.',
+    tags: ['C', 'SDL2', 'Game dev'],
+    imageLabel: 'Digital Duel image',
+    image: '/images/digital-duel.svg',
+  },
+  {
+    title: 'Applibit',
+    type: 'Product build',
+    summary: 'A resume-building web app with onboarding, authentication, billing, and dynamic resume workflows.',
+    tags: ['JavaScript', 'Firebase', 'Stripe'],
+    imageLabel: 'Applibit image',
+    image: '/images/applibit.svg',
+  },
+  {
+    title: 'Robotic Arm Control System',
+    type: 'Systems project',
+    summary: 'A Python + WebSocket dashboard for monitoring a robotic arm in real time from a browser.',
+    tags: ['Python', 'WebSocket', 'UI'],
+    imageLabel: 'Robotic Arm image',
+    image: '/images/robotic-arm.svg',
+  },
+  {
+    title: 'Secret Santa Automation Script',
+    type: 'Automation script',
+    summary: 'A Bash workflow that registers participants, assigns recipients, and sends personalized emails automatically.',
+    tags: ['Bash', 'Linux', 'Automation'],
+    imageLabel: 'Secret Santa image',
+    image: '/images/secret-santa.svg',
+  },
+  {
+    title: 'OPSConnect',
+    type: 'Hackathon project',
+    summary: 'An AI-powered people-discovery and knowledge-retrieval platform built for a large public-sector organization.',
+    tags: ['React', 'TypeScript', 'AI'],
+    imageLabel: 'OPSConnect image',
+    image: '/images/opsconnect.svg',
+  },
+] as const
+
+const experienceEntries = [
+  {
+    company: 'Ontario Government — GovTechON',
+    dates: '2024 — Present',
+    title: 'Full-Stack Software Engineer',
+    summary: 'Built and modernized a large enterprise intranet and media-delivery platform across Go APIs, Vue/Nuxt, and WordPress integration layers.',
+    image: '/images/govtechon.svg',
+  },
+  {
+    company: 'Vironix AI',
+    dates: 'Sep 2025 — Present',
+    title: 'Founding Software Engineer / Technical Co-Founder',
+    summary: 'Helped architect and ship a full-stack AI video analytics platform with billing, async processing, and production safeguards.',
+    image: '/images/vironix-ai.svg',
+  },
+] as const
+
+const freelanceEntries = [
+  {
+    title: 'Course Availability Notifier',
+    type: 'Automation tool',
+    summary: 'A Selenium-based monitor for university course availability with automated SMS alerts and polling logic.',
+    tags: ['Python', 'Selenium', 'SMS'],
+    imageLabel: 'Course Availability image',
+    image: '/images/course-availability-notifier.svg',
+  },
+  {
+    title: 'JTC Property Services Website',
+    type: 'Client website',
+    summary: 'A responsive business website with service pages, project galleries, and online quote request flows.',
+    tags: ['HTML', 'CSS', 'Freelance'],
+    imageLabel: 'JTC website image',
+    image: '/images/jtc-property-services.svg',
+  },
+  {
+    title: 'Apartment Listing Filter & AI Scraper',
+    type: 'Automation service',
+    summary: 'A browser-based apartment search tool using Selenium and OpenAI to surface only valid two-bedroom listings.',
+    tags: ['Python', 'AI', 'Automation'],
+    imageLabel: 'Apartment filter image',
+    image: '/images/apartment-listing-filter.svg',
+  },
+  {
+    title: 'Business Website & Booking System',
+    type: 'Client website',
+    summary: 'A lead-generation website and booking workflow for a service business looking to improve online conversions.',
+    tags: ['HTML', 'CSS', 'JavaScript'],
+    imageLabel: 'Booking website image',
+    image: '/images/business-booking-site.svg',
+  },
+] as const
+
 function PageHeading({ kicker, title, detail }: { kicker: string; title: string; detail: string }) {
   return (
     <div className="page-heading section-wrap">
@@ -131,26 +228,45 @@ function PageHeading({ kicker, title, detail }: { kicker: string; title: string;
   )
 }
 
+function MediaPanel({ src, alt, label }: { src?: string; alt: string; label: string }) {
+  return (
+    <div className="media-panel">
+      {src ? (
+        <img src={src} alt={alt} />
+      ) : (
+        <div className="media-placeholder" aria-label={`${label} placeholder`}>
+          <span>+ Add image</span>
+          <small>{label}</small>
+        </div>
+      )}
+    </div>
+  )
+}
+
 function ProjectsPage() {
   return (
     <>
-      <PageHeading kicker="A FEW THINGS I’VE MADE" title="Selected work" detail="A work in progress, in the best way. More projects coming soon." />
+      <PageHeading kicker="A FEW THINGS I’VE MADE" title="Projects" detail="A practical mix of product builds, systems work, and creative problem-solving from the past few years." />
       <section className="projects-page-content section-wrap">
         <div className="project-grid">
-          <article className="project-card">
-            <a className="project-visual visual-garden" href="#/contact" aria-label="Ask me about the first project">
-              <div className="mock-window"><div className="mock-top"><span /><span /><span /><i>studio / 01</i></div><div className="garden-copy"><span>FIELD NOTES NO. 01</span><strong>Find your<br />own rhythm.</strong><b>Explore the collection <span>↗</span></b></div><div className="garden-shape shape-a" /><div className="garden-shape shape-b" /><div className="garden-shape shape-c" /></div>
-            </a>
-            <div className="project-info"><div><span className="project-number">01 / CONCEPT</span><h3>Project title goes here</h3><p>A short line about the problem, your approach, and what changed.</p></div><span className="project-arrow" aria-hidden="true">↗</span></div>
-            <div className="tag-list"><span>React</span><span>TypeScript</span><span>Product design</span></div>
-          </article>
-          <article className="project-card">
-            <a className="project-visual visual-dashboard" href="#/contact" aria-label="Ask me about the second project">
-              <div className="dashboard-frame"><div className="dashboard-sidebar"><span className="mini-logo">◒</span><i /><i /><i /><i /></div><div className="dashboard-main"><span className="dashboard-label">YOUR WEEK, IN FOCUS</span><div className="dashboard-title">Good morning,<br /><b>Sam.</b></div><div className="dashboard-bars"><i /><i /><i /><i /><i /><i /><i /></div><div className="dashboard-bottom"><span /><span /><span /></div></div></div>
-            </a>
-            <div className="project-info"><div><span className="project-number">02 / CONCEPT</span><h3>Another project title</h3><p>Make space for a second case study and its best result.</p></div><span className="project-arrow" aria-hidden="true">↗</span></div>
-            <div className="tag-list"><span>Web app</span><span>UI engineering</span><span>2025</span></div>
-          </article>
+          {projectEntries.map((project, index) => (
+            <article className="project-card" key={project.title}>
+              <MediaPanel src={project.image} alt={`${project.title} cover`} label={project.imageLabel} />
+              <div className="project-info">
+                <div>
+                  <span className="project-number">{String(index + 1).padStart(2, '0')} / {project.type.toUpperCase()}</span>
+                  <h3>{project.title}</h3>
+                  <p>{project.summary}</p>
+                </div>
+                <span className="project-arrow" aria-hidden="true">↗</span>
+              </div>
+              <div className="tag-list">
+                {project.tags.map((tag) => (
+                  <span key={tag}>{tag}</span>
+                ))}
+              </div>
+            </article>
+          ))}
         </div>
         <a className="all-work-link" href="#/contact">Have a project in mind? <span>Let’s make it real ↗</span></a>
       </section>
@@ -161,12 +277,50 @@ function ProjectsPage() {
 function ExperiencePage() {
   return (
     <>
-      <PageHeading kicker="THE PATH SO FAR" title="Experience" detail="Good work comes from curiosity, collaboration, and a willingness to keep getting better." />
+      <PageHeading kicker="THE PATH SO FAR" title="Experience" detail="A mix of public-sector engineering, startup product work, and hands-on technical leadership." />
       <section className="experience-page-content section-wrap">
-        <div className="timeline">
-          <article className="timeline-item"><span className="timeline-date">2024 — NOW</span><div><h3>Software Engineer <span>· Company name</span></h3><p>Building accessible, user-focused products with a thoughtful team.</p></div><span className="timeline-type">FULL-TIME</span></article>
-          <article className="timeline-item"><span className="timeline-date">2022 — 2024</span><div><h3>Role or internship <span>· Organization</span></h3><p>Shipped features, learned the craft, and made a measurable impact.</p></div><span className="timeline-type">EXPERIENCE</span></article>
-          <article className="timeline-item"><span className="timeline-date">2021 — 2025</span><div><h3>Degree or certification <span>· School</span></h3><p>Studied computer science and the human side of technology.</p></div><span className="timeline-type">EDUCATION</span></article>
+        <div className="experience-list">
+          {experienceEntries.map((experience) => (
+            <article className="experience-entry" key={experience.company}>
+              <MediaPanel src={experience.image} alt={`${experience.company} cover`} label={`${experience.company} image`} />
+              <div className="experience-copy">
+                <span className="timeline-date">{experience.dates}</span>
+                <h3>{experience.title}</h3>
+                <p className="experience-company">{experience.company}</p>
+                <p>{experience.summary}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+    </>
+  )
+}
+
+function FreelancePage() {
+  return (
+    <>
+      <PageHeading kicker="CLIENT WORK" title="Freelance" detail="Independent work for clients, students, and small businesses across automation, web design, and product delivery." />
+      <section className="projects-page-content section-wrap">
+        <div className="project-grid">
+          {freelanceEntries.map((project, index) => (
+            <article className="project-card" key={project.title}>
+              <MediaPanel src={project.image} alt={`${project.title} cover`} label={project.imageLabel} />
+              <div className="project-info">
+                <div>
+                  <span className="project-number">{String(index + 1).padStart(2, '0')} / {project.type.toUpperCase()}</span>
+                  <h3>{project.title}</h3>
+                  <p>{project.summary}</p>
+                </div>
+                <span className="project-arrow" aria-hidden="true">↗</span>
+              </div>
+              <div className="tag-list">
+                {project.tags.map((tag) => (
+                  <span key={tag}>{tag}</span>
+                ))}
+              </div>
+            </article>
+          ))}
         </div>
       </section>
     </>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 540" role="img" aria-label="Robotic Arm cover art">
+  <rect width="800" height="540" fill="#edf3eb"/>
+  <rect x="90" y="110" width="620" height="320" rx="22" fill="#f9faf5" stroke="#d5dfd2"/>
+  <circle cx="240" cy="270" r="96" fill="#0f2f27" opacity="0.12"/>
+  <path d="M240 200 L330 130 L420 210 L370 230 L320 190 L250 250 Z" fill="#285c42"/>
+  <path d="M342 210 L438 278 L564 200" fill="none" stroke="#285c42" stroke-width="18" stroke-linecap="round"/>
+  <circle cx="570" cy="188" r="32" fill="#b7d174"/>
+  <rect x="515" y="210" width="120" height="20" rx="10" fill="#1d4036"/>
+  <path d="M318 200 L440 148 L450 214" fill="none" stroke="#4d785f" stroke-width="14" stroke-linecap="round"/>
+  <text x="400" y="455" text-anchor="middle" fill="#1b3127" font-size="42" font-family="Georgia, serif">Arm Control</text>
+</svg>

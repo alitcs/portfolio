@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 540" role="img" aria-label="GovTechON cover art">
+  <rect width="800" height="540" fill="#edf0ea"/>
+  <rect x="110" y="110" width="580" height="320" rx="18" fill="#f7faf5" stroke="#d9e0d6"/>
+  <rect x="170" y="180" width="180" height="180" rx="10" fill="#285c42"/>
+  <rect x="390" y="180" width="220" height="18" rx="9" fill="#c1d38d"/>
+  <rect x="390" y="220" width="200" height="14" rx="7" fill="#dce7d0"/>
+  <rect x="390" y="250" width="180" height="14" rx="7" fill="#dce7d0"/>
+  <rect x="390" y="283" width="210" height="52" rx="12" fill="#dcdfe9"/>
+  <text x="400" y="425" text-anchor="middle" fill="#1f382e" font-size="38" font-family="Georgia, serif">GovTechON</text>
+</svg>

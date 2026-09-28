@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 540" role="img" aria-label="Apartment listing filter cover art">
+  <rect width="800" height="540" fill="#eef1eb"/>
+  <rect x="110" y="110" width="580" height="320" rx="18" fill="#f9faf7" stroke="#d9e1d5"/>
+  <rect x="170" y="170" width="210" height="200" rx="12" fill="#ffffff" stroke="#d8e0d2"/>
+  <rect x="420" y="170" width="210" height="18" rx="9" fill="#285c42"/>
+  <rect x="420" y="210" width="170" height="12" rx="6" fill="#dfe9dc"/>
+  <rect x="420" y="236" width="190" height="12" rx="6" fill="#dfe9dc"/>
+  <rect x="420" y="262" width="150" height="12" rx="6" fill="#dfe9dc"/>
+  <circle cx="275" cy="250" r="64" fill="#bfd28a"/>
+  <text x="400" y="425" text-anchor="middle" fill="#26392f" font-size="34" font-family="Georgia, serif">Apartment Filter</text>
+</svg>

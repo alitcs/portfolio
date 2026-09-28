@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 540" role="img" aria-label="Course Availability Notifier cover art">
+  <rect width="800" height="540" fill="#eef3ed"/>
+  <rect x="110" y="110" width="580" height="320" rx="18" fill="#f9faf7" stroke="#d5dfd3"/>
+  <rect x="180" y="160" width="440" height="200" rx="14" fill="#ffffff" stroke="#cfdacd"/>
+  <rect x="220" y="200" width="120" height="18" rx="9" fill="#285c42"/>
+  <rect x="220" y="240" width="260" height="12" rx="6" fill="#dce8d7"/>
+  <rect x="220" y="268" width="240" height="12" rx="6" fill="#dce8d7"/>
+  <circle cx="575" cy="238" r="38" fill="#b9d173"/>
+  <text x="400" y="420" text-anchor="middle" fill="#213a2f" font-size="36" font-family="Georgia, serif">Course Notifier</text>
+</svg>

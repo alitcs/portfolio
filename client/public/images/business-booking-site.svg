@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 540" role="img" aria-label="Business booking site cover art">
+  <rect width="800" height="540" fill="#f4f3ee"/>
+  <rect x="110" y="110" width="580" height="320" rx="18" fill="#fffdf9" stroke="#d8d3c4"/>
+  <rect x="180" y="170" width="230" height="170" rx="12" fill="#e9f0ea"/>
+  <rect x="440" y="170" width="180" height="24" rx="10" fill="#285c42"/>
+  <rect x="440" y="212" width="150" height="12" rx="6" fill="#dfe6d6"/>
+  <rect x="440" y="238" width="170" height="12" rx="6" fill="#dfe6d6"/>
+  <rect x="440" y="264" width="130" height="12" rx="6" fill="#dfe6d6"/>
+  <rect x="180" y="360" width="120" height="30" rx="15" fill="#d7be84"/>
+  <rect x="320" y="360" width="180" height="30" rx="15" fill="#285c42"/>
+  <text x="400" y="425" text-anchor="middle" fill="#262f2a" font-size="34" font-family="Georgia, serif">Booking Site</text>
+</svg>
