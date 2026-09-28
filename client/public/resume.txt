@@ -1,0 +1,32 @@
+ALI HAMOUDI
+Software Engineer
+
+Replace this starter file with your resume content, or replace it with a PDF
+and update the Resume link in src/App.tsx.
+
+CONTACT
+Email: hello@example.com
+Location: Your city
+Portfolio: your-domain.com
+LinkedIn: linkedin.com/in/your-profile
+GitHub: github.com/your-username
+
+SUMMARY
+Write a brief introduction about your focus, strengths, and the work you want
+to do next.
+
+EXPERIENCE
+Job Title | Company | 2024–Present
+Add a concise description of your work and impact.
+
+Previous Role | Organization | 2022–2024
+Add a concise description of your work and impact.
+
+EDUCATION
+Degree or Certification | School | 2021–2025
+
+SKILLS
+Add your languages, frameworks, tools, and areas of expertise.
+
+PROJECTS
+Project Name | Add a short description and a link.

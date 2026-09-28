@@ -1,0 +1,15 @@
+* { box-sizing: border-box; }
+
+html { min-width: 320px; scroll-behavior: smooth; }
+
+body { margin: 0; min-width: 320px; min-height: 100vh; }
+
+a { color: inherit; }
+
+button, a { -webkit-tap-highlight-color: transparent; }
+
+:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
+
+::selection { background: var(--lime); color: var(--ink); }
+
+#root { min-height: 100vh; }
