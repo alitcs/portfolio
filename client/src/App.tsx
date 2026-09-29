@@ -1,7 +1,7 @@
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useState, type FormEvent, type ReactNode } from 'react'
 import './App.css'
 
-type Page = 'home' | 'experience' | 'projects' | 'freelance' | 'extracurricular'
+type Page = 'home' | 'experience' | 'projects' | 'freelance' | 'extracurricular' | 'note'
 
 const pages: { id: Page; label: string }[] = [
   { id: 'home', label: 'Home' },
@@ -13,7 +13,7 @@ const pages: { id: Page; label: string }[] = [
 
 function getPage(): Page {
   const route = window.location.hash.slice(2).split('#')[0] as Page
-  return pages.some((page) => page.id === route) ? route : 'home'
+  return route === 'note' || pages.some((page) => page.id === route) ? route : 'home'
 }
 
 function App() {
@@ -47,44 +47,56 @@ function App() {
             <span>Software engineer</span>
           </span>
         </a>
-        <nav className="main-nav" aria-label="Main navigation">
-          {pages.map((item) => (
-            <a
-              className={page === item.id ? 'active' : undefined}
-              aria-current={page === item.id ? 'page' : undefined}
-              href={`#/${item.id}`}
-              key={item.id}
-            >
-              {item.label}
+        {page === 'note' ? (
+          <a className="note-header-back" href="#/home">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8 4 2.5 10 8 16M3 10h14" /></svg>
+            <span>Back to home</span>
+          </a>
+        ) : (
+          <>
+            <nav className="main-nav" aria-label="Main navigation">
+              {pages.map((item) => (
+                <a
+                  className={page === item.id ? 'active' : undefined}
+                  aria-current={page === item.id ? 'page' : undefined}
+                  href={`#/${item.id}`}
+                  key={item.id}
+                >
+                  {item.label}
+                </a>
+              ))}
+            </nav>
+            <a className="resume-link" href="/AliHamoudi.pdf" download>
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M10 2.75v9m0 0 3.25-3.25M10 11.75 6.75 8.5M4 13.5v2.75h12V13.5" />
+              </svg>
+              <span>Resume</span>
             </a>
-          ))}
-        </nav>
-        <a className="resume-link" href="/resume.txt" download>
-          <svg viewBox="0 0 20 20" aria-hidden="true">
-            <path d="M10 2.75v9m0 0 3.25-3.25M10 11.75 6.75 8.5M4 13.5v2.75h12V13.5" />
-          </svg>
-          <span>Resume</span>
-        </a>
+          </>
+        )}
       </header>
 
       <main key={page} className="page-main">
         {page === 'home' && <HomePage />}
+        {page === 'note' && <NotePage />}
         {page === 'projects' && <ProjectsPage />}
         {page === 'experience' && <ExperiencePage />}
         {page === 'freelance' && <FreelancePage />}
         {page === 'extracurricular' && <ExtracurricularPage />}
       </main>
 
-      <footer className="site-footer section-wrap">
-        <a className="footer-mark" href="#/home">AH<span>✳</span></a>
-        <span>Designed &amp; built with care.</span>
-        <div className="footer-links">
-          <a href="https://github.com/alitcs" target="_blank" rel="noreferrer">GitHub ↗</a>
-          <a href="https://www.linkedin.com/in/ali-hamoudi/" target="_blank" rel="noreferrer">LinkedIn ↗</a>
-          <a href="mailto:alihamoudiu18@gmail.com">Email ↗</a>
-        </div>
-        <a className="back-top" href="#/home" aria-label="Back to home">↑</a>
-      </footer>
+      {page !== 'note' && (
+        <footer className="site-footer section-wrap">
+          <a className="footer-mark" href="#/home">AH<span>✳</span></a>
+          <span>Designed &amp; built with care.</span>
+          <div className="footer-links">
+            <a href="https://github.com/alitcs" target="_blank" rel="noreferrer">GitHub ↗</a>
+            <a href="https://www.linkedin.com/in/ali-hamoudi/" target="_blank" rel="noreferrer">LinkedIn ↗</a>
+            <a href="mailto:alihamoudiu18@gmail.com">Email ↗</a>
+          </div>
+          <a className="back-top" href="#/home" aria-label="Back to home">↑</a>
+        </footer>
+      )}
     </div>
   )
 }
@@ -98,10 +110,15 @@ function HomePage() {
           <h1>Thoughtful software.<br /><em>Made for people.</em></h1>
           <p className="intro-description">Hi, I’m Ali, a software engineer who turns complex ideas into clear, useful digital experiences. I care about the details, from the first sketch to the final interaction.</p>
           <div className="intro-actions">
-            <a className="button button-primary" href="#/projects">Explore my work <span aria-hidden="true">↗</span></a>
-            <a className="text-link" href="#/home#contact">Let’s talk <span aria-hidden="true">↗</span></a>
+            <a className="button button-primary" href="#/note">Send me a note <span aria-hidden="true">↗</span></a>
           </div>
-          <div className="availability"><span className="availability-mark">✳</span> Currently building something new</div>
+          <div className="intro-socials" aria-label="Contact links">
+            <div className="intro-social-links">
+              <a href="https://www.linkedin.com/in/ali-hamoudi/" target="_blank" rel="noreferrer">LinkedIn</a>
+              <a href="https://github.com/alitcs" target="_blank" rel="noreferrer">GitHub</a>
+            </div>
+            <span className="intro-email-link">alihamoudiu18@gmail.com</span>
+          </div>
         </div>
         <div className="hero-art" aria-label="Decorative illustration with the initials AH" role="img">
           <div className="art-caption"><span>INDEPENDENT BY DESIGN</span><span>01 / 04</span></div>
@@ -116,22 +133,109 @@ function HomePage() {
           <div className="art-foot"><span>DESIGN</span><span>ENGINEERING</span><span>✳</span></div>
         </div>
       </section>
-      <section className="quick-facts section-wrap" aria-label="At a glance">
-        <div className="fact-item"><span className="fact-index">01</span><div><strong>Product-minded</strong><span>From rough idea to refined UI</span></div></div>
-        <div className="fact-item"><span className="fact-index">02</span><div><strong>Full-stack curious</strong><span>Thoughtful across the stack</span></div></div>
-        <div className="fact-item"><span className="fact-index">03</span><div><strong>Always learning</strong><span>Better with every build</span></div></div>
-      </section>
-      <nav className="home-shortcuts section-wrap" aria-label="Explore portfolio">
-        <a href="#/projects"><span>01</span><strong>Selected projects</strong><i>↗</i></a>
-        <a href="#/experience"><span>02</span><strong>Experience</strong><i>↗</i></a>
-        <a href="#/home#education"><span>03</span><strong>Education</strong><i>↗</i></a>
-        <a href="#/home#about"><span>04</span><strong>About</strong><i>↗</i></a>
-        <a href="#/home#contact"><span>05</span><strong>Contact</strong><i>↗</i></a>
-      </nav>
+      <MetricsSection />
       <EducationSection />
-      <AboutSection />
-      <ContactSection />
     </>
+  )
+}
+
+function NotePage() {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [error, setError] = useState('')
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const form = event.currentTarget
+    const formData = new FormData(form)
+    const name = String(formData.get('name') ?? '').trim()
+    const message = String(formData.get('message') ?? '').trim()
+
+    if (!name || !message) {
+      setError('Please add your name and a message before sending.')
+      return
+    }
+
+    setIsSubmitting(true)
+    setError('')
+
+    try {
+      const response = await fetch('https://formsubmit.co/ajax/alihamoudiu18@gmail.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          name,
+          message,
+          _subject: 'A personal note from your portfolio',
+        }),
+      })
+      const result = await response.json() as { success?: boolean | string; message?: string }
+      if (!response.ok || result.success === false || result.success === 'false') {
+        throw new Error(result.message || 'The message could not be sent.')
+      }
+
+      setIsSubmitted(true)
+    } catch {
+      setError('Your note could not be sent right now. Please try again or email me directly at alihamoudiu18@gmail.com.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  return (
+    <section className="note-page">
+      {isSubmitted ? (
+        <div className="note-success" role="status" aria-live="polite">
+          <svg className="success-check" viewBox="0 0 64 64" aria-hidden="true">
+            <circle className="success-check-circle" cx="32" cy="32" r="27" />
+            <path className="success-checkmark" d="m19 33 9 9 18-20" />
+          </svg>
+          <p className="section-kicker">NOTE RECEIVED</p>
+          <h1>Thanks for reaching out.</h1>
+          <p className="note-success-copy">Your note is on its way. I appreciate you taking the time to write.</p>
+          <a className="button button-primary" href="#/home">Back to home <span aria-hidden="true">↗</span></a>
+        </div>
+      ) : (
+        <>
+          <div className="note-heading">
+            <p className="section-kicker">A PERSONAL NOTE</p>
+            <h1>Let’s pick up<br /><em>the conversation.</em></h1>
+            <p>Write as much or as little as you like. A few details help me place the connection, but there’s no special format.</p>
+          </div>
+          <div className="note-layout">
+            <aside className="note-guides" aria-labelledby="note-guides-title">
+              <p className="section-kicker">A FEW THOUGHTS</p>
+              <h2 id="note-guides-title">Helpful context</h2>
+              <ul>
+                <li><span>01</span><p>How we know each other, or where we crossed paths.</p></li>
+                <li><span>02</span><p>What you’d like to share or recommend.</p></li>
+                <li><span>03</span><p>Your contact details, only if you’d like me to reply.</p></li>
+              </ul>
+            </aside>
+            <form className="note-form" onSubmit={handleSubmit}>
+              <div className="note-field">
+                <label htmlFor="note-name">Your name</label>
+                <input id="note-name" name="name" type="text" autoComplete="name" placeholder="Jane Smith" maxLength={120} required />
+              </div>
+              <div className="note-field">
+                <label htmlFor="note-message">Your note</label>
+                <textarea id="note-message" name="message" placeholder="Start anywhere..." rows={7} maxLength={5000} required />
+                <span className="note-field-hint">Include an email or phone number in your note if you’d like a reply.</span>
+              </div>
+              {error && <p className="note-error" role="alert">{error}</p>}
+              <button className="note-submit" type="submit" disabled={isSubmitting}>
+                <span>{isSubmitting ? 'Sending note...' : 'Send note'}</span>
+                <span aria-hidden="true">{isSubmitting ? '···' : '↗'}</span>
+              </button>
+              <p className="note-privacy">Your note is delivered to Ali’s inbox via FormSubmit.</p>
+            </form>
+          </div>
+        </>
+      )}
+    </section>
   )
 }
 
@@ -179,14 +283,14 @@ const experienceEntries = [
     company: 'Ontario Government — GovTechON',
     dates: '2024 — Present',
     title: 'Full-Stack Software Engineer',
-    summary: 'Ships full-stack features across Go APIs, Nuxt/Vue, and WordPress for an enterprise intranet and media platform. Work includes chi modernization, S3 migration, Redis performance fixes, and security hardening.',
+    summary: 'Deliver full-stack features and modernization for an Ontario Public Service intranet and media platform serving tens of thousands of employees. Work spans backend services, web applications, and content systems, including cloud-storage migration, performance and reliability improvements, and security hardening.',
     image: '/images/govtechon.svg',
   },
   {
     company: 'Vironix AI',
     dates: 'Sep 2025 — Present',
     title: 'Founding Software Engineer / Technical Co-Founder',
-    summary: 'Helped build and operate a customer-facing AI video analytics product, spanning React and Node.js, async video processing, credit accounting, Stripe billing, and production safeguards. Also interviewed 50+ engineering candidates.',
+    summary: 'Co-built and operate a customer-facing AI video analytics product as one of two engineers, sharing ownership across the frontend, backend, video-processing pipeline, credit and billing systems, and production safeguards. Interviewed 50+ engineering candidates and took an active role in growing the founding team.',
     image: '/images/vironix-ai.svg',
     previewUrl: 'https://vironixai.net/login',
     links: [{ label: 'Visit Vironix AI', href: 'https://vironixai.net/' }],
@@ -282,8 +386,8 @@ const educationEntries = [
   {
     title: 'Toronto Metropolitan University',
     type: 'Sep 2023 — Present · Toronto, ON',
-    summary: 'Bachelor of Science in Computer Science, Co-op. Dean’s List.',
-    tags: ['Computer Science', 'Co-op', 'Dean’s List'],
+    summary: 'Bachelor of Science in Computer Science',
+    tags: ['Co-op', 'Dean’s List'],
     imageLabel: 'Toronto Metropolitan University image',
     image: '/images/education.svg',
   },
@@ -490,50 +594,50 @@ function ExtracurricularPage() {
   )
 }
 
+function MetricsSection() {
+  const metrics = [
+    { value: '3', label: 'Current business partners' },
+    { value: '1', label: 'Hackathon won' },
+    { value: '50+', label: 'Engineering candidates interviewed' },
+    { value: '$1,000+', label: 'Raised for community support' },
+  ]
+
+  return (
+    <section className="home-metrics section-wrap" aria-label="Career metrics">
+      <ul>
+        {metrics.map((metric) => (
+          <li key={metric.label}>
+            <strong>{metric.value}</strong>
+            <span>{metric.label}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
 function EducationSection() {
   return (
-    <section id="education" className="home-education section-wrap">
-      <div className="section-heading">
-        <div><p className="section-kicker">EDUCATION</p><h2>Learning by doing.</h2></div>
+    <section id="education" className="home-education section-wrap" aria-labelledby="education-title">
+      <div className="education-section-heading">
+        <p className="section-kicker">EDUCATION</p>
+        <span className="education-heading-note">CURRENT STUDIES</span>
       </div>
-      <div className="experience-list">
+      <div className="education-feature-list">
         {educationEntries.map((entry) => (
-          <article className="experience-entry" key={entry.title}>
-            <MediaPanel src={entry.image} alt={`${entry.title} cover`} label={entry.imageLabel} />
-            <div className="experience-copy">
-              <span className="timeline-date">{entry.type}</span>
-              <h3>{entry.title}</h3>
-              <p>{entry.summary}</p>
-              <div className="tag-list">
+          <article className="education-feature" key={entry.title}>
+            <div className="education-feature-copy">
+              <span className="education-date">{entry.type}</span>
+              <h2 id="education-title">{entry.title}</h2>
+              <p className="education-degree">{entry.summary}</p>
+              <div className="education-feature-tags">
                 {entry.tags.map((tag) => <span key={tag}>{tag}</span>)}
               </div>
             </div>
+            <MediaPanel src={entry.image} alt={`${entry.title} education illustration`} label={entry.imageLabel} />
           </article>
         ))}
       </div>
-    </section>
-  )
-}
-
-function AboutSection() {
-  return (
-    <section id="about" className="about-section section-wrap">
-      <div className="about-stamp" aria-hidden="true"><span>CURIOUS<br />BY NATURE</span><b>✳</b></div>
-      <div className="about-copy"><p className="section-kicker">A LITTLE ABOUT ME</p><h2>Good work is a<br /><em>team sport.</em></h2><p>I like asking one more question, making the complicated feel simple, and working with kind people who care about what they put into the world. Away from my screen, you’ll find me out for a long walk or trying a new recipe.</p><a className="text-link" href="#/home#contact">More about me <span aria-hidden="true">↗</span></a></div>
-      <div className="about-note"><span className="note-mark">“</span><p>Make it useful.<br />Make it feel right.<br /><em>Then make it better.</em></p><span className="note-credit">A SMALL WORKING PHILOSOPHY</span></div>
-    </section>
-  )
-}
-
-function ContactSection() {
-  return (
-    <section id="contact" className="contact-home-section section-wrap">
-      <div className="section-heading">
-        <div><p className="section-kicker">HAVE SOMETHING IN MIND?</p><h2>Let’s make it matter.</h2></div>
-        <p className="section-aside">Have a role, a project, or just a good question? My inbox is open.</p>
-      </div>
-      <a className="contact-card" href="mailto:alihamoudiu18@gmail.com"><span className="contact-card-label">EMAIL</span><strong>alihamoudiu18@gmail.com</strong><span className="contact-card-arrow">↗</span></a>
-      <div className="contact-socials"><a href="https://www.linkedin.com/in/ali-hamoudi/" target="_blank" rel="noreferrer">LinkedIn <span>↗</span></a><a href="https://github.com/alitcs" target="_blank" rel="noreferrer">GitHub <span>↗</span></a></div>
     </section>
   )
 }
