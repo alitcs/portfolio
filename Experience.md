@@ -1,48 +1,24 @@
 # Software Engineer Profile — Ali Hamoudi
 
-## Candidate Profile
+## Email: alihamoudiu18@gmail.com
 
-[general information about Ali]
+## LinkedIn: https://www.linkedin.com/in/ali-hamoudi/
 
-## Technical Skills
+## Github: https://github.com/alitcs
 
-### Languages & Frameworks
-
-- ...
-
-### Backend
-
-- ...
-
-### Frontend
-
-- ...
-
-### Cloud & Infrastructure
-
-- ...
-
-### Databases & Caching
-
-- ...
-
-### Security
-
-- ...
-
----
+## City: Toronto
 
 # Work Experience
 
 ## Ontario Government - GovTechON
 
-## Who Ali Is (At a Glance)
+### Who Ali Is (At a Glance)
 
 Ali is a **full-stack software engineer** who works comfortably across the entire stack of a large enterprise web platform: a Go backend, a Nuxt/Vue frontend, and a WordPress/PHP content-management layer. Ali is equally at home writing new API services, modernizing legacy code, fixing subtle production defects, hardening security, and polishing user-facing UI. Ali gravitates toward **root-cause understanding** rather than surface-level patches, and delivers vertically integrated features that span backend, frontend, and CMS in a single piece of work.
 
 The platform Ali works on is a **large-scale government intranet** serving tens of thousands of public-service employees across many ministries and agencies, alongside a **media delivery service** for enterprise video and file assets. The scale, security expectations, and accessibility/compliance requirements of a public-sector system shape how Ali writes and reviews code.
 
-## Core Engineering Strengths
+### Core Engineering Strengths
 
 - **Full-stack ownership.** Ali routinely delivers a single feature end-to-end — designing the Go API endpoint, exposing the right data to the frontend, building the reactive Vue component, and adjusting the WordPress/PHP side where needed. He is not siloed to one tier.
 - **Legacy modernization.** A large share of Ali's work is migrating and decoupling legacy systems: moving web framework code to a cleaner, more idiomatic foundation; replacing self-hosted infrastructure with cloud-native equivalents; and lifting business logic out of an aging PHP monolith into modern services and components.
@@ -52,7 +28,7 @@ The platform Ali works on is a **large-scale government intranet** serving tens 
 - **Code quality discipline.** Ali writes idiomatic, consistently formatted code, adds tests where behavior is subtle, and keeps changes focused and reviewable.
 - **Clear communicator.** Ali writes concise pull-request summaries and can explain technical decisions in plain, practical language for both engineers and non-engineers.
 
-## Technologies & Tools
+### Technologies & Tools
 
 **Backend & APIs**
 
@@ -106,7 +82,7 @@ The platform Ali works on is a **large-scale government intranet** serving tens 
 - Jira Cloud and Confluence
 - Feature-branch discipline; merges kept current with main
 
-## The Kinds of Work Ali Does
+### The Kinds of Work Ali Does
 
 ### Backend service development & API modernization
 
@@ -136,7 +112,7 @@ Ali modernizes the front end by moving logic out of legacy PHP server-rendered w
 
 On the WordPress side, Ali balances contributor empowerment with safety: whitelisting FontAwesome icon markup in text widgets, adding title and image-URL support to image and text widgets, and consolidating external-URL allow-lists into a shared configuration while extending sensitive-content coverage. He implemented **file-type validation** across image and media widgets — both in the browser and on the server — to block invalid non-image files, and **blocked video uploads to the media library** across every upload path (drag-and-drop, file picker, direct upload, and the REST media endpoint), returning a helpful message that redirects users to the proper media-delivery service instead. He fixed an "ultimate posts" widget defect that caused errors and duplicate event listeners on content/excerpt toggles.
 
-## How Ali Works (Working Style)
+### How Ali Works (Working Style)
 
 - **Delivers complete features, not fragments.** When a change touches three tiers, Ali does all three rather than handing off partial work.
 - **Investigates before he changes code.** He reads the existing code paths, reproduces the problem, and confirms the mechanism — especially for environment-specific or intermittent bugs — before writing a fix.
@@ -145,11 +121,11 @@ On the WordPress side, Ali balances contributor empowerment with safety: whiteli
 - **Communicates plainly.** He can translate a subtle technical situation into a straightforward explanation for teammates and stakeholders, and prefers practical, non-jargon language.
 - **Operates in a modern cloud-delivery workflow.** He is comfortable with Kubernetes, Helm, and GitOps-style deployment, including using production-data snapshots to validate work realistically.
 
-## One-Paragraph Summary (Reusable)
+### One-Paragraph Summary (Reusable)
 
 Ali Hamoudi is a full-stack software engineer on a large government enterprise intranet and media-delivery platform, working fluently across a Go (`chi`) backend, a Nuxt/Vue frontend, and a WordPress/PHP CMS. His work spans backend API development and framework modernization, cloud storage migration to AWS S3, Redis caching and concurrency correctness, security hardening (SQL injection, access control, upload/content validation), and a broad range of frontend and CMS UX improvements. He is a strong root-cause debugger of hard, environment-specific and concurrency bugs, a security-conscious and quality-focused coder, and a clear communicator who ships complete, well-tested, vertically integrated features within a Kubernetes/Helm/GitOps delivery model.
 
-## Vironix AI
+## Vironix AI - https://vironixai.net/
 
 **Role:** Founding Software Engineer / Technical Co-Founder  
 **Dates:** Sep 2025 – Present  
@@ -215,7 +191,7 @@ Ali Hamoudi is a full-stack software engineer on a large government enterprise i
 
 # Projects
 
-## Digital Duel
+## Digital Duel - https://github.com/alitcs/Digital-Duel
 
 ### Project Overview
 
@@ -270,7 +246,7 @@ Ali Hamoudi is a full-stack software engineer on a large government enterprise i
 - **Tools:** GCC, MinGW
 - **Concepts:** Real-time game loops, collision detection, 2D rendering, manual memory management, modular architecture, input processing, resource management
 
-## Secret Santa Automation Script
+## Secret Santa Automation Script - https://github.com/alitcs/Secret-Santa
 
 ### Project Overview
 
@@ -306,9 +282,9 @@ Ali Hamoudi is a full-stack software engineer on a large government enterprise i
 - **Tools:** Unix command-line utilities, `shuf`, `mail`
 - **Concepts:** Shell scripting, arrays, associative arrays, randomization, file I/O, command-line automation, system utilities
 
-# Applibit
+## Applibit - https://github.com/alitcs/Applibit
 
-## Project Overview
+### Project Overview
 
 - Designed and built **Applibit**, a web application that helps users create tailored resumes for job applications.
 - Developed a multi-step onboarding flow for username creation, password setup, email verification, login, and subscription access.
@@ -316,7 +292,7 @@ Ali Hamoudi is a full-stack software engineer on a large government enterprise i
 - Added support for resume sections including summaries, education, projects, experience, technical skills, and volunteer work.
 - Designed a responsive interface for authentication, resume editing, profile settings, and resume generation workflows.
 
-## Frontend Development
+### Frontend Development
 
 - Built the frontend with HTML, CSS, and modern JavaScript modules.
 - Created reusable UI behaviors for form transitions, progress indicators, dropdown menus, loading states, and dynamic content.
@@ -324,7 +300,7 @@ Ali Hamoudi is a full-stack software engineer on a large government enterprise i
 - Added responsive layouts for authentication screens and the resume dashboard.
 - Implemented dynamic resume section creation and removal without page reloads.
 
-## Authentication & User Accounts
+### Authentication & User Accounts
 
 - Integrated Firebase Authentication for email-and-password account registration and login.
 - Implemented email verification before users continue to the application.
@@ -332,7 +308,7 @@ Ali Hamoudi is a full-stack software engineer on a large government enterprise i
 - Used Firebase Auth state listeners to protect the dashboard and redirect unauthenticated users.
 - Stored user profile information, usernames, timestamps, and subscription status in Firestore.
 
-## Resume Builder
+### Resume Builder
 
 - Created a dashboard for entering personal information, including name, phone, email, LinkedIn, and GitHub profiles.
 - Added dynamic resume sections for summaries, education, projects, work experience, technical skills, and volunteer experience.
@@ -340,7 +316,7 @@ Ali Hamoudi is a full-stack software engineer on a large government enterprise i
 - Added “Must Include” controls to allow users to prioritize resume content.
 - Included character limits, placeholders, and structured input fields to improve resume data quality.
 
-## Subscription & Payment System
+### Subscription & Payment System
 
 - Integrated Stripe Checkout through Firebase Cloud Functions.
 - Created authenticated checkout sessions for subscription purchases.
@@ -349,7 +325,7 @@ Ali Hamoudi is a full-stack software engineer on a large government enterprise i
 - Synchronized Stripe subscription status with Firestore user records.
 - Added Firebase custom claims to track active subscriptions.
 
-## Firebase Backend
+### Firebase Backend
 
 - Used Firebase Firestore for storing user profiles and subscription information.
 - Used Firebase Cloud Functions with Node.js and the Firebase Admin SDK.
@@ -357,7 +333,7 @@ Ali Hamoudi is a full-stack software engineer on a large government enterprise i
 - Added webhook event tracking to prevent duplicate Stripe event processing.
 - Configured CORS handling for local frontend development and API requests.
 
-## Data Modeling & State Management
+### Data Modeling & State Management
 
 - Modeled users, resume data, and subscription state using Firestore documents.
 - Used real-time Firestore listeners to update dashboard profile information.
@@ -365,14 +341,14 @@ Ali Hamoudi is a full-stack software engineer on a large government enterprise i
 - Managed authentication, loading, payment, and resume-generation states on the client.
 - Used local storage to track whether a checkout session had already started.
 
-## Technologies
+### Technologies
 
 - **Languages:** JavaScript, HTML, CSS
 - **Services:** Firebase Authentication, Cloud Firestore, Firebase Cloud Functions, Stripe
 - **Libraries:** Firebase JavaScript SDK, Firebase Admin SDK, Stripe Node.js SDK
 - **Concepts:** Authentication, email verification, real-time databases, subscription billing, REST-style cloud functions, dynamic forms, responsive UI design, and client-side state management
 
-## Robotic Arm Control System with Web UI
+## Robotic Arm Control System with Web UI - https://github.com/alitcs/Robotic-Arm-UI
 
 ### Project Overview
 
@@ -426,7 +402,7 @@ Ali Hamoudi is a full-stack software engineer on a large government enterprise i
 
 # Freelance Work
 
-## Course Availability Notifier
+## Course Availability Notifier - https://github.com/alitcs/Course-Availability-Notifier
 
 ### Project Overview
 
@@ -457,7 +433,7 @@ Ali Hamoudi is a full-stack software engineer on a large government enterprise i
 - Helped students respond more quickly when seats became available in high-demand courses.
 - Customized the tool for different students, institutions, course pages, and notification requirements.
 
-## JTC Property Services Website
+## JTC Property Services Website - https://majestic-youtiao-4bc24e.netlify.app/
 
 ### Project Overview
 
@@ -493,7 +469,7 @@ Ali Hamoudi is a full-stack software engineer on a large government enterprise i
 - **Assets:** Project photography, service-area map imagery, company branding
 - **Concepts:** Multi-page website architecture, lead generation, quote-request workflows, responsive UI design, accessibility-minded HTML, business website development
 
-## Apartment Listing Filter and AI Scraper
+## Apartment Listing Filter and AI Scraper - https://github.com/alitcs/Apartment-Filter
 
 ### Project Overview
 
@@ -529,7 +505,7 @@ Ali Hamoudi is a full-stack software engineer on a large government enterprise i
 
 - A client paid me to develop and customize this apartment-listing filtering service for their housing search.
 
-## Business Website & Booking System
+## Little Genius Island Website & Booking System - https://littlegeniusisland.ca/
 
 ### Project Overview
 
@@ -556,22 +532,71 @@ Ali Hamoudi is a full-stack software engineer on a large government enterprise i
 
 ### Technologies
 
-- **Languages:** HTML5, CSS3, JavaScript
+- **Languages:** HTML5, CSS3, TypeScript, React
 - **Frontend:** Responsive web design, mobile-friendly layouts, conversion-focused UI design
 - **Integrations:** Booking/inquiry form flow, contact and quote intake process
 - **Concepts:** Lead generation, client acquisition, scheduling workflows, business website development, responsive UX design
 
+## Tutoring - Freelance - Little Genius Island (littlegeniusisland.ca) - Best Brains (bestbrains.com)
+
+### Overview
+
+- Provided tutoring to students from **Grade 3 through Grade 12** across mathematics, calculus, functions, physics, English, and programming.
+- Worked with students at different grade levels and skill levels, adapting explanations, practice problems, and lesson structure to their individual needs.
+- Tutored students through a combination of **private freelance work**, **Best Brains**, and **Little Genius Island**.
+- Supported both elementary and high-school students, ranging from foundational English reading and writing to senior-level calculus, functions, and physics.
+
+### Subjects & Grade Levels
+
+- **Grades 3–8:** Mathematics, English, and programming/coding
+- **Grades 11–12:** Functions, calculus, mathematics, and physics
+- Provided individualized instruction focused on understanding concepts, solving problems, completing schoolwork, and building confidence with course material.
+
+### Skills Demonstrated
+
+- One-on-one instruction and communication
+- Adapting technical explanations to different ages and learning levels
+- Breaking complex concepts into understandable steps
+- Problem-solving and guided practice
+- Working independently with students and families
+- Communication, patience, and mentorship
+
+## Under The Tree Charity
+
+### Overview
+
+- Founded and organized **Under The Tree Charity**, a community initiative supporting people experiencing hardship during the winter season.
+- Raised **over $1,000** through social media marketing and community fundraising efforts.
+- Used fundraising proceeds to prepare and distribute **hot meals, warm clothing, blankets, and winter gear** to people in need.
+- Managed the initiative from fundraising and promotion through to preparing and distributing resources to the community.
+
+### Fundraising & Community Outreach
+
+- Created and promoted social media content to raise awareness and encourage donations.
+- Used social media marketing to reach community members and generate fundraising support.
+- Coordinated the preparation and distribution of donated and purchased supplies.
+- Organized resources around practical winter needs, including food, clothing, blankets, and other cold-weather essentials.
+
+### Skills Demonstrated
+
+- Initiative and independent project leadership
+- Social media marketing and community outreach
+- Fundraising and resource management
+- Organization and logistics
+- Community engagement
+- Project planning and execution
+
 # Extracurricular
 
-# OPSConnect — AI-Powered Organizational Knowledge & People-Discovery Platform
+## Connect OPS — AI-Powered Organizational Knowledge & People-Discovery Platform - https://connectops.netlify.app/
 
-> **Also referred to as ConnectOPS in the codebase and pitch materials.** A full-stack
+> **The codebase and pitch materials use the identifier ConnectOPS.** A full-stack
 > AI-powered knowledge-retrieval and people-discovery web app built for the **Ontario Public
 > Service (OPS)** — a ~66,000-person government organization.
 
 ---
 
-## At a Glance
+### At a Glance
 
 |                        |                                                                                                                                                                                                    |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -586,7 +611,7 @@ Ali Hamoudi is a full-stack software engineer on a large government enterprise i
 
 ---
 
-## The Problem
+### The Problem
 
 In a large organization the knowledge already exists — but the **people and places that hold
 it are hard to reach**. Staff act on partial context (a ticket number, a system name, a vague
@@ -600,11 +625,11 @@ SharePoint — to find the right owner, expert, or next step.
   information and chasing colleagues (McKinsey). Across ~66,000 OPS staff, recovering even a
   fraction of that is **millions of dollars in reclaimed capacity per year**.
 
-OPSConnect turns that friction from **hours into seconds**.
+Connect OPS turns that friction from **hours into seconds**.
 
 ---
 
-## The Solution
+### The Solution
 
 A **Teams-native AI assistant** (plus a companion web app) built around a clear, governed
 pipeline:
@@ -627,7 +652,7 @@ effectively.
 
 ---
 
-## Technical Architecture
+### Technical Architecture
 
 The whole system is built to be a **production-forward prototype**, not a throwaway demo. Every
 mock component is abstracted behind a stable interface so it can be swapped out one piece at a
@@ -667,7 +692,7 @@ so the same UI can run against either.
 
 ---
 
-## The AI Layer
+### The AI Layer
 
 A **mock AI service** simulates an LLM: it parses queries for keywords and intents (skills,
 departments, names, ticket/system references) and returns **realistic, cited, explainable**
@@ -700,7 +725,7 @@ _without changing the response contract_.
 
 ---
 
-## Key Features
+### Key Features
 
 ### Core member experience
 
@@ -752,7 +777,7 @@ _without changing the response contract_.
 
 ---
 
-## Security & Privacy Modeling
+### Security & Privacy Modeling
 
 Security was treated as a first-class design concern, with a written **Security Overview** that
 is explicit about what is genuine vs. a demonstrative stand-in, and a full production-hardening
@@ -790,7 +815,7 @@ backlog.
 
 ---
 
-## The Business Case
+### The Business Case
 
 Beyond the code, the team produced a complete public-sector business case — a major reason the
 project placed at a competition that explicitly weighed **financial feasibility and long-term
@@ -826,7 +851,7 @@ resolved without re-routing, 100% grounded/cited answers).
 
 ---
 
-## Tech Stack
+### Tech Stack
 
 **Frontend**
 
@@ -856,7 +881,7 @@ resolved without re-routing, 100% grounded/cited answers).
 
 ---
 
-## Quantified Facts
+### Quantified Facts
 
 - 🥉 **3rd place** at the OGT Summer 2026 hackathon (Ontario Government).
 - **Team of 4.**
@@ -869,7 +894,7 @@ resolved without re-routing, 100% grounded/cited answers).
 
 ---
 
-## Skills Demonstrated
+### Skills Demonstrated
 
 TypeScript · React · Node.js · Express · REST API design · Vite · full-stack development · data
 visualization (WebGL / 3D graphs) · UI/UX · responsive / mobile-first design · authentication &
@@ -880,9 +905,9 @@ hackathon delivery under time constraints.
 
 ---
 
-## Honest Scope
+### Honest Scope
 
-For interview integrity: OPSConnect is a **proof-of-concept prototype**. It uses **mock data**
+For interview integrity: Connect OPS is a **proof-of-concept prototype**. It uses **mock data**
 and a **mock AI service** — there is no real database, no live LLM call, and no real integration
 with OPS systems in the delivered build. What is **real code** is the frontend, the REST API
 scaffold, the authorization/privacy logic, the 3D visualization, and the intent-routing engine.
@@ -890,44 +915,39 @@ What is **simulated** is the data and the LLM. The honest value is a _working pr
 production-forward design_ — and a business case complete enough to place 3rd at a government
 competition.
 
-# Extracurricular
-
-## Robotics Team
+## T.A.S.C (Toronto Autonomous Systems Collective) [https://tasctmu.com](https://tasctmu.com) - Website Development
 
 ### Project Overview
 
-- Worked as part of a student robotics team, contributing to the design, development, and testing of a robot for competition and demonstration purposes.
-- Collaborated closely with another developer to build and improve the robot's software and system functionality.
-- Worked cross-functionally with both the robotics team and the marketing team to support project goals, demos, and team presentations.
-- Helped the team iterate on the robot's performance by debugging issues, improving reliability, and refining the overall build.
+- Designed and developed the official **T.A.S.C (Toronto Autonomous Systems Collective)** website as a student extracurricular project.
+- Built the website using **React and TypeScript** to provide the team with a professional online presence for showcasing its work, members, and activities.
+- Worked with the team to understand their website requirements and translate them into a functional, responsive interface.
+- Developed and organized the site's pages, content, navigation, and overall user experience.
 
-### Software & Team Collaboration
+### Website Development
 
-- Partnered with another developer to troubleshoot technical issues, implement improvements, and support the robot's core functionality.
-- Contributed to the integration of software and hardware components to ensure the robot operated consistently during testing and demonstrations.
-- Worked in a fast-paced team environment where engineering decisions needed to balance technical performance, reliability, and project deadlines.
-- Helped document and communicate technical progress so the broader team, including the marketing team, could accurately represent the project and its capabilities.
-
-### Cross-Functional Work
-
-- Collaborated with the marketing team to prepare materials, demos, and messaging that effectively communicated the robot's purpose and value.
-- Supported event and showcase preparation by helping ensure the robot was demo-ready and the team could present the project clearly to external audiences.
-- Gained experience working in a multidisciplinary environment where engineering, product storytelling, and presentation all mattered.
+- Built the website using **React and TypeScript** with modern frontend development practices.
+- Created responsive layouts designed to work across desktop and mobile devices.
+- Implemented reusable components and structured the application to keep the code maintainable.
+- Integrated the team's branding, content, and project information into the website.
+- Deployed and maintained the website at **https://tasctmu.com**.
 
 ### Skills Demonstrated
 
-- Team collaboration and pair programming
-- Robotics systems development and debugging
-- Hardware/software integration
-- Cross-functional teamwork with engineering and marketing stakeholders
-- Problem-solving under project deadlines
-- Technical communication and demo support
+- React and TypeScript development
+- Frontend web development
+- Responsive UI/UX design
+- Component-based architecture
+- Client collaboration and requirements gathering
+- Website deployment and maintenance
+- Translating organizational requirements into a functional product
 
 ### Technologies
 
-- **Languages:** C++, Python, JavaScript (depending on project tooling)
-- **Areas:** Robotics, embedded systems, testing, troubleshooting, cross-functional collaboration
-- **Tools:** Git, hardware debugging tools, development boards, prototyping equipment
+- **Languages:** TypeScript, JavaScript, HTML, CSS
+- **Frontend:** React
+- **Tools:** Git, web development and deployment tooling
+- **Concepts:** Responsive design, component-based development, UI/UX, website deployment
 
 ---
 

@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 540" role="img" aria-label="OPSConnect cover art">
-  <rect width="800" height="540" fill="#edf3ef"/>
-  <rect x="110" y="110" width="580" height="320" rx="24" fill="#f9fbf8" stroke="#d4e1d7"/>
-  <circle cx="255" cy="220" r="58" fill="#285c42"/>
-  <circle cx="420" cy="220" r="58" fill="#b8d07a"/>
-  <circle cx="585" cy="220" r="58" fill="#d5b778"/>
-  <path d="M250 320 L355 270 L465 330 L590 260" fill="none" stroke="#244d3f" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
-  <text x="400" y="420" text-anchor="middle" fill="#1a3128" font-size="48" font-family="Georgia, serif">OPSConnect</text>
-</svg>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 540" role="img" aria-label="Tutoring cover art">
+  <rect width="800" height="540" fill="#edf2e9"/>
+  <rect x="110" y="90" width="580" height="360" rx="18" fill="#fbfcf8" stroke="#d6dfd1"/>
+  <rect x="170" y="150" width="220" height="200" rx="12" fill="#285c42"/>
+  <path d="M220 295 L265 205 L310 295 M238 263 H292" fill="none" stroke="#e6efcf" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="495" cy="205" r="34" fill="#c4dc83"/>
+  <circle cx="570" cy="205" r="34" fill="#d3a96d"/>
+  <path d="M440 320 Q495 245 550 320 M515 320 Q570 245 625 320" fill="none" stroke="#466a50" stroke-width="12" stroke-linecap="round"/>
+  <text x="400" y="415" text-anchor="middle" fill="#20362c" font-size="42" font-family="Georgia,serif">Tutoring &amp; Mentorship</text>
+</svg>

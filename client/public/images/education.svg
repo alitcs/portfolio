@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 540" role="img" aria-label="Education cover art">
+  <rect width="800" height="540" fill="#edf0e8"/>
+  <rect x="110" y="90" width="580" height="360" rx="18" fill="#fafbf7" stroke="#d8dfd2"/>
+  <path d="M400 145 L560 220 L400 295 L240 220 Z" fill="#285c42"/>
+  <path d="M300 248 V315 Q400 380 500 315 V248" fill="#b9cf80"/>
+  <path d="M560 220 V305" stroke="#786b4e" stroke-width="8"/>
+  <circle cx="560" cy="316" r="13" fill="#d4aa6c"/>
+  <text x="400" y="415" text-anchor="middle" fill="#20372d" font-size="38" font-family="Georgia,serif">Computer Science · Co-op</text>
+</svg>

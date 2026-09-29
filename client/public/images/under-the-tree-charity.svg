@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 540" role="img" aria-label="Under The Tree Charity cover art">
+  <rect width="800" height="540" fill="#f4f1e9"/>
+  <rect x="110" y="90" width="580" height="360" rx="18" fill="#fffdf8" stroke="#ded8c8"/>
+  <path d="M400 145 L300 285 H360 L285 365 H515 L440 285 H500 Z" fill="#285c42"/>
+  <rect x="380" y="350" width="40" height="45" fill="#b17d4d"/>
+  <circle cx="300" cy="180" r="12" fill="#d7b66e"/><circle cx="500" cy="225" r="12" fill="#d7b66e"/>
+  <text x="400" y="425" text-anchor="middle" fill="#29362b" font-size="38" font-family="Georgia,serif">Under The Tree</text>
+</svg>
