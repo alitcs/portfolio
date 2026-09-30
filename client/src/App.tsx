@@ -159,26 +159,28 @@ function NotePage() {
     setError('')
 
     try {
-      const response = await fetch('https://formsubmit.co/ajax/alihamoudiu18@gmail.com', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify({
-          name,
-          message,
-          _subject: 'A personal note from your portfolio',
-        }),
+      if (['localhost', '127.0.0.1', '::1'].includes(window.location.hostname)) {
+        throw new Error('The local Vite server cannot process form submissions. Test this on your deployed Netlify site.')
+      }
+
+      const encodedFormData = new URLSearchParams()
+      formData.forEach((value, key) => {
+        if (typeof value === 'string') encodedFormData.append(key, value)
       })
-      const result = await response.json() as { success?: boolean | string; message?: string }
-      if (!response.ok || result.success === false || result.success === 'false') {
-        throw new Error(result.message || 'The message could not be sent.')
+
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: encodedFormData.toString(),
+      })
+      if (!response.ok) {
+        throw new Error(`Netlify rejected the submission (${response.status}). Check that form detection is enabled and the latest deploy includes this form.`)
       }
 
       setIsSubmitted(true)
-    } catch {
-      setError('Your note could not be sent right now. Please try again or email me directly at alihamoudiu18@gmail.com.')
+    } catch (caughtError) {
+      const reason = caughtError instanceof Error ? caughtError.message : 'Please try again.'
+      setError(`Your note could not be sent. ${reason}`)
     } finally {
       setIsSubmitting(false)
     }
@@ -194,7 +196,7 @@ function NotePage() {
           </svg>
           <p className="section-kicker">NOTE RECEIVED</p>
           <h1>Thanks for reaching out.</h1>
-          <p className="note-success-copy">Your note is on its way. I appreciate you taking the time to write.</p>
+          <p className="note-success-copy">Your message was accepted. I appreciate you taking the time to write.</p>
           <a className="button button-primary" href="#/home">Back to home <span aria-hidden="true">↗</span></a>
         </div>
       ) : (
@@ -211,10 +213,11 @@ function NotePage() {
               <ul>
                 <li><span>01</span><p>How we know each other, or where we crossed paths.</p></li>
                 <li><span>02</span><p>What you’d like to share or recommend.</p></li>
-                <li><span>03</span><p>Your contact details, only if you’d like me to reply.</p></li>
+                <li><span>03</span><p>Anything else that would be helpful context.</p></li>
               </ul>
             </aside>
-            <form className="note-form" onSubmit={handleSubmit}>
+            <form className="note-form" name="portfolio-note" method="POST" data-netlify="true" onSubmit={handleSubmit}>
+              <input type="hidden" name="form-name" value="portfolio-note" />
               <div className="note-field">
                 <label htmlFor="note-name">Your name</label>
                 <input id="note-name" name="name" type="text" autoComplete="name" placeholder="Jane Smith" maxLength={120} required />
@@ -222,14 +225,13 @@ function NotePage() {
               <div className="note-field">
                 <label htmlFor="note-message">Your note</label>
                 <textarea id="note-message" name="message" placeholder="Start anywhere..." rows={7} maxLength={5000} required />
-                <span className="note-field-hint">Include an email or phone number in your note if you’d like a reply.</span>
               </div>
-              {error && <p className="note-error" role="alert">{error}</p>}
+              {error && <p className="note-error" role="alert">{error} You can also <a href="mailto:alihamoudiu18@gmail.com">email me directly</a>.</p>}
               <button className="note-submit" type="submit" disabled={isSubmitting}>
                 <span>{isSubmitting ? 'Sending note...' : 'Send note'}</span>
                 <span aria-hidden="true">{isSubmitting ? '···' : '↗'}</span>
               </button>
-              <p className="note-privacy">Your note is delivered to Ali’s inbox via FormSubmit.</p>
+              <p className="note-privacy">Submissions are handled by Netlify Forms.</p>
             </form>
           </div>
         </>
