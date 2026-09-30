@@ -227,7 +227,6 @@ h1, h2, h3, p { margin-top: 0; }
 .footer-mark span { padding-left: 3px; color: var(--green); font-size: 9px; }
 .footer-links { display: flex; gap: 19px; margin-left: auto; }
 .footer-links a { color: var(--muted); text-decoration: none; }.footer-links a:hover { color: var(--green); }
-.back-top { width: 27px; height: 27px; display: grid; place-items: center; margin-left: 10px; color: var(--green); border: 1px solid var(--line); text-decoration: none; font-size: 14px; }
 
 .page-main { min-height: 68vh; animation: rise-in .35s both; }
 .page-heading { padding-top: 76px; padding-bottom: 35px; border-bottom: 1px solid var(--line); }
@@ -369,5 +368,4 @@ h1, h2, h3, p { margin-top: 0; }
   .education-feature .media-panel { max-width: 280px; justify-self: start; aspect-ratio: 1.6; }
   .site-footer { min-height: 105px; display: grid; grid-template-columns: auto 1fr auto; gap: 8px 13px; padding-block: 17px; font-size: 8px; }
   .footer-links { grid-column: 1 / 3; grid-row: 2; margin: 0; gap: 14px; }
-  .back-top { grid-column: 3; grid-row: 1 / 3; margin: 0; }
 }

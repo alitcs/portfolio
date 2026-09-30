@@ -94,7 +94,6 @@ function App() {
             <a href="https://www.linkedin.com/in/ali-hamoudi/" target="_blank" rel="noreferrer">LinkedIn ↗</a>
             <a href="mailto:alihamoudiu18@gmail.com">Email ↗</a>
           </div>
-          <a className="back-top" href="#/home" aria-label="Back to home">↑</a>
         </footer>
       )}
     </div>
