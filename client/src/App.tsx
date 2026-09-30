@@ -12,21 +12,27 @@ const pages: { id: Page; label: string }[] = [
 ]
 
 function getPage(): Page {
-  const route = window.location.hash.slice(2).split('#')[0] as Page
-  return route === 'note' || pages.some((page) => page.id === route) ? route : 'home'
+  const route = window.location.pathname.replace(/^\/+|\/+$/g, '')
+  if (route === '' || route === 'home') return 'home'
+  if (route === 'note' || pages.some((page) => page.id === route)) return route as Page
+  return 'home'
 }
 
 function App() {
   const [page, setPage] = useState<Page>(getPage)
-  const [section, setSection] = useState(() => window.location.hash.split('#')[2] ?? '')
+  const [section, setSection] = useState(() => window.location.hash.slice(1))
 
   useEffect(() => {
-    const updatePage = () => {
+    const updateLocation = () => {
       setPage(getPage())
-      setSection(window.location.hash.split('#')[2] ?? '')
+      setSection(window.location.hash.slice(1))
     }
-    window.addEventListener('hashchange', updatePage)
-    return () => window.removeEventListener('hashchange', updatePage)
+    window.addEventListener('popstate', updateLocation)
+    window.addEventListener('hashchange', updateLocation)
+    return () => {
+      window.removeEventListener('popstate', updateLocation)
+      window.removeEventListener('hashchange', updateLocation)
+    }
   }, [])
 
   useEffect(() => {
@@ -40,7 +46,7 @@ function App() {
   return (
     <div className="site-shell">
       <header className="site-header">
-        <a className="wordmark" href="#/home" aria-label="Ali Hamoudi, home">
+        <a className="wordmark" href="/" aria-label="Ali Hamoudi, home">
           <span className="wordmark-mark">AH</span>
           <span className="wordmark-copy">
             <strong>Ali Hamoudi</strong>
@@ -48,7 +54,7 @@ function App() {
           </span>
         </a>
         {page === 'note' ? (
-          <a className="note-header-back" href="#/home">
+          <a className="note-header-back" href="/">
             <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8 4 2.5 10 8 16M3 10h14" /></svg>
             <span>Back to home</span>
           </a>
@@ -59,7 +65,7 @@ function App() {
                 <a
                   className={page === item.id ? 'active' : undefined}
                   aria-current={page === item.id ? 'page' : undefined}
-                  href={`#/${item.id}`}
+                  href={item.id === 'home' ? '/' : `/${item.id}`}
                   key={item.id}
                 >
                   {item.label}
@@ -87,7 +93,7 @@ function App() {
 
       {page !== 'note' && (
         <footer className="site-footer section-wrap">
-          <a className="footer-mark" href="#/home">AH<span>✳</span></a>
+          <a className="footer-mark" href="/">AH<span>✳</span></a>
           <span>Designed &amp; built with care.</span>
           <div className="footer-links">
             <a href="https://github.com/alitcs" target="_blank" rel="noreferrer">GitHub ↗</a>
@@ -109,7 +115,7 @@ function HomePage() {
           <h1>Thoughtful software.<br /><em>Made for people.</em></h1>
           <p className="intro-description">Hi, I’m Ali, a software engineer who turns complex ideas into clear, useful digital experiences. I care about the details, from the first sketch to the final interaction.</p>
           <div className="intro-actions">
-            <a className="button button-primary" href="#/note">Send me a note <span aria-hidden="true">↗</span></a>
+            <a className="button button-primary" href="/note">Send me a note <span aria-hidden="true">↗</span></a>
           </div>
           <div className="intro-socials" aria-label="Contact links">
             <div className="intro-social-links">
@@ -197,7 +203,7 @@ function NotePage() {
           <p className="section-kicker">NOTE RECEIVED</p>
           <h1>Thanks for reaching out.</h1>
           <p className="note-success-copy">Your message was accepted. I appreciate you taking the time to write.</p>
-          <a className="button button-primary" href="#/home">Back to home <span aria-hidden="true">↗</span></a>
+          <a className="button button-primary" href="/">Back to home <span aria-hidden="true">↗</span></a>
         </div>
       ) : (
         <>
@@ -457,7 +463,7 @@ function ProjectsPage() {
             </article>
           ))}
         </div>
-        <a className="all-work-link" href="#/home#contact">Have a project in mind? <span>Let’s make it real ↗</span></a>
+        <a className="all-work-link" href="/note">Have a project in mind? <span>Let’s make it real ↗</span></a>
       </section>
     </>
   )
