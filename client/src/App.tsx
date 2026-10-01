@@ -96,9 +96,9 @@ function App() {
           <a className="footer-mark" href="/">AH<span>✳</span></a>
           <span>Designed &amp; built with care.</span>
           <div className="footer-links">
-            <a href="https://github.com/alitcs" target="_blank" rel="noreferrer">GitHub ↗</a>
-            <a href="https://www.linkedin.com/in/ali-hamoudi/" target="_blank" rel="noreferrer">LinkedIn ↗</a>
-            <a href="mailto:alihamoudiu18@gmail.com">Email ↗</a>
+            <a href="https://github.com/alitcs" target="_blank" rel="noreferrer">GitHub ↗︎</a>
+            <a href="https://www.linkedin.com/in/ali-hamoudi/" target="_blank" rel="noreferrer">LinkedIn ↗︎</a>
+            <a href="mailto:alihamoudiu18@gmail.com">Email ↗︎</a>
           </div>
         </footer>
       )}
@@ -115,7 +115,7 @@ function HomePage() {
           <h1>Thoughtful software.<br /><em>Made for people.</em></h1>
           <p className="intro-description">Hi, I’m Ali, a software engineer who turns complex ideas into clear, useful digital experiences. I care about the details, from the first sketch to the final interaction.</p>
           <div className="intro-actions">
-            <a className="button button-primary" href="/note">Send me a note <span aria-hidden="true">↗</span></a>
+            <a className="button button-primary" href="/note">Send me a note <span aria-hidden="true">↗︎</span></a>
           </div>
           <div className="intro-socials" aria-label="Contact links">
             <div className="intro-social-links">
@@ -203,7 +203,7 @@ function NotePage() {
           <p className="section-kicker">NOTE RECEIVED</p>
           <h1>Thanks for reaching out.</h1>
           <p className="note-success-copy">Your message was accepted. I appreciate you taking the time to write.</p>
-          <a className="button button-primary" href="/">Back to home <span aria-hidden="true">↗</span></a>
+          <a className="button button-primary" href="/">Back to home <span aria-hidden="true">↗︎</span></a>
         </div>
       ) : (
         <>
@@ -235,7 +235,7 @@ function NotePage() {
               {error && <p className="note-error" role="alert">{error} You can also <a href="mailto:alihamoudiu18@gmail.com">email me directly</a>.</p>}
               <button className="note-submit" type="submit" disabled={isSubmitting}>
                 <span>{isSubmitting ? 'Sending note...' : 'Send note'}</span>
-                <span aria-hidden="true">{isSubmitting ? '···' : '↗'}</span>
+                <span aria-hidden="true">{isSubmitting ? '···' : '↗︎'}</span>
               </button>
               <p className="note-privacy">Submissions are handled by Netlify Forms.</p>
             </form>
@@ -451,7 +451,7 @@ function ProjectsPage() {
                     <h3>{project.title}</h3>
                     <p>{project.summary}</p>
                   </div>
-                  <span className="project-arrow" aria-hidden="true">↗</span>
+                  <span className="project-arrow" aria-hidden="true">↗︎</span>
                 </div>
                 <div className="tag-list">
                   {project.tags.map((tag) => (
@@ -463,7 +463,7 @@ function ProjectsPage() {
             </article>
           ))}
         </div>
-        <a className="all-work-link" href="/note">Have a project in mind? <span>Let’s make it real ↗</span></a>
+        <a className="all-work-link" href="/note">Have a project in mind? <span>Let’s make it real ↗︎</span></a>
       </section>
     </>
   )
@@ -521,7 +521,7 @@ function FreelancePage() {
                     <h3>{project.title}</h3>
                     <p>{project.summary}</p>
                   </div>
-                  {cardHref && <span className="project-arrow" aria-hidden="true">↗</span>}
+                  {cardHref && <span className="project-arrow" aria-hidden="true">↗︎</span>}
                 </div>
                 <div className="tag-list">
                   {project.tags.map((tag) => (
@@ -551,7 +551,7 @@ function CardLink({ href, title, className = 'project-card-main-link', preview =
       {children}
       {href && (
         <a className="card-click-overlay" href={href} target="_blank" rel="noreferrer" aria-label={`Open ${title}`}>
-          {preview && <span className="card-link-hint">Visit live site <span aria-hidden="true">↗</span></span>}
+          {preview && <span className="card-link-hint">Visit live site <span aria-hidden="true">↗︎</span></span>}
         </a>
       )}
     </div>
@@ -563,7 +563,7 @@ function EntryLinks({ links }: { links: readonly { label: string; href: string }
     <div className="entry-links">
       {links.map((link) => (
         <a href={link.href} key={link.href} target="_blank" rel="noreferrer">
-          {link.label}<span aria-hidden="true"> ↗</span>
+          {link.label}<span aria-hidden="true"> ↗︎</span>
         </a>
       ))}
     </div>
@@ -586,7 +586,7 @@ function ExtracurricularPage() {
                     <h3>{entry.title}</h3>
                     <p>{entry.summary}</p>
                   </div>
-                  <span className="project-arrow" aria-hidden="true">↗</span>
+                  <span className="project-arrow" aria-hidden="true">↗︎</span>
                 </div>
                 <div className="tag-list">
                   {entry.tags.map((tag) => <span key={tag}>{tag}</span>)}
