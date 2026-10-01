@@ -1,5 +1,5 @@
 [[redirects]]
   from = "https://alihamoudi.netlify.app/*"
   to = "https://alihamoudi.com/:splat"
-  status = 302
+  status = 301
   force = true
