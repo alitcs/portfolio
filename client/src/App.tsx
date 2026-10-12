@@ -98,7 +98,6 @@ function App() {
           <div className="footer-links">
             <a href="https://github.com/alitcs" target="_blank" rel="noreferrer">GitHub ↗︎</a>
             <a href="https://www.linkedin.com/in/ali-hamoudi/" target="_blank" rel="noreferrer">LinkedIn ↗︎</a>
-            <a href="mailto:alihamoudiu18@gmail.com">Email ↗︎</a>
           </div>
         </footer>
       )}
@@ -607,8 +606,8 @@ function MetricsSection() {
   const metrics = [
     { value: '3', label: 'Current business partners' },
     { value: '1', label: 'Hackathon won' },
-    { value: '50+', label: 'Engineering candidates interviewed' },
-    { value: '$1,000+', label: 'Raised for community support' },
+    { value: '~ $25,000+', label: 'Revenue generated' },
+    { value: '10+', label: 'Freelance and personal projects' },
   ]
 
   return (
