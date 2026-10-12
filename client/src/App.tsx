@@ -6,8 +6,8 @@ type Page = 'home' | 'experience' | 'projects' | 'freelance' | 'extracurricular'
 const pages: { id: Page; label: string }[] = [
   { id: 'home', label: 'Home' },
   { id: 'experience', label: 'Experience' },
-  { id: 'projects', label: 'Projects' },
   { id: 'freelance', label: 'Freelance' },
+  { id: 'projects', label: 'Projects' },
   { id: 'extracurricular', label: 'Extracurricular' },
 ]
 
@@ -288,7 +288,7 @@ const projectEntries = [
 const experienceEntries = [
   {
     company: 'Ontario Government — GovTechON',
-    dates: '2024 — Present',
+    dates: 'May 2026 — Present',
     title: 'Full-Stack Software Engineer',
     summary: 'Deliver full-stack features and modernization for an Ontario Public Service intranet and media platform serving tens of thousands of employees. Work spans backend services, web applications, and content systems, including cloud-storage migration, performance and reliability improvements, and security hardening.',
     image: '/images/govtechon.svg',
@@ -305,6 +305,15 @@ const experienceEntries = [
 ] as const
 
 const freelanceEntries = [
+    {
+    title: 'Artificial Intelligence Real Estate Scraper & Filter',
+    type: 'Automation service',
+    summary: 'Created a paid Selenium and OpenAI tool that classifies apartment descriptions, filters for genuine two-bedroom listings, and saves results between runs.',
+    tags: ['Python', 'AI', 'Automation'],
+    imageLabel: 'Apartment filter image',
+    image: '/images/apartment-listing-filter.svg',
+    links: [{ label: 'View project', href: 'https://github.com/alitcs/Apartment-Filter' }],
+  },
   {
     title: 'Course Availability Notifier',
     type: 'Automation tool',
@@ -315,25 +324,6 @@ const freelanceEntries = [
     links: [{ label: 'View project', href: 'https://github.com/alitcs/Course-Availability-Notifier' }],
   },
   {
-    title: 'JTC Property Services Website',
-    type: 'Client website',
-    summary: 'Built a responsive multi-page site for a GTA property-maintenance company, including service areas, a real-work gallery, and an emailed quote-request form.',
-    tags: ['HTML', 'CSS', 'Freelance'],
-    imageLabel: 'JTC website image',
-    image: '/images/jtc-property-services.svg',
-    previewUrl: 'https://majestic-youtiao-4bc24e.netlify.app/',
-    links: [{ label: 'Visit website', href: 'https://majestic-youtiao-4bc24e.netlify.app/' }],
-  },
-  {
-    title: 'Apartment Listing Filter & AI Scraper',
-    type: 'Automation service',
-    summary: 'Created a paid Selenium and OpenAI tool that classifies apartment descriptions, filters for genuine two-bedroom listings, and saves results between runs.',
-    tags: ['Python', 'AI', 'Automation'],
-    imageLabel: 'Apartment filter image',
-    image: '/images/apartment-listing-filter.svg',
-    links: [{ label: 'View project', href: 'https://github.com/alitcs/Apartment-Filter' }],
-  },
-  {
     title: 'Little Genius Island Website & Booking System',
     type: 'Client website',
     summary: 'Built a responsive multi-page client website with a booking and quote-request workflow to support customer acquisition and simplify inquiry management.',
@@ -342,6 +332,16 @@ const freelanceEntries = [
     image: '/images/business-booking-site.svg',
     previewUrl: 'https://littlegeniusisland.ca/',
     links: [{ label: 'Visit website', href: 'https://littlegeniusisland.ca/' }],
+  },
+  {
+    title: 'JTC Property Services Website & Booking System',
+    type: 'Client website',
+    summary: 'Built a responsive multi-page site for a GTA property-maintenance company, including service areas, a real-work gallery, and an emailed quote-request form.',
+    tags: ['HTML', 'CSS', 'Freelance'],
+    imageLabel: 'JTC website image',
+    image: '/images/jtc-property-services.svg',
+    previewUrl: 'https://majestic-youtiao-4bc24e.netlify.app/',
+    links: [{ label: 'Visit website', href: 'https://majestic-youtiao-4bc24e.netlify.app/' }],
   },
   {
     title: 'Tutoring',
@@ -355,14 +355,6 @@ const freelanceEntries = [
       { label: 'Little Genius Island', href: 'https://littlegeniusisland.ca' },
       { label: 'Best Brains', href: 'https://bestbrains.com' },
     ],
-  },
-  {
-    title: 'Under The Tree Charity',
-    type: 'Community initiative',
-    summary: 'Founded a winter community initiative, raised over $1,000, and coordinated distribution of hot meals, warm clothing, blankets, and winter supplies.',
-    tags: ['Fundraising', 'Community outreach', 'Organization'],
-    imageLabel: 'Under The Tree Charity image',
-    image: '/images/under-the-tree-charity.svg',
   },
 ] as const
 
@@ -386,6 +378,16 @@ const extracurricularEntries = [
     image: '/images/tasctmu.svg',
     previewUrl: 'https://tasctmu.com/',
     links: [{ label: 'Visit T.A.S.C.', href: 'https://tasctmu.com' }],
+  },
+    {
+    title: 'Under The Tree Charity',
+    type: 'Community initiative',
+    summary: 'Founded a winter community initiative, raised over $1,000, and coordinated distribution of hot meals, warm clothing, blankets, and winter supplies.',
+    tags: ['Fundraising', 'Community outreach', 'Organization'],
+    imageLabel: 'Under The Tree Charity image',
+    image: '/images/under-the-tree-charity.svg',
+    previewUrl: '',
+    links: [{ label: '', href: '' }],
   },
 ] as const
 
@@ -503,7 +505,7 @@ function ExperiencePage() {
 function FreelancePage() {
   return (
     <>
-      <PageHeading kicker="CLIENT WORK" title="Freelance" detail="Independent work for clients, students, and small businesses across automation, web design, and product delivery." />
+      <PageHeading kicker="CLIENT WORK" title="Freelance" detail="Independent work for clients, students, and small businesses across automation, AI workflows, web design, and product delivery." />
       <section className="projects-page-content section-wrap">
         <div className="project-grid">
           {freelanceEntries.map((project, index) => {
