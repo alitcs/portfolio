@@ -249,11 +249,15 @@ const projectEntries = [
   {
     title: 'Digital Duel',
     type: 'Game project',
-    summary: 'Designed and built a local two-player top-down shooter in C and SDL2, with custom graphics, projectile combat, collision detection, and a complete game loop.',
-    tags: ['C', 'SDL2', 'Game dev'],
+    summary: 'Built a local two-player top-down shooter in C and SDL2, then brought Digital Duel online with a browser-based game UI, hand-drawn art, keyboard and touch controls, and custom-coded physics.',
+    tags: ['C', 'SDL2', 'Web UI', 'Game dev'],
     imageLabel: 'Digital Duel image',
     image: '/images/digital-duel.svg',
-    links: [{ label: 'View project', href: 'https://github.com/alitcs/Digital-Duel' }],
+    previewUrl: 'https://digitalduel.netlify.app/',
+    links: [
+      { label: 'Visit website', href: 'https://digitalduel.netlify.app/' },
+      { label: 'View source', href: 'https://github.com/alitcs/Digital-Duel' },
+    ],
   },
   {
     title: 'Applibit',
@@ -464,8 +468,8 @@ function ProjectsPage() {
         <div className="project-grid">
           {projectEntries.map((project, index) => (
             <article className="project-card linked-card" key={project.title}>
-              <CardLink href={project.links[0]?.href} title={project.title}>
-                <MediaPanel src={project.image} alt={`${project.title} cover`} label={project.imageLabel} />
+              <CardLink href={project.links[0]?.href} title={project.title} preview={'previewUrl' in project}>
+                <MediaPanel src={project.image} alt={`${project.title} cover`} label={project.imageLabel} previewUrl={'previewUrl' in project ? project.previewUrl : undefined} />
                 <div className="project-info">
                   <div>
                     <span className="project-number">{String(index + 1).padStart(2, '0')} / {project.type.toUpperCase()}</span>
