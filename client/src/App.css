@@ -121,6 +121,8 @@ h1, h2, h3, p { margin-top: 0; }
 .media-panel { width: 100%; aspect-ratio: 1.48; border: 1px solid var(--line); background: linear-gradient(135deg, var(--paper-shade), var(--paper-bright)); overflow: hidden; display: grid; place-items: center; margin-bottom: 16px; }
 .media-panel img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .media-panel iframe { width: 100%; height: 100%; display: block; border: 0; background: var(--paper-bright); pointer-events: none; }
+.live-site-preview { position: relative; }
+.live-site-preview iframe { position: absolute; top: 0; left: 0; width: 200%; height: 200%; transform: scale(.5); transform-origin: top left; }
 .media-placeholder { width: 100%; height: 100%; display: grid; place-items: center; gap: 8px; text-align: center; color: var(--green); background: linear-gradient(135deg, rgba(40,92,66,0.06), rgba(195,223,118,0.18)); }
 .media-placeholder span { font: 600 12px var(--mono); letter-spacing: .12em; text-transform: uppercase; }
 .media-placeholder small { color: var(--muted); font: 700 9px var(--mono); letter-spacing: .12em; text-transform: uppercase; }

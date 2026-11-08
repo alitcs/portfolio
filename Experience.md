@@ -433,6 +433,33 @@ Ali Hamoudi is a full-stack software engineer on a large government enterprise i
 - Helped students respond more quickly when seats became available in high-demand courses.
 - Customized the tool for different students, institutions, course pages, and notification requirements.
 
+## Interior Studio Website - https://interiordesignr.netlify.app/
+
+### Project Overview
+
+- Designed and built a website presenting an interior design and decoration service and its work.
+- Created a visual, responsive experience that guides visitors from the project portfolio to an inquiry form.
+
+### Website Development
+
+- Showcased interior projects with interactive before-and-after image comparisons and a work-in-progress section.
+- Added English and Persian language options to make the site accessible to visitors in both languages.
+- Built a project inquiry form for visitors to share their name, email address, and details about their space.
+- Deployed the website on Netlify.
+
+## GetMyPortfolio Website - https://getmyportfolio.com/
+
+### Project Overview
+
+- Designed and built a website for a service offering custom portfolio websites that are designed, built, and maintained for customers.
+- Presented the service and its process to help prospective customers understand what to expect.
+
+### Website Development
+
+- Created a responsive experience explaining the steps from the initial inquiry through portfolio design, review, and launch.
+- Added a customer inquiry form to collect contact information and details about the prospective customer's work.
+- Used clear calls to action to guide visitors toward starting a portfolio inquiry.
+
 ## JTC Property Services Website - https://majestic-youtiao-4bc24e.netlify.app/
 
 ### Project Overview
