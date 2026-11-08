@@ -266,7 +266,11 @@ const projectEntries = [
     tags: ['Python', 'WebSocket', 'UI'],
     imageLabel: 'Robotic Arm image',
     image: '/images/robotic-arm.svg',
-    links: [{ label: 'View project', href: 'https://github.com/alitcs/Robotic-Arm-UI' }],
+    previewUrl: 'https://roboticarmcontrol.netlify.app/',
+    links: [
+      { label: 'Visit website', href: 'https://roboticarmcontrol.netlify.app/' },
+      { label: 'View source', href: 'https://github.com/alitcs/Robotic-Arm-UI' },
+    ],
   },
   {
     title: 'Secret Santa',
