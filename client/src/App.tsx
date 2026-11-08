@@ -278,13 +278,17 @@ const projectEntries = [
     links: [{ label: 'View project', href: 'https://github.com/alitcs/Robotic-Arm-UI' }],
   },
   {
-    title: 'Secret Santa Automation Script',
-    type: 'Automation script',
+    title: 'Secret Santa',
+    type: 'Web app & automation',
     summary: 'Automated participant registration, randomized no-self-match assignments, personalized email generation, and delivery from a Linux command line.',
-    tags: ['Bash', 'Linux', 'Automation'],
+    tags: ['Web app', 'Bash', 'Linux', 'Automation'],
     imageLabel: 'Secret Santa image',
     image: '/images/secret-santa.svg',
-    links: [{ label: 'View project', href: 'https://github.com/alitcs/Secret-Santa' }],
+    previewUrl: 'https://secretsantash.netlify.app/',
+    links: [
+      { label: 'Visit website', href: 'https://secretsantash.netlify.app/' },
+      { label: 'View source', href: 'https://github.com/alitcs/Secret-Santa' },
+    ],
   },
 ] as const
 
