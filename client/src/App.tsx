@@ -293,7 +293,8 @@ const experienceEntries = [
     dates: 'May 2026 — Present',
     title: 'Full-Stack Software Engineer',
     summary: 'Deliver full-stack features and modernization for an Ontario Public Service intranet and media platform serving tens of thousands of employees. Work spans backend services, web applications, and content systems, including cloud-storage migration, performance and reliability improvements, and security hardening.',
-    image: '/images/govtechon.svg',
+    image: '/images/govtechon-platform.png',
+    note: 'Internal Ontario Public Service platform; not publicly accessible.',
   },
   {
     company: 'Vironix AI',
@@ -513,6 +514,7 @@ function ExperiencePage() {
                   <h3>{experience.title}</h3>
                   <p className="experience-company">{experience.company}</p>
                   <p>{experience.summary}</p>
+                  {'note' in experience && <p>{experience.note}</p>}
                 </div>
               </CardLink>
               {'links' in experience && <EntryLinks links={experience.links} />}
