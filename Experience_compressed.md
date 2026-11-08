@@ -49,10 +49,6 @@ AI chat-first people and knowledge discovery app for the ~66,000-person Ontario 
 
 Local two-player top-down 2D shooter with menu, gameplay, and game-over states. Frame-rate-independent movement via delta time, projectile cooldowns, rectangle collision detection, and manual memory and SDL resource management in a modular C codebase. Builds with GCC (Linux/WSL) and MinGW (Windows).
 
-### Applibit | JavaScript, Firebase, Stripe | [GitHub](https://github.com/alitcs/Applibit)
-
-Resume-building web app with Firebase Auth (email verification, protected routes), Firestore profiles, and dynamic resume sections. Stripe Checkout via Cloud Functions with ID-token verification, webhook handling with duplicate-event protection, and subscription status synced to Firestore and custom claims.
-
 ### Robotic Arm Control Web UI | Python, JavaScript | [GitHub](https://github.com/alitcs/Robotic-Arm-UI)
 
 PyGame keyboard backend polling at ~50 Hz and broadcasting six-channel PWM-style packets over an `asyncio` WebSocket server to a dependency-free browser dashboard with live gauges, a packet log, and auto-reconnect.
