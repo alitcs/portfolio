@@ -1,5 +1,7 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react'
 import './App.css'
+import WorkShowcase from './WorkShowcase'
+import './Browsing.css'
 
 type Page = 'home' | 'index' | 'experience' | 'projects' | 'freelance' | 'extracurricular' | 'note' | 'work'
 type WorkItem = {
@@ -66,6 +68,8 @@ function App() {
   const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
+    // The scrollable showcase stays quiet; immersive work pages keep their overlay.
+    if (page === 'index') return
     const createOverlay = window.BlobOverlay?.create
     if (!createOverlay) {
       console.error('The portfolio tracking overlay did not load.')
@@ -147,7 +151,7 @@ function App() {
   useEffect(() => {
     if (section && page === 'home') {
       document.getElementById(section)?.scrollIntoView({ behavior: 'smooth' })
-    } else if (!section) {
+    } else if (!section && page !== 'index') {
       window.scrollTo(0, 0)
     }
   }, [page, section])
@@ -162,9 +166,9 @@ function App() {
   }, [menuOpen])
 
   return (
-    <div className="site-shell">
+    <div className={`site-shell ${page !== 'work' ? 'monochrome-shell' : ''}`}>
       <a className="skip-link" href="#main-content">Skip to content</a>
-      {page !== 'work' && <header className={`site-header ${page === 'home' ? 'home-header' : ''}`}>
+      {page !== 'work' && page !== 'index' && <header className={`site-header ${page === 'home' ? 'home-header' : ''}`}>
         <a className="wordmark" href="/" aria-label="Ali Hamoudi, home">
           <span className="wordmark-mark">AH</span>
           <span className="wordmark-copy">
@@ -174,12 +178,12 @@ function App() {
         </a>
         {page === 'home' ? (
           <nav className="header-contacts home-contacts" aria-label="Contact and profile links">
-            <a href="https://www.linkedin.com/in/ali-hamoudi/" target="_blank" rel="noreferrer"><span>01</span> LinkedIn</a>
-            <a href="https://github.com/alitcs" target="_blank" rel="noreferrer"><span>02</span> GitHub</a>
-            <a href="mailto:alihamoudiu18@gmail.com?subject=Let%E2%80%99s%20schedule%20a%20call"><span>03</span> Phone<br />Request a call</a>
+            <a href="/index#work-gallery"><span>01</span> Selected work</a>
+            <a href="/note"><span>02</span> Start a project</a>
+            <a href="/experience"><span>03</span> Experience</a>
             <a href="/AliHamoudi.pdf" download><span>04</span> Resume</a>
             <a href="mailto:alihamoudiu18@gmail.com"><span>05</span> Email</a>
-            <a href="/index"><span>06</span> Computer Science<br />Toronto, Canada</a>
+            <a href="/experience"><span>06</span> Ali Hamoudi<br />Software engineer</a>
           </nav>
         ) : (
           <nav className="header-contacts" aria-label="Contact links">
@@ -235,7 +239,7 @@ function App() {
         {page === 'extracurricular' && <ExtracurricularPage />}
       </main>
 
-      {page !== 'home' && page !== 'note' && page !== 'work' && (
+      {page !== 'home' && page !== 'note' && page !== 'work' && page !== 'index' && (
         <footer className="site-footer section-wrap">
           <a className="footer-mark" href="/">AH<span>✳</span></a>
           <span>Designed &amp; built with care.</span>
@@ -257,10 +261,14 @@ function HomePage() {
         <div className="hero-blur" aria-hidden="true">
           <img src="/images/hero-flower.png" alt="" />
         </div>
-        <a className="hero-cta" href="/note">
-          <span>Want to build<br />something</span>
+        <a className="hero-cta" href="/index#work-gallery">
+          <span>See my work</span>
           <span className="hero-cta-arrow" aria-hidden="true">→</span>
         </a>
+        <div className="hero-audience-links" aria-label="Ways to work together">
+          <a href="/note">Have a project? <span>Let’s talk ↗</span></a>
+          <a href="/experience">Hiring? <span>Experience & résumé ↗</span></a>
+        </div>
         <div className="hero-image-frame" aria-hidden="true">
           <img src="/images/hero-flower.png" alt="" />
           <span className="hero-frame-cross">+</span>
@@ -842,33 +850,7 @@ function ExtracurricularPage() {
 }
 
 function HomeWorkSection() {
-  return (
-    <section className="selected-work section-wrap" id="selected-work" aria-labelledby="selected-work-title">
-      <div className="work-index-heading">
-        <div>
-          <p className="section-kicker">THE INDEX <span>/ 01—{String(workItems.length).padStart(2, '0')}</span></p>
-          <h2 id="selected-work-title">Choose a world<br /><em>to step into.</em></h2>
-        </div>
-        <p>Every project has its own space. Select a frame to explore the work.</p>
-      </div>
-      <div className="work-index">
-        {workItems.map((work, index) => (
-          <a className="work-index-card" href={`/work/${work.slug}`} key={work.slug}>
-            <div className="work-index-image">
-              <img src={work.image} alt="" loading="lazy" />
-              <span className="work-index-number">/{String(index + 1).padStart(2, '0')}</span>
-              <span className="work-index-arrow" aria-hidden="true">↗</span>
-            </div>
-            <div className="work-index-copy">
-              <span>{work.category}</span>
-              <h3>{work.title}</h3>
-              <span aria-hidden="true">↗</span>
-            </div>
-          </a>
-        ))}
-      </div>
-    </section>
-  )
+  return <WorkShowcase items={workItems} />
 }
 
 function WorkDetailPage({ item }: { item?: WorkItem }) {

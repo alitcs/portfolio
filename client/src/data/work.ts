@@ -1,0 +1,295 @@
+export type WorkItem = {
+  slug: string
+  title: string
+  category: string
+  summary: string
+  impact: string
+  technical: string
+  image: string
+  previewUrl?: string
+  tags: readonly string[]
+  links: readonly {
+    label: string
+    href: string
+  }[]
+  highlights?: readonly string[]
+  dates?: string
+  company?: string
+}
+export function slugify(value: string) {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+}
+const projectEntries = [
+  {
+    title: 'Digital Duel',
+    impact: 'Gives two players a fast-paced game to play together.',
+    technical: 'C, SDL2, custom physics, browser UI',
+    type: 'Game project',
+    summary: 'Built a local two-player top-down shooter in C and SDL2, then brought Digital Duel online with a browser-based game UI, hand-drawn art, keyboard and touch controls, and custom-coded physics.',
+    tags: ['C', 'SDL2', 'Web UI', 'Game dev'],
+    imageLabel: 'Digital Duel image',
+    image: '/item-images/digital-duel.png',
+    hoverImage: '/item-images/digital-duel-hover.png',
+    previewUrl: 'https://digitalduel.netlify.app/',
+    links: [
+      { label: 'Visit website', href: 'https://digitalduel.netlify.app/' },
+      { label: 'View source', href: 'https://github.com/alitcs/Digital-Duel' },
+    ],
+  },
+  {
+    title: 'Robotic Arm Control System with Web UI',
+    impact: 'Makes robotic arm movement easier to monitor and control.',
+    technical: 'Python, PyGame, JavaScript, WebSockets',
+    type: 'Systems project',
+    summary: 'Connected Python keyboard controls to a browser dashboard over WebSockets, with six live motor gauges, packet history, and reconnect handling.',
+    tags: ['Python', 'WebSocket', 'UI'],
+    imageLabel: 'Robotic Arm image',
+    image: '/item-images/roboticarm.png',
+    hoverImage: '/item-images/roboticarm-hover.png',
+    previewUrl: 'https://roboticarmcontrol.netlify.app/',
+    links: [
+      { label: 'Visit website', href: 'https://roboticarmcontrol.netlify.app/' },
+      { label: 'View source', href: 'https://github.com/alitcs/Robotic-Arm-UI' },
+    ],
+  },
+  {
+    title: 'Secret Santa',
+    impact: 'Takes the manual work out of organizing a Secret Santa.',
+    technical: 'Bash, Linux, shuf, email automation',
+    type: 'Web app & automation',
+    summary: 'Automated participant registration, randomized no-self-match assignments, personalized email generation, and delivery from a Linux command line.',
+    tags: ['Web app', 'Bash', 'Linux', 'Automation'],
+    imageLabel: 'Secret Santa image',
+    image: '/item-images/secret-santa.png',
+    hoverImage: '/item-images/secret-santa-hover.png',
+    previewUrl: 'https://secretsantash.netlify.app/',
+    links: [
+      { label: 'Visit website', href: 'https://secretsantash.netlify.app/' },
+      { label: 'View source', href: 'https://github.com/alitcs/Secret-Santa' },
+    ],
+  },
+] as const
+const experienceEntries = [
+  {
+    company: 'Ontario Government — GovTechON',
+    impact: 'Helps public servants access a more reliable and secure intranet.',
+    technical: 'Go, Nuxt, Vue, PHP, WordPress, AWS S3, Redis, Kubernetes',
+    dates: 'May 2026 — Present',
+    title: 'Full-Stack Software Engineer',
+    summary: 'Deliver full-stack features and modernization for an Ontario Public Service intranet and media platform serving tens of thousands of employees. Work spans backend services, web applications, and content systems, including cloud-storage migration, performance and reliability improvements, and security hardening.',
+    highlights: [
+      'Modernized Go REST services and consolidated authentication and authorization in the API.',
+      'Decoupled media storage and migrated the service from MinIO to the AWS S3 SDK.',
+      'Resolved Redis performance and distributed coordination issues across API and CMS workloads.',
+      'Hardened media access, comment permissions, and upload validation across WordPress paths.',
+    ],
+    image: '/item-images/government-base.png',
+    note: 'Internal Ontario Public Service platform; not publicly accessible.',
+  },
+  {
+    company: 'Vironix AI',
+    impact: 'Helps customers turn video into useful insights.',
+    technical: 'React, TypeScript, Node.js, Firebase, Google Cloud, Stripe',
+    dates: 'Sep 2025 — Present',
+    title: 'Founding Software Engineer / Technical Co-Founder',
+    summary: 'Co-built and operate a customer-facing AI video analytics product as one of two engineers, sharing ownership across the frontend, backend, video-processing pipeline, credit and billing systems, and production safeguards. Interviewed 50+ engineering candidates and took an active role in growing the founding team.',
+    highlights: [
+      'Built an asynchronous video-analysis pipeline with retries, idempotency, and failure handling.',
+      'Developed credit usage, billing, reconciliation, and refund flows across the product.',
+      'Integrated AI and media services while adding authentication, validation, and rate limits.',
+      'Interviewed 50+ engineering candidates and helped grow the founding team.',
+    ],
+    image: '/item-images/vironix-hover.png',
+    previewUrl: 'https://vironixai.net',
+    links: [{ label: 'Visit Vironix AI', href: 'https://vironixai.net/' }],
+  },
+] as const
+const freelanceEntries = [
+  {
+    title: 'Artificial Intelligence Real Estate Scraper & Filter',
+    impact: 'Helps renters find genuine two-bedroom apartments faster.',
+    technical: 'Python, Selenium, OpenAI API, JSON',
+    type: 'Automation service',
+    summary: 'Created a paid Selenium and OpenAI tool that classifies apartment descriptions, filters for genuine two-bedroom listings, and saves results between runs.',
+    tags: ['Python', 'AI', 'Automation'],
+    imageLabel: 'Apartment filter image',
+    image: '/item-images/04_terminal_expanded.png',
+    hoverImage: '/item-images/apartment-hover.png',
+    links: [{ label: 'View project', href: 'https://github.com/alitcs/Apartment-Filter' }],
+  },
+  {
+    title: 'Course Availability Notifier',
+    impact: 'Alerts students when a seat opens in a desired course.',
+    technical: 'Python, Selenium, Chrome profiles, SMS',
+    type: 'Automation tool',
+    summary: 'Customized Selenium automation for students to monitor course-registration portals, preserve login sessions, and send SMS alerts when seats opened.',
+    tags: ['Python', 'Selenium', 'SMS'],
+    imageLabel: 'Course Availability image',
+    image: '/item-images/03_phone_notification_expanded.png',
+    hoverImage: '/item-images/course-hover.png',
+    links: [{ label: 'View project', href: 'https://github.com/alitcs/Course-Availability-Notifier' }],
+  },
+  {
+    title: 'Interior Studio Website',
+    impact: 'Helps clients explore design work and enquire in English or Persian.',
+    technical: 'Responsive web UI, bilingual content, interactive galleries',
+    type: 'Business website',
+    summary: 'Designed and built an interior design website with interactive before-and-after project galleries, English and Persian language options, and a project inquiry form.',
+    tags: ['Web design', 'Responsive UI', 'Multilingual'],
+    imageLabel: 'Interior Studio website image',
+    image: '/item-images/interiordesignr.png',
+    hoverImage: '/item-images/interiordesignr-hover.png',
+    previewUrl: 'https://interiordesignr.netlify.app/',
+    links: [{ label: 'Visit website', href: 'https://interiordesignr.netlify.app/' }],
+  },
+  {
+    title: 'GetMyPortfolio',
+    impact: 'Helps prospective clients discover and enquire about portfolio services.',
+    technical: 'Responsive web design, inquiry workflow',
+    type: 'Portfolio service website',
+    summary: 'Designed and built a website for a custom portfolio service, explaining the design and delivery process and collecting prospective customer inquiries.',
+    tags: ['Web design', 'Responsive UI', 'Lead generation'],
+    imageLabel: 'GetMyPortfolio website image',
+    image: '/item-images/99portfolio.png',
+    hoverImage: '/item-images/99portfolio-hover.png',
+    previewUrl: 'https://getmyportfolio.com/',
+    links: [{ label: 'Visit website', href: 'https://getmyportfolio.com/' }],
+  },
+  {
+    title: 'Little Genius Island Website & Booking System',
+    impact: 'Helps families request quotes and book services.',
+    technical: 'React, TypeScript, HTML, CSS',
+    type: 'Client website',
+    summary: 'Built a responsive multi-page client website with a booking and quote-request workflow to support customer acquisition and simplify inquiry management.',
+    tags: ['HTML5', 'CSS3', 'TypeScript', 'React'],
+    imageLabel: 'Little Genius Island website image',
+    image: '/item-images/little-genius.png',
+    hoverImage: '/item-images/little-genius-hover.png',
+    previewUrl: 'https://littlegeniusisland.ca/',
+    links: [{ label: 'Visit website', href: 'https://littlegeniusisland.ca/' }],
+  },
+  {
+    title: 'JTC Property Services Website & Booking System',
+    impact: 'Helps customers find services and request property maintenance quotes.',
+    technical: 'HTML, CSS, responsive navigation, email forms',
+    type: 'Client website',
+    summary: 'Built a responsive multi-page site for a GTA property-maintenance company, including service areas, a real-work gallery, and an emailed quote-request form.',
+    tags: ['HTML', 'CSS', 'Freelance'],
+    imageLabel: 'JTC website image',
+    image: '/item-images/jtc.png',
+    hoverImage: '/item-images/jtc-hover.png',
+    previewUrl: 'https://majestic-youtiao-4bc24e.netlify.app/',
+    links: [{ label: 'Visit website', href: 'https://majestic-youtiao-4bc24e.netlify.app/' }],
+  },
+  {
+    title: 'Tutoring',
+    impact: 'Helps students build confidence in math, science, English and programming.',
+    technical: 'Individualized lessons, programming, mentorship',
+    type: 'Freelance & tutoring organizations',
+    summary: 'Tutored students in Grades 3–12 in math, English, programming, functions, calculus, and physics, adapting lessons to each student.',
+    tags: ['Tutoring', 'Mentorship', 'Communication'],
+    imageLabel: 'Tutoring image',
+    image: '/item-images/01_hand_with_pencil_expanded.png',
+    hoverImage: '/item-images/tutor.png',
+    cardLink: false,
+    links: [
+      { label: 'Little Genius Island', href: 'https://littlegeniusisland.ca' },
+      { label: 'Best Brains', href: 'https://bestbrains.com' },
+    ],
+  },
+] as const
+const extracurricularEntries = [
+  {
+    title: 'Connect OPS',
+    impact: 'Explores how public servants could find people and knowledge across teams.',
+    technical: 'React, TypeScript, Node.js, Express, Three.js, mock AI',
+    type: 'OGT Summer 2026 hackathon',
+    summary: 'Co-built a full-stack, governance-first knowledge and people-discovery prototype for the Ontario Public Service. The team placed 3rd; the live demo uses mock data and a mock AI service.',
+    tags: ['React', 'TypeScript', 'Express', 'Three.js', 'AI prototype'],
+    imageLabel: 'Connect OPS image',
+    image: '/item-images/ops.png',
+    previewUrl: 'https://connectops.netlify.app/',
+    links: [{ label: 'View live demo', href: 'https://connectops.netlify.app' }],
+  },
+  {
+    title: 'T.A.S.C. Website Development',
+    impact: 'Gives the autonomous systems team a place to share its work.',
+    technical: 'React, TypeScript, responsive UI, deployment',
+    type: 'Toronto Autonomous Systems Collective',
+    summary: 'Designed and developed the organization’s React and TypeScript website, translating team requirements into a responsive experience and maintaining the deployed site.',
+    tags: ['React', 'TypeScript', 'Responsive UI', 'Deployment'],
+    imageLabel: 'T.A.S.C. website image',
+    image: '/item-images/tasc.png',
+    hoverImage: '/item-images/tasc-hover.png',
+    previewUrl: 'https://tasctmu.com/',
+    links: [{ label: 'Visit T.A.S.C.', href: 'https://tasctmu.com' }],
+  },
+  {
+    title: 'Under The Tree Charity',
+    impact: 'Raised over $1,000 to help distribute meals, clothing and blankets.',
+    technical: 'Fundraising, social media, community coordination',
+    type: 'Community initiative',
+    summary: 'Founded a winter community initiative, raised over $1,000, and coordinated distribution of hot meals, warm clothing, blankets, and winter supplies.',
+    tags: ['Fundraising', 'Community outreach', 'Organization'],
+    imageLabel: 'Under The Tree Charity image',
+    image: '/item-images/02_christmas_tree_expanded.png',
+    hoverImage: '/item-images/underthetree.png',
+    previewUrl: '',
+    links: [{ label: '', href: '' }],
+  },
+] as const
+export const workItems: WorkItem[] = [
+  ...projectEntries.map((entry) => ({
+    slug: slugify(entry.title),
+    title: entry.title,
+    category: 'Projects',
+    summary: entry.summary,
+    impact: entry.impact,
+    technical: entry.technical,
+    image: entry.image,
+    previewUrl: entry.previewUrl,
+    tags: entry.tags,
+    links: entry.links,
+  })),
+  ...experienceEntries.map((entry) => ({
+    slug: slugify(entry.company),
+    title: entry.title,
+    category: 'Experience',
+    company: entry.company,
+    dates: entry.dates,
+    summary: entry.summary,
+    impact: entry.impact,
+    technical: entry.technical,
+    image: entry.image,
+    previewUrl: 'previewUrl' in entry ? entry.previewUrl : undefined,
+    tags: entry.company.includes('Government')
+      ? ['Go', 'AWS S3', 'Redis', 'Nuxt', 'Vue', 'WordPress']
+      : ['React', 'TypeScript', 'Node.js', 'AI', 'Video'],
+    links: 'links' in entry ? entry.links : [],
+    highlights: entry.highlights,
+  })),
+  ...freelanceEntries.map((entry) => ({
+    slug: slugify(entry.title),
+    title: entry.title,
+    category: 'Freelance',
+    summary: entry.summary,
+    impact: entry.impact,
+    technical: entry.technical,
+    image: entry.image,
+    previewUrl: 'previewUrl' in entry ? entry.previewUrl : undefined,
+    tags: entry.tags,
+    links: entry.links,
+  })),
+  ...extracurricularEntries.map((entry) => ({
+    slug: slugify(entry.title),
+    title: entry.title,
+    category: 'Community & extracurricular',
+    summary: entry.summary,
+    impact: entry.impact,
+    technical: entry.technical,
+    image: entry.image,
+    previewUrl: entry.previewUrl || undefined,
+    tags: entry.tags,
+    links: entry.links,
+  })),
+]
