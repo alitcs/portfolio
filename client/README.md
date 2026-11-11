@@ -14,6 +14,7 @@ npm run lint
 ## Work previews
 
 - The landing page fits the viewport. Its work links lead to the separate `/index` gallery.
+- The landing and work-page blurred areas have a static film-grain texture; focused previews and interface text remain untextured.
 - Work pages embed each public website at a reduced scale behind a blurred backdrop. The focused rectangle expands on hover or keyboard focus and links to the site. Some external sites may prevent embedding.
 - Items without a public website use their supplied artwork, fitted within the viewport over a blurred background; their focus rectangle links to a GitHub repository when one exists. The apartment and course interfaces are layered from the original artwork above the focus border. Tutoring and government use white backdrops, and the charity artwork uses a matching blue fill.
 - Each work page pairs the item title with concise real-world impact and technical details sourced from the experience files.
