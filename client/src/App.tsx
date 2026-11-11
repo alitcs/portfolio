@@ -1,10 +1,41 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react'
 import './App.css'
 
-type Page = 'home' | 'experience' | 'projects' | 'freelance' | 'extracurricular' | 'note'
+type Page = 'home' | 'index' | 'experience' | 'projects' | 'freelance' | 'extracurricular' | 'note' | 'work'
+type WorkItem = {
+  slug: string
+  title: string
+  category: string
+  summary: string
+  impact: string
+  technical: string
+  image: string
+  previewUrl?: string
+  tags: readonly string[]
+  links: readonly { label: string; href: string }[]
+  highlights?: readonly string[]
+  dates?: string
+  company?: string
+}
+
+type BlobOverlay = {
+  canvas: HTMLCanvasElement
+  pause: () => void
+  resume: () => void
+  destroy: () => void
+}
+
+declare global {
+  interface Window {
+    BlobOverlay?: {
+      create: (target: HTMLElement, options: { count: number; speed: number; zIndex: number }) => BlobOverlay
+    }
+  }
+}
 
 const pages: { id: Page; label: string }[] = [
   { id: 'home', label: 'Home' },
+  { id: 'index', label: 'Selected work' },
   { id: 'experience', label: 'Experience' },
   { id: 'freelance', label: 'Freelance' },
   { id: 'projects', label: 'Projects' },
@@ -14,18 +45,95 @@ const pages: { id: Page; label: string }[] = [
 function getPage(): Page {
   const route = window.location.pathname.replace(/^\/+|\/+$/g, '')
   if (route === '' || route === 'home') return 'home'
+  if (route === 'index') return 'index'
+  if (route.startsWith('work/')) return 'work'
   if (route === 'note' || pages.some((page) => page.id === route)) return route as Page
   return 'home'
 }
 
+function getWorkSlug() {
+  return window.location.pathname.replace(/^\/+|\/+$/g, '').split('/')[1] ?? ''
+}
+
+function slugify(value: string) {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+}
+
 function App() {
   const [page, setPage] = useState<Page>(getPage)
+  const [workSlug, setWorkSlug] = useState(getWorkSlug)
   const [section, setSection] = useState(() => window.location.hash.slice(1))
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  useEffect(() => {
+    const createOverlay = window.BlobOverlay?.create
+    if (!createOverlay) {
+      console.error('The portfolio tracking overlay did not load.')
+      return
+    }
+
+    const overlay = createOverlay(document.body, {
+      count: 88,
+      speed: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 0.7,
+      zIndex: 35,
+    })
+    overlay.canvas.style.opacity = page === 'work' ? '0.72' : '0.65'
+    overlay.canvas.style.mixBlendMode = page === 'work' ? 'screen' : 'multiply'
+    if (page !== 'work') overlay.canvas.style.filter = 'brightness(0)'
+
+    let maskFrame = 0
+    const updateMask = () => {
+      maskFrame = 0
+      const elements = document.querySelectorAll(
+        'h1, h2, h3, p, label, input, textarea, button, .header-contacts a, .main-nav, .hero-cta, .detail-step-link',
+      )
+      const masks = Array.from(elements).flatMap((element) => {
+        const bounds = element.getBoundingClientRect()
+        if (!bounds.width || !bounds.height || bounds.bottom < 0 || bounds.top > window.innerHeight || bounds.right < 0 || bounds.left > window.innerWidth) return []
+        const x = bounds.left + bounds.width / 2
+        const y = bounds.top + bounds.height / 2
+        const radiusX = bounds.width / 2 + 20
+        const radiusY = bounds.height / 2 + 16
+        return [`radial-gradient(ellipse ${radiusX}px ${radiusY}px at ${x}px ${y}px, rgba(0,0,0,.3) 0%, rgba(0,0,0,.3) 65%, #000 100%)`]
+      })
+      overlay.canvas.style.maskImage = masks.join(', ')
+      overlay.canvas.style.maskComposite = masks.map(() => 'intersect').join(', ')
+    }
+    const scheduleMask = () => {
+      if (!maskFrame) maskFrame = window.requestAnimationFrame(updateMask)
+    }
+    updateMask()
+    window.addEventListener('resize', scheduleMask)
+    window.addEventListener('scroll', scheduleMask, { passive: true })
+    const main = document.getElementById('main-content')
+    const contentObserver = new MutationObserver(scheduleMask)
+    if (main) contentObserver.observe(main, { childList: true, subtree: true, characterData: true })
+
+    const syncVisibility = () => {
+      if (document.hidden) overlay.pause()
+      else {
+        overlay.resume()
+        scheduleMask()
+      }
+    }
+    document.addEventListener('visibilitychange', syncVisibility)
+
+    return () => {
+      document.removeEventListener('visibilitychange', syncVisibility)
+      window.removeEventListener('resize', scheduleMask)
+      window.removeEventListener('scroll', scheduleMask)
+      contentObserver.disconnect()
+      window.cancelAnimationFrame(maskFrame)
+      overlay.destroy()
+    }
+  }, [page, workSlug, menuOpen])
 
   useEffect(() => {
     const updateLocation = () => {
       setPage(getPage())
+      setWorkSlug(getWorkSlug())
       setSection(window.location.hash.slice(1))
+      setMenuOpen(false)
     }
     window.addEventListener('popstate', updateLocation)
     window.addEventListener('hashchange', updateLocation)
@@ -43,47 +151,82 @@ function App() {
     }
   }, [page, section])
 
+  useEffect(() => {
+    if (!menuOpen) return
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMenuOpen(false)
+    }
+    window.addEventListener('keydown', closeOnEscape)
+    return () => window.removeEventListener('keydown', closeOnEscape)
+  }, [menuOpen])
+
   return (
     <div className="site-shell">
-      <header className="site-header">
+      <a className="skip-link" href="#main-content">Skip to content</a>
+      {page !== 'work' && <header className={`site-header ${page === 'home' ? 'home-header' : ''}`}>
         <a className="wordmark" href="/" aria-label="Ali Hamoudi, home">
           <span className="wordmark-mark">AH</span>
           <span className="wordmark-copy">
             <strong>Ali Hamoudi</strong>
-            <span>Software engineer</span>
+            <span>Toronto, Canada</span>
           </span>
         </a>
-        {page === 'note' ? (
-          <a className="note-header-back" href="/">
-            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8 4 2.5 10 8 16M3 10h14" /></svg>
-            <span>Back to home</span>
-          </a>
+        {page === 'home' ? (
+          <nav className="header-contacts home-contacts" aria-label="Contact and profile links">
+            <a href="https://www.linkedin.com/in/ali-hamoudi/" target="_blank" rel="noreferrer"><span>01</span> LinkedIn</a>
+            <a href="https://github.com/alitcs" target="_blank" rel="noreferrer"><span>02</span> GitHub</a>
+            <a href="mailto:alihamoudiu18@gmail.com?subject=Let%E2%80%99s%20schedule%20a%20call"><span>03</span> Phone<br />Request a call</a>
+            <a href="/AliHamoudi.pdf" download><span>04</span> Resume</a>
+            <a href="mailto:alihamoudiu18@gmail.com"><span>05</span> Email</a>
+            <a href="/index"><span>06</span> Computer Science<br />Toronto, Canada</a>
+          </nav>
         ) : (
-          <>
-            <nav className="main-nav" aria-label="Main navigation">
-              {pages.map((item) => (
-                <a
-                  className={page === item.id ? 'active' : undefined}
-                  aria-current={page === item.id ? 'page' : undefined}
-                  href={item.id === 'home' ? '/' : `/${item.id}`}
-                  key={item.id}
-                >
-                  {item.label}
-                </a>
-              ))}
-            </nav>
-            <a className="resume-link" href="/AliHamoudi.pdf" download>
-              <svg viewBox="0 0 20 20" aria-hidden="true">
-                <path d="M10 2.75v9m0 0 3.25-3.25M10 11.75 6.75 8.5M4 13.5v2.75h12V13.5" />
-              </svg>
-              <span>Resume</span>
-            </a>
-          </>
+          <nav className="header-contacts" aria-label="Contact links">
+            <a href="https://www.linkedin.com/in/ali-hamoudi/" target="_blank" rel="noreferrer"><span>01</span> LinkedIn</a>
+            <a href="https://github.com/alitcs" target="_blank" rel="noreferrer"><span>02</span> GitHub</a>
+            <a href="mailto:alihamoudiu18@gmail.com"><span>03</span> Email</a>
+            <a href="/AliHamoudi.pdf" download><span>04</span> Resume</a>
+          </nav>
         )}
-      </header>
+        <button
+          className={`menu-toggle ${menuOpen ? 'is-open' : ''}`}
+          type="button"
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={menuOpen}
+          aria-controls="site-menu"
+          onClick={() => setMenuOpen((open) => !open)}
+        >
+          <span>{menuOpen ? 'Close' : 'Menu'}</span>
+          <span className="menu-toggle-icon" aria-hidden="true">+</span>
+        </button>
+        {menuOpen && (
+          <nav className="main-nav" id="site-menu" aria-label="Main navigation">
+            <span className="menu-kicker">Navigate / 0{pages.length}</span>
+            {pages.map((item, index) => (
+              <a
+                className={page === item.id ? 'active' : undefined}
+                aria-current={page === item.id ? 'page' : undefined}
+                href={item.id === 'home' ? '/' : `/${item.id}`}
+                key={item.id}
+                onClick={() => setMenuOpen(false)}
+              >
+                <span>0{index + 1}</span>{item.label}<span className="menu-link-arrow" aria-hidden="true">↗</span>
+              </a>
+            ))}
+            <div className="menu-contacts">
+              <a href="https://www.linkedin.com/in/ali-hamoudi/" target="_blank" rel="noreferrer">LinkedIn ↗</a>
+              <a href="https://github.com/alitcs" target="_blank" rel="noreferrer">GitHub ↗</a>
+              <a href="mailto:alihamoudiu18@gmail.com">Email ↗</a>
+              <a href="/AliHamoudi.pdf" download>Resume ↓</a>
+            </div>
+          </nav>
+        )}
+      </header>}
 
-      <main key={page} className="page-main">
+      <main id="main-content" key={`${page}-${workSlug}`} className={`page-main ${page === 'work' ? 'detail-main' : ''} ${page === 'home' ? 'home-main' : ''}`}>
         {page === 'home' && <HomePage />}
+        {page === 'index' && <HomeWorkSection />}
+        {page === 'work' && <WorkDetailPage item={workItems.find((item) => item.slug === workSlug)} />}
         {page === 'note' && <NotePage />}
         {page === 'projects' && <ProjectsPage />}
         {page === 'experience' && <ExperiencePage />}
@@ -91,7 +234,7 @@ function App() {
         {page === 'extracurricular' && <ExtracurricularPage />}
       </main>
 
-      {page !== 'note' && (
+      {page !== 'home' && page !== 'note' && page !== 'work' && (
         <footer className="site-footer section-wrap">
           <a className="footer-mark" href="/">AH<span>✳</span></a>
           <span>Designed &amp; built with care.</span>
@@ -108,37 +251,21 @@ function App() {
 function HomePage() {
   return (
     <>
-      <section className="intro section-wrap">
-        <div className="intro-copy">
-          <p className="eyebrow"><span className="status-dot" /> Open to opportunities <span className="eyebrow-divider">/</span> Toronto </p>
-          <h1>Thoughtful software.<br /><em>Made for people.</em></h1>
-          <p className="intro-description">Hi, I’m Ali, a software engineer who turns complex ideas into clear, useful digital experiences. I care about the details, from the first sketch to the final interaction.</p>
-          <div className="intro-actions">
-            <a className="button button-primary" href="/note">Send me a note <span aria-hidden="true">↗︎</span></a>
-          </div>
-          <div className="intro-socials" aria-label="Contact links">
-            <div className="intro-social-links">
-              <a href="https://www.linkedin.com/in/ali-hamoudi/" target="_blank" rel="noreferrer">LinkedIn</a>
-              <a href="https://github.com/alitcs" target="_blank" rel="noreferrer">GitHub</a>
-            </div>
-            <span className="intro-email-link">alihamoudiu18@gmail.com</span>
-          </div>
+      <section className="home-hero" aria-label="Portfolio introduction">
+        <h1 className="visually-hidden">Ali Hamoudi — Toronto Metropolitan University computer science student</h1>
+        <div className="hero-blur" aria-hidden="true" />
+        <a className="hero-cta" href="/note">
+          <span>Want to build<br />something</span>
+          <span className="hero-cta-arrow" aria-hidden="true">→</span>
+        </a>
+        <div className="hero-image-frame" aria-hidden="true">
+          <span className="frame-index">/01</span>
         </div>
-        <div className="hero-art" aria-label="Decorative illustration with the initials AH" role="img">
-          <div className="art-caption"><span>INDEPENDENT BY DESIGN</span><span>01 / 04</span></div>
-          <div className="orbit orbit-one" />
-          <div className="orbit orbit-two" />
-          <div className="orbit orbit-three" />
-          <span className="orbit-dot dot-one" />
-          <span className="orbit-dot dot-two" />
-          <span className="orbit-dot dot-three" />
-          <span className="hero-monogram">AH</span>
-          <span className="art-side-label">BUILD WITH INTENTION</span>
-          <div className="art-foot"><span>DESIGN</span><span>ENGINEERING</span><span>✳</span></div>
-        </div>
+        <a className="hero-plus hero-plus-bottom" href="/index" aria-label="Explore selected work">+</a>
+        <a className="hero-scroll" href="/index" aria-label="Explore selected work">
+          <span className="hero-tick is-active" /><span className="hero-tick" /><span className="hero-tick" /><span className="hero-tick" /><span className="hero-tick" />
+        </a>
       </section>
-      <MetricsSection />
-      <EducationSection />
     </>
   )
 }
@@ -248,11 +375,14 @@ function NotePage() {
 const projectEntries = [
   {
     title: 'Digital Duel',
+    impact: 'Gives two players a fast-paced game to play together.',
+    technical: 'C, SDL2, custom physics, browser UI',
     type: 'Game project',
     summary: 'Built a local two-player top-down shooter in C and SDL2, then brought Digital Duel online with a browser-based game UI, hand-drawn art, keyboard and touch controls, and custom-coded physics.',
     tags: ['C', 'SDL2', 'Web UI', 'Game dev'],
     imageLabel: 'Digital Duel image',
-    image: '/images/digital-duel.svg',
+    image: '/item-images/digital-duel.png',
+    hoverImage: '/item-images/digital-duel-hover.png',
     previewUrl: 'https://digitalduel.netlify.app/',
     links: [
       { label: 'Visit website', href: 'https://digitalduel.netlify.app/' },
@@ -261,11 +391,14 @@ const projectEntries = [
   },
   {
     title: 'Robotic Arm Control System with Web UI',
+    impact: 'Makes robotic arm movement easier to monitor and control.',
+    technical: 'Python, PyGame, JavaScript, WebSockets',
     type: 'Systems project',
     summary: 'Connected Python keyboard controls to a browser dashboard over WebSockets, with six live motor gauges, packet history, and reconnect handling.',
     tags: ['Python', 'WebSocket', 'UI'],
     imageLabel: 'Robotic Arm image',
-    image: '/images/robotic-arm.svg',
+    image: '/item-images/roboticarm.png',
+    hoverImage: '/item-images/roboticarm-hover.png',
     previewUrl: 'https://roboticarmcontrol.netlify.app/',
     links: [
       { label: 'Visit website', href: 'https://roboticarmcontrol.netlify.app/' },
@@ -274,11 +407,14 @@ const projectEntries = [
   },
   {
     title: 'Secret Santa',
+    impact: 'Takes the manual work out of organizing a Secret Santa.',
+    technical: 'Bash, Linux, shuf, email automation',
     type: 'Web app & automation',
     summary: 'Automated participant registration, randomized no-self-match assignments, personalized email generation, and delivery from a Linux command line.',
     tags: ['Web app', 'Bash', 'Linux', 'Automation'],
     imageLabel: 'Secret Santa image',
-    image: '/images/secret-santa.svg',
+    image: '/item-images/secret-santa.png',
+    hoverImage: '/item-images/secret-santa-hover.png',
     previewUrl: 'https://secretsantash.netlify.app/',
     links: [
       { label: 'Visit website', href: 'https://secretsantash.netlify.app/' },
@@ -290,18 +426,34 @@ const projectEntries = [
 const experienceEntries = [
   {
     company: 'Ontario Government — GovTechON',
+    impact: 'Helps public servants access a more reliable and secure intranet.',
+    technical: 'Go, Nuxt, Vue, PHP, WordPress, AWS S3, Redis, Kubernetes',
     dates: 'May 2026 — Present',
     title: 'Full-Stack Software Engineer',
     summary: 'Deliver full-stack features and modernization for an Ontario Public Service intranet and media platform serving tens of thousands of employees. Work spans backend services, web applications, and content systems, including cloud-storage migration, performance and reliability improvements, and security hardening.',
-    image: '/images/govtechon-platform.png',
+    highlights: [
+      'Modernized Go REST services and consolidated authentication and authorization in the API.',
+      'Decoupled media storage and migrated the service from MinIO to the AWS S3 SDK.',
+      'Resolved Redis performance and distributed coordination issues across API and CMS workloads.',
+      'Hardened media access, comment permissions, and upload validation across WordPress paths.',
+    ],
+    image: '/item-images/government-hover.png',
     note: 'Internal Ontario Public Service platform; not publicly accessible.',
   },
   {
     company: 'Vironix AI',
+    impact: 'Helps customers turn video into useful insights.',
+    technical: 'React, TypeScript, Node.js, Firebase, Google Cloud, Stripe',
     dates: 'Sep 2025 — Present',
     title: 'Founding Software Engineer / Technical Co-Founder',
     summary: 'Co-built and operate a customer-facing AI video analytics product as one of two engineers, sharing ownership across the frontend, backend, video-processing pipeline, credit and billing systems, and production safeguards. Interviewed 50+ engineering candidates and took an active role in growing the founding team.',
-    image: '/images/vironix-ai.svg',
+    highlights: [
+      'Built an asynchronous video-analysis pipeline with retries, idempotency, and failure handling.',
+      'Developed credit usage, billing, reconciliation, and refund flows across the product.',
+      'Integrated AI and media services while adding authentication, validation, and rate limits.',
+      'Interviewed 50+ engineering candidates and helped grow the founding team.',
+    ],
+    image: '/item-images/vironix-hover.png',
     previewUrl: 'https://vironixai.net',
     links: [{ label: 'Visit Vironix AI', href: 'https://vironixai.net/' }],
   },
@@ -310,69 +462,90 @@ const experienceEntries = [
 const freelanceEntries = [
     {
     title: 'Artificial Intelligence Real Estate Scraper & Filter',
+    impact: 'Helps renters find genuine two-bedroom apartments faster.',
+    technical: 'Python, Selenium, OpenAI API, JSON',
     type: 'Automation service',
     summary: 'Created a paid Selenium and OpenAI tool that classifies apartment descriptions, filters for genuine two-bedroom listings, and saves results between runs.',
     tags: ['Python', 'AI', 'Automation'],
     imageLabel: 'Apartment filter image',
-    image: '/images/apartment-listing-filter.svg',
+    image: '/item-images/apartment.png',
+    hoverImage: '/item-images/apartment-hover.png',
     links: [{ label: 'View project', href: 'https://github.com/alitcs/Apartment-Filter' }],
   },
   {
     title: 'Course Availability Notifier',
+    impact: 'Alerts students when a seat opens in a desired course.',
+    technical: 'Python, Selenium, Chrome profiles, SMS',
     type: 'Automation tool',
     summary: 'Customized Selenium automation for students to monitor course-registration portals, preserve login sessions, and send SMS alerts when seats opened.',
     tags: ['Python', 'Selenium', 'SMS'],
     imageLabel: 'Course Availability image',
-    image: '/images/course-availability-notifier.svg',
+    image: '/item-images/course-base.png',
+    hoverImage: '/item-images/course-hover.png',
     links: [{ label: 'View project', href: 'https://github.com/alitcs/Course-Availability-Notifier' }],
   },
   {
     title: 'Interior Studio Website',
+    impact: 'Helps clients explore design work and enquire in English or Persian.',
+    technical: 'Responsive web UI, bilingual content, interactive galleries',
     type: 'Business website',
     summary: 'Designed and built an interior design website with interactive before-and-after project galleries, English and Persian language options, and a project inquiry form.',
     tags: ['Web design', 'Responsive UI', 'Multilingual'],
     imageLabel: 'Interior Studio website image',
-    image: '/images/business-booking-site.svg',
+    image: '/item-images/interiordesignr.png',
+    hoverImage: '/item-images/interiordesignr-hover.png',
     previewUrl: 'https://interiordesignr.netlify.app/',
     links: [{ label: 'Visit website', href: 'https://interiordesignr.netlify.app/' }],
   },
   {
     title: 'GetMyPortfolio',
+    impact: 'Helps prospective clients discover and enquire about portfolio services.',
+    technical: 'Responsive web design, inquiry workflow',
     type: 'Portfolio service website',
     summary: 'Designed and built a website for a custom portfolio service, explaining the design and delivery process and collecting prospective customer inquiries.',
     tags: ['Web design', 'Responsive UI', 'Lead generation'],
     imageLabel: 'GetMyPortfolio website image',
-    image: '/images/business-booking-site.svg',
+    image: '/item-images/99portfolio.png',
+    hoverImage: '/item-images/99portfolio-hover.png',
     previewUrl: 'https://getmyportfolio.com/',
     links: [{ label: 'Visit website', href: 'https://getmyportfolio.com/' }],
   },
   {
     title: 'Little Genius Island Website & Booking System',
+    impact: 'Helps families request quotes and book services.',
+    technical: 'React, TypeScript, HTML, CSS',
     type: 'Client website',
     summary: 'Built a responsive multi-page client website with a booking and quote-request workflow to support customer acquisition and simplify inquiry management.',
     tags: ['HTML5', 'CSS3', 'TypeScript', 'React'],
     imageLabel: 'Little Genius Island website image',
-    image: '/images/business-booking-site.svg',
+    image: '/item-images/little-genius.png',
+    hoverImage: '/item-images/little-genius-hover.png',
     previewUrl: 'https://littlegeniusisland.ca/',
     links: [{ label: 'Visit website', href: 'https://littlegeniusisland.ca/' }],
   },
   {
     title: 'JTC Property Services Website & Booking System',
+    impact: 'Helps customers find services and request property maintenance quotes.',
+    technical: 'HTML, CSS, responsive navigation, email forms',
     type: 'Client website',
     summary: 'Built a responsive multi-page site for a GTA property-maintenance company, including service areas, a real-work gallery, and an emailed quote-request form.',
     tags: ['HTML', 'CSS', 'Freelance'],
     imageLabel: 'JTC website image',
-    image: '/images/jtc-property-services.svg',
+    image: '/item-images/jtc.png',
+    hoverImage: '/item-images/jtc-hover.png',
     previewUrl: 'https://majestic-youtiao-4bc24e.netlify.app/',
     links: [{ label: 'Visit website', href: 'https://majestic-youtiao-4bc24e.netlify.app/' }],
   },
   {
     title: 'Tutoring',
+    impact: 'Helps students build confidence in math, science, English and programming.',
+    technical: 'Individualized lessons, programming, mentorship',
     type: 'Freelance & tutoring organizations',
     summary: 'Tutored students in Grades 3–12 in math, English, programming, functions, calculus, and physics, adapting lessons to each student.',
     tags: ['Tutoring', 'Mentorship', 'Communication'],
     imageLabel: 'Tutoring image',
-    image: '/images/tutoring.svg',
+    image: '/item-images/tutor-base.png',
+    hoverImage: '/item-images/tutor.png',
     cardLink: false,
     links: [
       { label: 'Little Genius Island', href: 'https://littlegeniusisland.ca' },
@@ -384,46 +557,99 @@ const freelanceEntries = [
 const extracurricularEntries = [
   {
     title: 'Connect OPS',
+    impact: 'Explores how public servants could find people and knowledge across teams.',
+    technical: 'React, TypeScript, Node.js, Express, Three.js, mock AI',
     type: 'OGT Summer 2026 hackathon',
     summary: 'Co-built a full-stack, governance-first knowledge and people-discovery prototype for the Ontario Public Service. The team placed 3rd; the live demo uses mock data and a mock AI service.',
     tags: ['React', 'TypeScript', 'Express', 'Three.js', 'AI prototype'],
     imageLabel: 'Connect OPS image',
-    image: '/images/connect-ops.svg',
+    image: '/item-images/ops.png',
     previewUrl: 'https://connectops.netlify.app/',
     links: [{ label: 'View live demo', href: 'https://connectops.netlify.app' }],
   },
   {
     title: 'T.A.S.C. Website Development',
+    impact: 'Gives the autonomous systems team a place to share its work.',
+    technical: 'React, TypeScript, responsive UI, deployment',
     type: 'Toronto Autonomous Systems Collective',
     summary: 'Designed and developed the organization’s React and TypeScript website, translating team requirements into a responsive experience and maintaining the deployed site.',
     tags: ['React', 'TypeScript', 'Responsive UI', 'Deployment'],
     imageLabel: 'T.A.S.C. website image',
-    image: '/images/tasctmu.svg',
+    image: '/item-images/tasc.png',
+    hoverImage: '/item-images/tasc-hover.png',
     previewUrl: 'https://tasctmu.com/',
     links: [{ label: 'Visit T.A.S.C.', href: 'https://tasctmu.com' }],
   },
     {
     title: 'Under The Tree Charity',
+    impact: 'Raised over $1,000 to help distribute meals, clothing and blankets.',
+    technical: 'Fundraising, social media, community coordination',
     type: 'Community initiative',
     summary: 'Founded a winter community initiative, raised over $1,000, and coordinated distribution of hot meals, warm clothing, blankets, and winter supplies.',
     tags: ['Fundraising', 'Community outreach', 'Organization'],
     imageLabel: 'Under The Tree Charity image',
-    image: '/images/under-the-tree-charity.svg',
+    image: '/item-images/underthetree-base.png',
+    hoverImage: '/item-images/underthetree.png',
     previewUrl: '',
     links: [{ label: '', href: '' }],
   },
 ] as const
 
-const educationEntries = [
-  {
-    title: 'Toronto Metropolitan University',
-    type: 'Sep 2023 — Present · Toronto, ON',
-    summary: 'Bachelor of Science in Computer Science',
-    tags: ['Co-op', 'Dean’s List'],
-    imageLabel: 'Toronto Metropolitan University image',
-    image: '/images/education.svg',
-  },
-] as const
+const workItems: WorkItem[] = [
+  ...projectEntries.map((entry) => ({
+    slug: slugify(entry.title),
+    title: entry.title,
+    category: 'Projects',
+    summary: entry.summary,
+    impact: entry.impact,
+    technical: entry.technical,
+    image: entry.image,
+    previewUrl: entry.previewUrl,
+    tags: entry.tags,
+    links: entry.links,
+  })),
+  ...experienceEntries.map((entry) => ({
+    slug: slugify(entry.company),
+    title: entry.title,
+    category: 'Experience',
+    company: entry.company,
+    dates: entry.dates,
+    summary: entry.summary,
+    impact: entry.impact,
+    technical: entry.technical,
+    image: entry.image,
+    previewUrl: 'previewUrl' in entry ? entry.previewUrl : undefined,
+    tags: entry.company.includes('Government')
+      ? ['Go', 'AWS S3', 'Redis', 'Nuxt', 'Vue', 'WordPress']
+      : ['React', 'TypeScript', 'Node.js', 'AI', 'Video'],
+    links: 'links' in entry ? entry.links : [],
+    highlights: entry.highlights,
+  })),
+  ...freelanceEntries.map((entry) => ({
+    slug: slugify(entry.title),
+    title: entry.title,
+    category: 'Freelance',
+    summary: entry.summary,
+    impact: entry.impact,
+    technical: entry.technical,
+    image: entry.image,
+    previewUrl: 'previewUrl' in entry ? entry.previewUrl : undefined,
+    tags: entry.tags,
+    links: entry.links,
+  })),
+  ...extracurricularEntries.map((entry) => ({
+    slug: slugify(entry.title),
+    title: entry.title,
+    category: 'Community & extracurricular',
+    summary: entry.summary,
+    impact: entry.impact,
+    technical: entry.technical,
+    image: entry.image,
+    previewUrl: entry.previewUrl || undefined,
+    tags: entry.tags,
+    links: entry.links,
+  })),
+]
 
 function PageHeading({ kicker, title, detail }: { kicker: string; title: string; detail: string }) {
   return (
@@ -435,21 +661,14 @@ function PageHeading({ kicker, title, detail }: { kicker: string; title: string;
   )
 }
 
-function MediaPanel({ src, alt, label, previewUrl }: { src?: string; alt: string; label: string; previewUrl?: string }) {
+function MediaPanel({ src, alt, label, previewUrl, hoverSrc }: { src?: string; alt: string; label: string; previewUrl?: string; hoverSrc?: string }) {
   return (
-    <div className={`media-panel ${previewUrl ? 'live-site-preview' : ''}`}>
-      {previewUrl ? (
-        <iframe
-          src={previewUrl}
-          title={`${alt} live preview`}
-          loading="lazy"
-          sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-          referrerPolicy="strict-origin-when-cross-origin"
-          tabIndex={-1}
-          aria-hidden="true"
-        />
-      ) : src ? (
-        <img src={src} alt={alt} />
+    <div className={`media-panel ${previewUrl ? 'has-live-link' : ''}`}>
+      {src ? (
+        <>
+          <img src={src} alt={alt} />
+          {hoverSrc && <img className="media-hover-image" src={hoverSrc} alt="" aria-hidden="true" />}
+        </>
       ) : (
         <div className="media-placeholder" aria-label={`${label} placeholder`}>
           <span>+ Add image</span>
@@ -468,8 +687,8 @@ function ProjectsPage() {
         <div className="project-grid">
           {projectEntries.map((project, index) => (
             <article className="project-card linked-card" key={project.title}>
-              <CardLink href={project.links[0]?.href} title={project.title} preview={'previewUrl' in project}>
-                <MediaPanel src={project.image} alt={`${project.title} cover`} label={project.imageLabel} previewUrl={'previewUrl' in project ? project.previewUrl : undefined} />
+              <CardLink href={`/work/${slugify(project.title)}`} title={project.title}>
+                <MediaPanel src={project.image} alt={`${project.title} cover`} label={project.imageLabel} previewUrl={'previewUrl' in project ? project.previewUrl : undefined} hoverSrc={'hoverImage' in project ? project.hoverImage : undefined} />
                 <div className="project-info">
                   <div>
                     <span className="project-number">{String(index + 1).padStart(2, '0')} / {project.type.toUpperCase()}</span>
@@ -484,7 +703,6 @@ function ProjectsPage() {
                   ))}
                 </div>
               </CardLink>
-              <EntryLinks links={project.links} />
             </article>
           ))}
         </div>
@@ -504,9 +722,8 @@ function ExperiencePage() {
             <article className={`experience-entry ${'links' in experience ? 'linked-card' : ''}`} key={experience.company}>
               <CardLink
                 className="experience-entry-link"
-                href={'links' in experience ? experience.links[0]?.href : undefined}
+                href={`/work/${slugify(experience.company)}`}
                 title={experience.company}
-                preview={'previewUrl' in experience}
               >
                 <MediaPanel src={experience.image} alt={`${experience.company} cover`} label={`${experience.company} image`} previewUrl={'previewUrl' in experience ? experience.previewUrl : undefined} />
                 <div className="experience-copy">
@@ -514,10 +731,14 @@ function ExperiencePage() {
                   <h3>{experience.title}</h3>
                   <p className="experience-company">{experience.company}</p>
                   <p>{experience.summary}</p>
+                  {'highlights' in experience && (
+                    <ul className="experience-highlights">
+                      {experience.highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}
+                    </ul>
+                  )}
                   {'note' in experience && <p>{experience.note}</p>}
                 </div>
               </CardLink>
-              {'links' in experience && <EntryLinks links={experience.links} />}
             </article>
           ))}
         </div>
@@ -533,14 +754,12 @@ function FreelancePage() {
       <section className="projects-page-content section-wrap">
         <div className="project-grid">
           {freelanceEntries.map((project, index) => {
-            const cardHref = 'links' in project && (!('cardLink' in project) || project.cardLink !== false)
-              ? project.links[0]?.href
-              : undefined
+            const cardHref = `/work/${slugify(project.title)}`
 
             return (
-            <article className={`project-card ${cardHref ? 'linked-card' : ''}`} key={project.title}>
-              <CardLink href={cardHref} title={project.title} preview={'previewUrl' in project}>
-                <MediaPanel src={project.image} alt={`${project.title} cover`} label={project.imageLabel} previewUrl={'previewUrl' in project ? project.previewUrl : undefined} />
+            <article className="project-card linked-card" key={project.title}>
+              <CardLink href={cardHref} title={project.title}>
+                <MediaPanel src={project.image} alt={`${project.title} cover`} label={project.imageLabel} previewUrl={'previewUrl' in project ? project.previewUrl : undefined} hoverSrc={'hoverImage' in project ? project.hoverImage : undefined} />
                 <div className="project-info">
                   <div>
                     <span className="project-number">{String(index + 1).padStart(2, '0')} / {project.type.toUpperCase()}</span>
@@ -555,7 +774,6 @@ function FreelancePage() {
                   ))}
                 </div>
               </CardLink>
-              {'links' in project && <EntryLinks links={project.links} />}
             </article>
             )
           })}
@@ -576,22 +794,10 @@ function CardLink({ href, title, className = 'project-card-main-link', preview =
     <div className={`${className} ${preview && href ? 'live-preview-link' : ''}`}>
       {children}
       {href && (
-        <a className="card-click-overlay" href={href} target="_blank" rel="noreferrer" aria-label={`Open ${title}`}>
-          {preview && <span className="card-link-hint">Visit live site <span aria-hidden="true">↗︎</span></span>}
+        <a className="card-click-overlay" href={href} aria-label={`Explore ${title}`}>
+          {preview && <span className="card-link-hint">Explore project <span aria-hidden="true">↗︎</span></span>}
         </a>
       )}
-    </div>
-  )
-}
-
-function EntryLinks({ links }: { links: readonly { label: string; href: string }[] }) {
-  return (
-    <div className="entry-links">
-      {links.map((link) => (
-        <a href={link.href} key={link.href} target="_blank" rel="noreferrer">
-          {link.label}<span aria-hidden="true"> ↗︎</span>
-        </a>
-      ))}
     </div>
   )
 }
@@ -604,8 +810,8 @@ function ExtracurricularPage() {
         <div className="project-grid">
           {extracurricularEntries.map((entry, index) => (
             <article className="project-card linked-card" key={entry.title}>
-              <CardLink href={entry.links[0]?.href} title={entry.title} preview>
-                <MediaPanel src={entry.image} alt={`${entry.title} cover`} label={entry.imageLabel} previewUrl={entry.previewUrl} />
+              <CardLink href={`/work/${slugify(entry.title)}`} title={entry.title}>
+                <MediaPanel src={entry.image} alt={`${entry.title} cover`} label={entry.imageLabel} previewUrl={entry.previewUrl} hoverSrc={'hoverImage' in entry ? entry.hoverImage : undefined} />
                 <div className="project-info">
                   <div>
                     <span className="project-number">{String(index + 1).padStart(2, '0')} / {entry.type.toUpperCase()}</span>
@@ -618,7 +824,6 @@ function ExtracurricularPage() {
                   {entry.tags.map((tag) => <span key={tag}>{tag}</span>)}
                 </div>
               </CardLink>
-              <EntryLinks links={entry.links} />
             </article>
           ))}
         </div>
@@ -627,51 +832,99 @@ function ExtracurricularPage() {
   )
 }
 
-function MetricsSection() {
-  const metrics = [
-    { value: '3', label: 'Current business partners' },
-    { value: '1', label: 'Hackathon won' },
-    { value: '~ $25,000+', label: 'Revenue generated' },
-    { value: '10+', label: 'Freelance and personal projects' },
-  ]
-
+function HomeWorkSection() {
   return (
-    <section className="home-metrics section-wrap" aria-label="Career metrics">
-      <ul>
-        {metrics.map((metric) => (
-          <li key={metric.label}>
-            <strong>{metric.value}</strong>
-            <span>{metric.label}</span>
-          </li>
+    <section className="selected-work section-wrap" id="selected-work" aria-labelledby="selected-work-title">
+      <div className="work-index-heading">
+        <div>
+          <p className="section-kicker">THE INDEX <span>/ 01—{String(workItems.length).padStart(2, '0')}</span></p>
+          <h2 id="selected-work-title">Choose a world<br /><em>to step into.</em></h2>
+        </div>
+        <p>Every project has its own space. Select a frame to explore the work.</p>
+      </div>
+      <div className="work-index">
+        {workItems.map((work, index) => (
+          <a className="work-index-card" href={`/work/${work.slug}`} key={work.slug}>
+            <div className="work-index-image">
+              <img src={work.image} alt="" loading="lazy" />
+              <span className="work-index-number">/{String(index + 1).padStart(2, '0')}</span>
+              <span className="work-index-arrow" aria-hidden="true">↗</span>
+            </div>
+            <div className="work-index-copy">
+              <span>{work.category}</span>
+              <h3>{work.title}</h3>
+              <span aria-hidden="true">↗</span>
+            </div>
+          </a>
         ))}
-      </ul>
+      </div>
     </section>
   )
 }
 
-function EducationSection() {
+function WorkDetailPage({ item }: { item?: WorkItem }) {
+  if (!item) {
+    return (
+      <section className="work-not-found">
+        <p>404 / This frame is empty</p>
+        <h1>That work could not be found.</h1>
+        <a href="/">Return to the index <span aria-hidden="true">↗</span></a>
+      </section>
+    )
+  }
+
+  const index = workItems.findIndex((entry) => entry.slug === item.slug)
+  const previous = workItems[(index - 1 + workItems.length) % workItems.length]
+  const next = workItems[(index + 1) % workItems.length]
+  const destination = item.previewUrl || item.links.find((link) => link.href.startsWith('https://github.com/'))?.href
+  const destinationLabel = item.previewUrl ? 'website' : 'project'
+
   return (
-    <section id="education" className="home-education section-wrap" aria-labelledby="education-title">
-      <div className="education-section-heading">
-        <p className="section-kicker">EDUCATION</p>
-        <span className="education-heading-note">CURRENT STUDIES</span>
+    <article className={`work-detail work-detail-${item.slug}`} aria-labelledby="work-detail-title">
+      <div className="work-detail-backdrop" aria-hidden="true">
+        {item.previewUrl ? (
+          <iframe src={item.previewUrl} title={`${item.title} preview`} tabIndex={-1} loading="eager" />
+        ) : (
+          <img src={item.image} alt="" />
+        )}
+        <div className="detail-blur detail-blur-top" />
+        <div className="detail-blur detail-blur-bottom" />
+        <div className="detail-blur detail-blur-left" />
+        <div className="detail-blur detail-blur-right" />
+        {(item.slug === 'course-availability-notifier' || item.slug === 'artificial-intelligence-real-estate-scraper-filter') && (
+          <img className="detail-art-peek" src={item.image} alt="" />
+        )}
       </div>
-      <div className="education-feature-list">
-        {educationEntries.map((entry) => (
-          <article className="education-feature" key={entry.title}>
-            <div className="education-feature-copy">
-              <span className="education-date">{entry.type}</span>
-              <h2 id="education-title">{entry.title}</h2>
-              <p className="education-degree">{entry.summary}</p>
-              <div className="education-feature-tags">
-                {entry.tags.map((tag) => <span key={tag}>{tag}</span>)}
-              </div>
-            </div>
-            <MediaPanel src={entry.image} alt={`${entry.title} education illustration`} label={entry.imageLabel} />
-          </article>
-        ))}
+      <header className="work-detail-header">
+        <a href="/index" className="detail-back-link" aria-label="Close and return to selected work"><span aria-hidden="true">×</span></a>
+        <span className="detail-header-index">ALI HAMOUDI <span>/</span> {String(index + 1).padStart(2, '0')} — {String(workItems.length).padStart(2, '0')}</span>
+      </header>
+      {destination ? (
+        <a className="detail-focus" href={destination} target="_blank" rel="noopener noreferrer" aria-label={`Open ${item.title} ${destinationLabel} in a new tab`}>
+          <span className="detail-focus-action">Open <span aria-hidden="true">↗</span></span>
+        </a>
+      ) : (
+        <div className="detail-focus detail-focus-empty" aria-hidden="true" />
+      )}
+      <div className="detail-copy">
+        <div className="detail-copy-row">
+          <span aria-hidden="true">01</span>
+          <h1 id="work-detail-title">{item.title}</h1>
+        </div>
+        <div className="detail-copy-row">
+          <span aria-hidden="true">02</span>
+          <p>{item.impact}</p>
+        </div>
+        <div className="detail-copy-row">
+          <span aria-hidden="true">03</span>
+          <p>{item.technical}</p>
+        </div>
       </div>
-    </section>
+      <footer className="work-detail-footer">
+        <a className="detail-step-link" href={`/work/${previous.slug}`}><span>←</span><span>PREVIOUS<small>{previous.title}</small></span></a>
+        <a className="detail-step-link detail-step-next" href={`/work/${next.slug}`}><span>NEXT<small>{next.title}</small></span><span>→</span></a>
+      </footer>
+    </article>
   )
 }
 
