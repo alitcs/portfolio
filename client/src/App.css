@@ -571,39 +571,84 @@ h1, h2, h3, p { margin-top: 0; }
 }
 
 .work-detail {
-  --focus-left: 9%;
+  --focus-left: 7%;
   --focus-top: 15%;
-  --focus-width: min(28vw, 40svh);
+  --focus-width: min(36vw, 52svh);
   --focus-height: 70%;
   transition: --focus-width .4s ease;
 }
 .work-detail:has(.detail-focus:hover), .work-detail:has(.detail-focus:focus-visible) {
-  --focus-width: 57vw;
+  --focus-width: 56vw;
 }
-.work-detail-backdrop iframe { width: 125%; height: 125%; display: block; border: 0; pointer-events: none; background: #202625; transform: scale(.8); transform-origin: top left; }
+.work-detail-backdrop iframe { width: 153.846%; height: 153.846%; display: block; border: 0; pointer-events: none; background: #202625; transform: scale(.65); transform-origin: top left; }
 .work-detail-backdrop img { width: 100%; height: 100%; top: 0; left: 0; display: block; object-fit: cover; object-position: center; }
+.work-detail-backdrop .detail-artwork-fill { filter: blur(25px) brightness(.65); transform: scale(1.08); }
+.work-detail-backdrop .detail-artwork { object-fit: contain; object-position: 22% 50%; }
 .work-detail-backdrop::after { display: none; }
-.detail-blur { position: absolute; background: #09101088; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
+.detail-blur { position: absolute; background: var(--detail-blur-tint, #09101088); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
 .detail-blur-top { inset: 0 0 auto; height: var(--focus-top); }
 .detail-blur-bottom { inset: calc(var(--focus-top) + var(--focus-height)) 0 0; }
 .detail-blur-left { top: var(--focus-top); left: 0; width: var(--focus-left); height: var(--focus-height); }
 .detail-blur-right { top: var(--focus-top); right: 0; left: calc(var(--focus-left) + var(--focus-width)); height: var(--focus-height); }
-.work-detail-backdrop .detail-art-peek { position: absolute; top: 50%; left: 50%; height: auto; transform: translate(-50%, -50%); pointer-events: none; }
-.work-detail-course-availability-notifier .detail-art-peek { width: max(100%, calc(100svh * 1122 / 1402)); clip-path: inset(33% 16% 55% 18% round 1.5%); }
-.work-detail-artificial-intelligence-real-estate-scraper-filter .detail-art-peek { width: max(100%, calc(100svh * 1447 / 1087)); clip-path: inset(26% 16% 35% 21% round 1.5%); }
+.detail-art-peek { position: absolute; z-index: 39; top: 50%; left: 22%; height: auto; transform: translate(-22%, -50%); pointer-events: none; }
+.work-detail-course-availability-notifier .detail-art-peek { width: min(100%, calc(100svh * 1683 / 2103)); clip-path: inset(39.3% 31.7% 53.9% 26.3% round 2%); }
+.work-detail-artificial-intelligence-real-estate-scraper-filter .detail-art-peek { width: min(100%, calc(100svh * 2172 / 1629)); clip-path: inset(33.2% 39.5% 36.3% 14% round 1.1%); }
 .detail-focus { position: absolute; z-index: 38; top: var(--focus-top); left: var(--focus-left); width: var(--focus-width); height: var(--focus-height); display: grid; place-items: center; border: 1px solid #ffffffdd; color: #fff; text-decoration: none; }
 .detail-focus:focus-visible { outline: 3px solid white; outline-offset: 4px; }
-.detail-focus-action { position: absolute; bottom: 14px; left: 50%; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 10px 14px; background: #101818cc; color: #fff; font: 700 12px/1 var(--sans); letter-spacing: .04em; text-transform: uppercase; opacity: 0; transform: translateX(-50%); transition: opacity .2s ease; }
+.detail-focus-action { position: absolute; bottom: 16px; left: 50%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 9px 13px; border: 1px solid #ffffffb3; border-radius: 999px; background: #fffef2e8; color: #171b19; font: 500 10px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; opacity: 0; transform: translateX(-50%); transition: opacity .2s ease; }
 .detail-focus:hover .detail-focus-action, .detail-focus:focus-visible .detail-focus-action { opacity: 1; }
-.detail-focus-action span { font-size: 23px; }
+.detail-focus-action span { font-size: 15px; }
 .detail-unavailable { max-width: 220px; padding: 20px; color: #ffffffb8; font: 11px/1.6 var(--mono); text-align: center; text-transform: uppercase; }
-.detail-copy { position: absolute; z-index: 39; top: 48%; left: 69%; width: 27%; color: #fff; font: 700 clamp(12px, 1.05vw, 16px)/1.05 var(--sans); letter-spacing: 0; text-transform: uppercase; text-shadow: none; transform: translateY(-50%); }
+.detail-copy { position: absolute; z-index: 40; top: 48%; left: 66%; width: 31%; color: var(--detail-accent, #fff); font: 400 clamp(12px, 1.05vw, 16px)/1.3 Consolas, 'Courier New', monospace; letter-spacing: 0; text-transform: uppercase; text-shadow: none; transform: translateY(-50%); }
 .detail-copy-row { display: grid; grid-template-columns: 2em minmax(0, 1fr); column-gap: .7em; align-items: start; }
-.detail-copy-row + .detail-copy-row { margin-top: .5em; }
-.detail-copy-row:nth-child(2) { margin-left: 12%; }
-.detail-copy-row:nth-child(3) { margin-left: 24%; }
+.detail-copy-row + .detail-copy-row { margin-top: 1em; }
+.detail-copy-row:nth-child(2) { margin-left: 17%; }
+.detail-copy-row:nth-child(3) { margin-left: 34%; }
 .detail-copy h1, .detail-copy p { margin: 0; color: inherit; font: inherit; letter-spacing: inherit; overflow-wrap: anywhere; }
 .work-detail-footer { grid-template-columns: 1fr 1fr; }
+
+.work-detail-digital-duel { --detail-accent: #c99e61; }
+.work-detail-robotic-arm-control-system-with-web-ui { --detail-accent: #a4f0dc; }
+.work-detail-secret-santa { --detail-accent: #f1ad63; }
+.work-detail-ontario-government-govtechon { --detail-accent: #111; --detail-blur-tint: #ffffff33; }
+.work-detail-vironix-ai { --detail-accent: #fff; }
+.work-detail-artificial-intelligence-real-estate-scraper-filter { --detail-accent: #bd9253; }
+.work-detail-course-availability-notifier { --detail-accent: #d57b62; }
+.work-detail-interior-studio-website { --detail-accent: #fbba4a; }
+.work-detail-getmyportfolio { --detail-accent: #d5ee69; }
+.work-detail-little-genius-island-website-booking-system { --detail-accent: #e9ae35; }
+.work-detail-jtc-property-services-website-booking-system { --detail-accent: #70a0d9; }
+.work-detail-tutoring { --detail-accent: #833811; --detail-blur-tint: #ffffff33; }
+.work-detail-connect-ops { --detail-accent: #5fabf8; }
+.work-detail-t-a-s-c-website-development { --detail-accent: #e9820b; }
+.work-detail-under-the-tree-charity { --detail-accent: #fff; --detail-blur-tint: #315a7d66; }
+
+.work-detail-tutoring .work-detail-backdrop,
+.work-detail-ontario-government-govtechon .work-detail-backdrop { background: #fff; }
+.work-detail-tutoring .detail-artwork-fill,
+.work-detail-ontario-government-govtechon .detail-artwork-fill { display: none; }
+.work-detail-tutoring .detail-artwork { background: #fff; }
+.work-detail-under-the-tree-charity .work-detail-backdrop { background: #6593bf; }
+.work-detail-under-the-tree-charity .detail-artwork-fill { filter: blur(35px); transform: scale(1.16); }
+.work-detail-ontario-government-govtechon .work-detail-backdrop .detail-artwork { width: min(30vw, 420px); height: auto; top: 50%; left: 25%; transform: translate(-50%, -50%); }
+.work-detail-tutoring .work-detail-header,
+.work-detail-ontario-government-govtechon .work-detail-header,
+.work-detail-tutoring .detail-step-link,
+.work-detail-ontario-government-govtechon .detail-step-link { color: #171b19; }
+.work-detail-tutoring .detail-header-index,
+.work-detail-ontario-government-govtechon .detail-header-index,
+.work-detail-tutoring .detail-header-index span,
+.work-detail-ontario-government-govtechon .detail-header-index span,
+.work-detail-tutoring .detail-step-link small,
+.work-detail-ontario-government-govtechon .detail-step-link small { color: #3a403d; }
+.work-detail-tutoring .detail-back-link > span,
+.work-detail-ontario-government-govtechon .detail-back-link > span,
+.work-detail-tutoring .detail-focus,
+.work-detail-ontario-government-govtechon .detail-focus { border-color: #171b19a6; }
+.work-detail-tutoring .detail-focus:focus-visible,
+.work-detail-ontario-government-govtechon .detail-focus:focus-visible { outline-color: #171b19; }
+.work-detail-tutoring .work-detail-footer,
+.work-detail-ontario-government-govtechon .work-detail-footer { background: none; }
 
 @media (hover: none) {
   .detail-focus-action { opacity: 1; }
@@ -613,8 +658,144 @@ h1, h2, h3, p { margin-top: 0; }
   .home-hero { min-height: 0; }
   .hero-image-frame { width: clamp(120px, 38vw, 190px); height: 36%; top: 64%; }
   .hero-cta { top: 30%; }
-  .work-detail { --focus-left: 6%; --focus-top: 15%; --focus-width: 42vw; --focus-height: 50%; }
+  .work-detail { --focus-left: 6%; --focus-top: 15%; --focus-width: 52vw; --focus-height: 50%; }
   .work-detail:has(.detail-focus:hover), .work-detail:has(.detail-focus:focus-visible) { --focus-width: 86vw; }
   .detail-copy { top: 69%; left: 8%; width: 84%; font-size: clamp(10px, 2.8vw, 13px); transform: none; }
+  .work-detail-ontario-government-govtechon .work-detail-backdrop .detail-artwork { width: 44vw; left: 32%; top: 40%; }
   .detail-unavailable { padding: 12px; font-size: 9px; }
+}
+
+/* Reference-inspired editorial typography and compositions. */
+.site-shell {
+  --sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --display: var(--sans);
+  --mono: var(--sans);
+}
+.site-header, .main-nav, .site-footer, .page-main { font-weight: 400; }
+.wordmark-copy strong, .header-contacts a, .menu-toggle > span:first-child,
+.footer-mark, .entry-links a, .all-work-link span, .note-error a {
+  font-weight: 400;
+}
+.wordmark-copy > span, .header-contacts a, .menu-toggle > span:first-child,
+.menu-kicker, .eyebrow, .section-kicker, .timeline-date,
+.work-index-copy > span:first-child {
+  letter-spacing: 0;
+  text-transform: lowercase;
+}
+.wordmark-mark { background: transparent; color: var(--ink); border: 1px solid currentColor; font-weight: 400; }
+.wordmark-copy strong { font-size: 15px; }
+.header-contacts a { font-size: 13px; }
+.main-nav { border-color: #b6b9b3; box-shadow: none; }
+.main-nav > a { font-size: 18px; font-weight: 400; text-transform: lowercase; }
+.menu-contacts a, .menu-kicker { font-size: 12px; }
+
+.home-header .home-contacts a {
+  font: 400 clamp(13px, 1.1vw, 16px)/1.05 var(--sans);
+  letter-spacing: 0;
+  text-transform: lowercase;
+}
+.home-header .home-contacts a span { font: 400 11px/1.05 var(--sans); letter-spacing: 0; }
+.home-hero { background: #f5f5f3; }
+.hero-blur {
+  width: 76%; height: 110%; top: -5%; left: 18%;
+  opacity: .7; filter: blur(35px);
+  background: none;
+  mask-image: radial-gradient(ellipse at 48% 50%, #000 0%, #000 35%, transparent 76%);
+}
+.hero-blur img { width: 74%; height: 100%; filter: grayscale(1); transform: scale(1.35); }
+.hero-image-frame {
+  width: clamp(165px, 15vw, 225px); height: 54%; max-height: 560px;
+  top: 54%; left: 40%; padding: 0; border: 1px solid #fff; background: #171916;
+}
+.hero-image-frame > img { filter: grayscale(1); }
+.hero-frame-cross {
+  position: absolute; top: 50%; left: 50%; color: #fff;
+  font: 300 38px/1 var(--sans); transform: translate(-50%, -50%);
+}
+.hero-cta {
+  width: auto; min-height: 0; top: 51%; padding: 0; border: 0;
+  gap: 20px; font: 400 clamp(15px, 1.25vw, 19px)/1.02 var(--sans);
+  letter-spacing: 0; text-transform: lowercase;
+}
+.hero-cta:hover { background: transparent; color: #555b53; }
+.hero-cta-arrow { font-size: 24px; }
+.hero-editorial {
+  position: absolute; z-index: 4; top: 51%; left: 55%;
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(30px, 5vw, 90px); width: min(37%, 460px);
+  color: #171916; font: 400 clamp(14px, 1.25vw, 18px)/1.02 var(--sans);
+}
+.hero-editorial p { margin: 0; }
+.hero-location {
+  position: absolute; z-index: 4; bottom: 7%; left: 50%; margin: 0;
+  color: #171916; font: 400 13px/1.1 var(--sans); transform: translateX(-50%);
+  white-space: nowrap;
+}
+.hero-plus { font-weight: 300; }
+
+.page-heading h1, .note-heading h1, .note-success h1, .work-index-heading h2 {
+  font: 400 clamp(32px, 4vw, 58px)/1 var(--sans);
+  letter-spacing: -.025em;
+  text-transform: lowercase;
+}
+.note-heading h1 em, .work-index-heading h2 em { font-style: normal; font-weight: 400; }
+.page-heading > p:last-child, .note-heading > p:last-child,
+.note-success-copy, .work-index-heading > p {
+  font: 400 15px/1.2 var(--sans);
+}
+.page-heading { padding-top: clamp(72px, 9vw, 130px); padding-bottom: 65px; }
+.section-kicker { font-size: 12px; line-height: 1.1; }
+.work-index-heading { align-items: end; }
+.work-index-heading > p { max-width: 230px; }
+.work-index { gap: 55px 25px; }
+.work-index-image { aspect-ratio: 1.1; }
+.work-index-image::after {
+  content: ''; position: absolute; inset: 12% 31%; border: 1px solid #fff;
+  pointer-events: none;
+}
+.work-index-number { background: transparent; color: #fff; font: 400 12px/1 var(--sans); }
+.work-index-arrow { border-radius: 0; background: transparent; color: #fff; font-weight: 400; }
+.work-index-copy { padding-top: 16px; }
+.work-index-copy > span:first-child { font-size: 11px; }
+.work-index-copy h3, .project-info h3, .experience-copy h3 {
+  font: 400 18px/1.08 var(--sans); letter-spacing: 0; text-transform: lowercase;
+}
+.project-info p, .experience-copy > p:not(.experience-company),
+.experience-highlights li, .note-guides li p {
+  font: 400 14px/1.25 var(--sans);
+}
+.project-number, .timeline-date, .tag-list span, .experience-company,
+.note-guides li span, .note-privacy { font: 400 12px/1.15 var(--sans); }
+.project-number { text-transform: lowercase; }
+.note-guides h2, .note-field label { font-weight: 400; text-transform: lowercase; }
+.note-guides h2 { font-size: 18px; }
+.note-field input, .note-field textarea { font: 400 15px/1.25 var(--sans); }
+.note-submit, .button { font-weight: 400; text-transform: lowercase; }
+
+.work-detail-header, .detail-header-index, .detail-step-link,
+.detail-step-link small, .detail-focus-action {
+  font-family: var(--sans); font-weight: 400; letter-spacing: 0; text-transform: lowercase;
+}
+.detail-copy {
+  font: 400 clamp(13px, 1.1vw, 17px)/1.08 var(--sans);
+  letter-spacing: 0; text-transform: lowercase;
+}
+.detail-copy-row + .detail-copy-row { margin-top: 1em; }
+
+@media (max-width: 760px) {
+  .home-header .home-contacts a { font-size: 12px; line-height: 1.05; letter-spacing: 0; }
+  .home-header .home-contacts a span { font-size: 10px; }
+  .hero-blur { width: 100%; height: 75%; top: 20%; left: 0; filter: blur(25px); }
+  .hero-blur img { width: 75%; }
+  .hero-image-frame { width: clamp(120px, 35vw, 180px); height: 42%; top: 58%; left: 31%; }
+  .hero-frame-cross { font-size: 30px; }
+  .hero-cta { top: 30%; left: 6%; width: auto; font-size: 15px; }
+  .hero-editorial {
+    top: 49%; left: 54%; width: 41%; grid-template-columns: 1fr;
+    gap: 20px; font-size: clamp(12px, 3.2vw, 15px);
+  }
+  .hero-location { bottom: 8%; font-size: 11px; }
+  .work-index { gap: 28px 14px; }
+  .work-index-copy h3, .project-info h3, .experience-copy h3 { font-size: 16px; }
+  .detail-copy { font-size: clamp(11px, 3.1vw, 13px); }
 }

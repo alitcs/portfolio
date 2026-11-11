@@ -72,14 +72,15 @@ function App() {
       return
     }
 
+    const lightWork = page === 'work' && ['tutoring', 'ontario-government-govtechon'].includes(workSlug)
     const overlay = createOverlay(document.body, {
-      count: 88,
+      count: page === 'work' ? 30 : page === 'home' ? 62 : 88,
       speed: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 0.7,
       zIndex: 35,
     })
-    overlay.canvas.style.opacity = page === 'work' ? '0.72' : '0.65'
-    overlay.canvas.style.mixBlendMode = page === 'work' ? 'screen' : 'multiply'
-    if (page !== 'work') overlay.canvas.style.filter = 'brightness(0)'
+    overlay.canvas.style.opacity = page === 'work' ? '0.55' : '0.65'
+    overlay.canvas.style.mixBlendMode = page === 'work' && !lightWork ? 'screen' : 'multiply'
+    if (page !== 'work' || lightWork) overlay.canvas.style.filter = 'brightness(0)'
 
     let maskFrame = 0
     const updateMask = () => {
@@ -253,14 +254,22 @@ function HomePage() {
     <>
       <section className="home-hero" aria-label="Portfolio introduction">
         <h1 className="visually-hidden">Ali Hamoudi — Toronto Metropolitan University computer science student</h1>
-        <div className="hero-blur" aria-hidden="true" />
+        <div className="hero-blur" aria-hidden="true">
+          <img src="/images/hero-flower.png" alt="" />
+        </div>
         <a className="hero-cta" href="/note">
           <span>Want to build<br />something</span>
           <span className="hero-cta-arrow" aria-hidden="true">→</span>
         </a>
         <div className="hero-image-frame" aria-hidden="true">
-          <span className="frame-index">/01</span>
+          <img src="/images/hero-flower.png" alt="" />
+          <span className="hero-frame-cross">+</span>
         </div>
+        <div className="hero-editorial" aria-label="Portfolio introduction">
+          <p>building useful<br />things for<br />real people.</p>
+          <p>software, design<br />and ideas<br />made tangible.</p>
+        </div>
+        <p className="hero-location">toronto, canada / selected work 01—{String(workItems.length).padStart(2, '0')}</p>
         <a className="hero-plus hero-plus-bottom" href="/index" aria-label="Explore selected work">+</a>
         <a className="hero-scroll" href="/index" aria-label="Explore selected work">
           <span className="hero-tick is-active" /><span className="hero-tick" /><span className="hero-tick" /><span className="hero-tick" /><span className="hero-tick" />
@@ -437,7 +446,7 @@ const experienceEntries = [
       'Resolved Redis performance and distributed coordination issues across API and CMS workloads.',
       'Hardened media access, comment permissions, and upload validation across WordPress paths.',
     ],
-    image: '/item-images/government-hover.png',
+    image: '/item-images/government-base.png',
     note: 'Internal Ontario Public Service platform; not publicly accessible.',
   },
   {
@@ -468,7 +477,7 @@ const freelanceEntries = [
     summary: 'Created a paid Selenium and OpenAI tool that classifies apartment descriptions, filters for genuine two-bedroom listings, and saves results between runs.',
     tags: ['Python', 'AI', 'Automation'],
     imageLabel: 'Apartment filter image',
-    image: '/item-images/apartment.png',
+    image: '/item-images/04_terminal_expanded.png',
     hoverImage: '/item-images/apartment-hover.png',
     links: [{ label: 'View project', href: 'https://github.com/alitcs/Apartment-Filter' }],
   },
@@ -480,7 +489,7 @@ const freelanceEntries = [
     summary: 'Customized Selenium automation for students to monitor course-registration portals, preserve login sessions, and send SMS alerts when seats opened.',
     tags: ['Python', 'Selenium', 'SMS'],
     imageLabel: 'Course Availability image',
-    image: '/item-images/course-base.png',
+    image: '/item-images/03_phone_notification_expanded.png',
     hoverImage: '/item-images/course-hover.png',
     links: [{ label: 'View project', href: 'https://github.com/alitcs/Course-Availability-Notifier' }],
   },
@@ -544,7 +553,7 @@ const freelanceEntries = [
     summary: 'Tutored students in Grades 3–12 in math, English, programming, functions, calculus, and physics, adapting lessons to each student.',
     tags: ['Tutoring', 'Mentorship', 'Communication'],
     imageLabel: 'Tutoring image',
-    image: '/item-images/tutor-base.png',
+    image: '/item-images/01_hand_with_pencil_expanded.png',
     hoverImage: '/item-images/tutor.png',
     cardLink: false,
     links: [
@@ -588,7 +597,7 @@ const extracurricularEntries = [
     summary: 'Founded a winter community initiative, raised over $1,000, and coordinated distribution of hot meals, warm clothing, blankets, and winter supplies.',
     tags: ['Fundraising', 'Community outreach', 'Organization'],
     imageLabel: 'Under The Tree Charity image',
-    image: '/item-images/underthetree-base.png',
+    image: '/item-images/02_christmas_tree_expanded.png',
     hoverImage: '/item-images/underthetree.png',
     previewUrl: '',
     links: [{ label: '', href: '' }],
@@ -885,15 +894,15 @@ function WorkDetailPage({ item }: { item?: WorkItem }) {
         {item.previewUrl ? (
           <iframe src={item.previewUrl} title={`${item.title} preview`} tabIndex={-1} loading="eager" />
         ) : (
-          <img src={item.image} alt="" />
+          <>
+            <img className="detail-artwork-fill" src={item.image} alt="" />
+            <img className="detail-artwork" src={item.image} alt="" />
+          </>
         )}
         <div className="detail-blur detail-blur-top" />
         <div className="detail-blur detail-blur-bottom" />
         <div className="detail-blur detail-blur-left" />
         <div className="detail-blur detail-blur-right" />
-        {(item.slug === 'course-availability-notifier' || item.slug === 'artificial-intelligence-real-estate-scraper-filter') && (
-          <img className="detail-art-peek" src={item.image} alt="" />
-        )}
       </div>
       <header className="work-detail-header">
         <a href="/index" className="detail-back-link" aria-label="Close and return to selected work"><span aria-hidden="true">×</span></a>
@@ -905,6 +914,9 @@ function WorkDetailPage({ item }: { item?: WorkItem }) {
         </a>
       ) : (
         <div className="detail-focus detail-focus-empty" aria-hidden="true" />
+      )}
+      {(item.slug === 'course-availability-notifier' || item.slug === 'artificial-intelligence-real-estate-scraper-filter') && (
+        <img className="detail-art-peek" src={item.image} alt="" aria-hidden="true" />
       )}
       <div className="detail-copy">
         <div className="detail-copy-row">
