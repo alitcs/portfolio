@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent, type ReactNode } from 'react'
 import './App.css'
 import WorkShowcase from './WorkShowcase'
 import './Browsing.css'
+import WorkSceneMedia from './WorkSceneMedia'
 
 type Page = 'home' | 'index' | 'experience' | 'projects' | 'freelance' | 'extracurricular' | 'note' | 'work'
 type WorkItem = {
@@ -68,8 +69,6 @@ function App() {
   const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
-    // The scrollable showcase stays quiet; immersive work pages keep their overlay.
-    if (page === 'index') return
     const createOverlay = window.BlobOverlay?.create
     if (!createOverlay) {
       console.error('The portfolio tracking overlay did not load.')
@@ -78,11 +77,11 @@ function App() {
 
     const lightWork = page === 'work' && ['tutoring', 'ontario-government-govtechon'].includes(workSlug)
     const overlay = createOverlay(document.body, {
-      count: page === 'work' ? 30 : page === 'home' ? 62 : 88,
+      count: page === 'work' || page === 'index' ? 30 : page === 'home' ? 62 : 88,
       speed: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 0.7,
       zIndex: 35,
     })
-    overlay.canvas.style.opacity = page === 'work' ? '0.55' : '0.65'
+    overlay.canvas.style.opacity = page === 'work' ? '0.55' : page === 'index' ? '0.5' : '0.65'
     overlay.canvas.style.mixBlendMode = page === 'work' && !lightWork ? 'screen' : 'multiply'
     if (page !== 'work' || lightWork) overlay.canvas.style.filter = 'brightness(0)'
 
@@ -90,7 +89,7 @@ function App() {
     const updateMask = () => {
       maskFrame = 0
       const elements = document.querySelectorAll(
-        'h1, h2, h3, p, label, input, textarea, button, .header-contacts a, .main-nav, .hero-cta, .detail-step-link',
+        'h1, h2, h3, p, label, input, textarea, button, .header-contacts a, .main-nav, .hero-cta, .detail-step-link, .gallery-intro-links, .gallery-directory, .gallery-position',
       )
       const masks = Array.from(elements).flatMap((element) => {
         const bounds = element.getBoundingClientRect()
@@ -178,7 +177,7 @@ function App() {
         </a>
         {page === 'home' ? (
           <nav className="header-contacts home-contacts" aria-label="Contact and profile links">
-            <a href="/index#work-gallery"><span>01</span> Selected work</a>
+            <a href="/index#overview"><span>01</span> Selected work</a>
             <a href="/note"><span>02</span> Start a project</a>
             <a href="/experience"><span>03</span> Experience</a>
             <a href="/AliHamoudi.pdf" download><span>04</span> Resume</a>
@@ -261,7 +260,7 @@ function HomePage() {
         <div className="hero-blur" aria-hidden="true">
           <img src="/images/hero-flower.png" alt="" />
         </div>
-        <a className="hero-cta" href="/index#work-gallery">
+        <a className="hero-cta" href="/index#overview">
           <span>See my work</span>
           <span className="hero-cta-arrow" aria-hidden="true">→</span>
         </a>
@@ -872,20 +871,7 @@ function WorkDetailPage({ item }: { item?: WorkItem }) {
 
   return (
     <article className={`work-detail work-detail-${item.slug}`} aria-labelledby="work-detail-title">
-      <div className="work-detail-backdrop" aria-hidden="true">
-        {item.previewUrl ? (
-          <iframe src={item.previewUrl} title={`${item.title} preview`} tabIndex={-1} loading="eager" />
-        ) : (
-          <>
-            <img className="detail-artwork-fill" src={item.image} alt="" />
-            <img className="detail-artwork" src={item.image} alt="" />
-          </>
-        )}
-        <div className="detail-blur detail-blur-top" />
-        <div className="detail-blur detail-blur-bottom" />
-        <div className="detail-blur detail-blur-left" />
-        <div className="detail-blur detail-blur-right" />
-      </div>
+      <WorkSceneMedia item={item} />
       <header className="work-detail-header">
         <a href="/index" className="detail-back-link" aria-label="Close and return to selected work"><span aria-hidden="true">×</span></a>
         <span className="detail-header-index">ALI HAMOUDI <span>/</span> {String(index + 1).padStart(2, '0')} — {String(workItems.length).padStart(2, '0')}</span>

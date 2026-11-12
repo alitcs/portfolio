@@ -1,0 +1,93 @@
+/* The gallery is a reel of the existing detail-page scenes, not a card layout. */
+html:has(.gallery-exhibition) { scroll-snap-type: y mandatory; scroll-padding-top: 0; scrollbar-width: none; }
+html:has(.gallery-exhibition)::-webkit-scrollbar { display: none; }
+.gallery-exhibition { background: #ededed; color: #171717; }
+.gallery-exhibition a { text-decoration: none; }
+.gallery-screen { width: 100%; height: 100svh; min-height: 100svh; scroll-snap-align: start; scroll-snap-stop: always; scroll-margin-top: 0; }
+.gallery-exhibition .gallery-intro.home-hero { height: 100svh; min-height: 100svh; background: #ededed; }
+.gallery-reel { width: 100%; }
+.gallery-exhibition .gallery-scene { height: 100svh; min-height: 100svh; background: #ededed; --detail-blur-tint: #edededca; }
+.gallery-scene .detail-blur { background: #edededca; backdrop-filter: grayscale(1) blur(18px); -webkit-backdrop-filter: grayscale(1) blur(18px); }
+.gallery-scene .detail-blur-top { background: linear-gradient(to bottom, #ededed, #edededca); }
+.gallery-scene .detail-blur-bottom { background: linear-gradient(to bottom, #edededca, #ededed); }
+.gallery-scene .detail-blur::after { mix-blend-mode: multiply; opacity: .2; }
+.gallery-exhibition .gallery-scene .work-detail-backdrop .detail-artwork,
+.gallery-exhibition .gallery-scene .gallery-preview-placeholder,
+.gallery-exhibition .gallery-scene .detail-art-peek { filter: none; }
+.gallery-scene .work-detail-backdrop .gallery-preview-placeholder { object-fit: cover; }
+.gallery-scene .gallery-live-frame { opacity: 0; }
+.gallery-scene .gallery-live-frame.is-ready { opacity: 1; }
+.gallery-scene .work-detail-backdrop { content-visibility: auto; contain-intrinsic-size: auto 100svh; }
+.gallery-scene .gallery-copy { color: #171717; }
+.gallery-copy h2 { margin: 0; color: inherit; font: inherit; letter-spacing: inherit; overflow-wrap: anywhere; }
+.gallery-focus-cross { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font: 200 34px/1 var(--sans); color: white; mix-blend-mode: difference; pointer-events: none; }
+.gallery-peek-clip { position: absolute; z-index: 39; inset: 0; pointer-events: none; clip-path: inset(var(--focus-top) calc(100% - var(--focus-left) - var(--focus-width)) calc(100% - var(--focus-top) - var(--focus-height)) var(--focus-left)); }
+.gallery-scene .gallery-scene-header { justify-content: flex-end; padding-right: 8%; color: #555; font-size: 10px; }
+.gallery-scene-header > span > span { margin-inline: 9px; color: #999; }
+
+/* The opening screen borrows the landing page's flower, crop, and staggered links. */
+.gallery-intro-links { position: absolute; z-index: 40; top: 5.3vh; left: 5vw; width: min(500px, 42vw); height: 270px; font: 400 clamp(13px, 1.1vw, 16px)/1.05 var(--sans); }
+.gallery-intro-links > a { position: absolute; display: flex; align-items: flex-start; gap: 13px; min-height: 24px; color: #171717; }
+.gallery-intro-links > a > span { min-width: 24px; font-size: 11px; padding-top: 2px; }
+.gallery-intro-links > a:hover { color: #777; }
+.gallery-intro-links > a:nth-child(1) { top: 0; left: 0; }
+.gallery-intro-links > a:nth-child(2) { top: 3.2vh; left: 55%; }
+.gallery-intro-links > a:nth-child(3) { top: 7.7vh; left: 25%; }
+.gallery-intro-links > a:nth-child(4) { top: 12.2vh; left: 69%; }
+.gallery-intro-links > a:nth-child(5) { top: 17.4vh; left: 48%; }
+.gallery-intro-links > a:nth-child(6) { top: 23vh; left: 0; }
+.gallery-intro .gallery-start { z-index: 40; }
+.gallery-intro .hero-editorial { z-index: 40; }
+.gallery-intro .hero-location { z-index: 40; }
+.gallery-intro .hero-plus { z-index: 40; }
+
+/* Navigation floats over the scene, as on the landing and individual work pages. */
+.gallery-header { position: fixed; inset: 0 0 auto; z-index: 60; height: 0; }
+.gallery-brand { position: absolute; top: 31px; left: 5vw; padding-block: 8px; color: #171717; font: 400 11px/1.2 var(--sans); }
+.gallery-brand[hidden] { display: none; }
+.gallery-brand > span { color: #777; margin-left: 10px; }
+.gallery-menu-toggle { position: absolute; top: 2.4vh; right: 2.1vw; display: grid; place-items: center; width: 46px; height: 46px; border: 0; background: transparent; color: #171717; cursor: pointer; }
+.gallery-menu-toggle > span { font: 200 46px/1 var(--sans); transition: transform .2s; }
+.gallery-menu-toggle.is-open > span { transform: rotate(45deg); }
+.gallery-directory { position: absolute; top: 80px; right: 3vw; width: min(420px, calc(100vw - 36px)); max-height: calc(100svh - 110px); overflow-y: auto; overscroll-behavior: contain; padding: 25px; border: 1px solid #c2c2c2; background: #f3f3f3f7; backdrop-filter: blur(20px); color: #171717; }
+.gallery-directory > p { font-size: 11px; color: #666; margin: 0 0 18px; }
+.gallery-filters { display: flex; flex-wrap: wrap; gap: 0 18px; padding-bottom: 15px; }
+.gallery-filters button { padding: 8px 0; min-height: 36px; background: none; border: 0; font: 400 11px/1.3 var(--sans); color: #777; cursor: pointer; }
+.gallery-filters button[aria-pressed='true'] { color: #111; text-decoration: underline; text-underline-offset: 6px; }
+.gallery-directory-items > a { display: grid; grid-template-columns: 24px 1fr 15px; align-items: center; gap: 12px; min-height: 48px; padding-block: 12px; border-top: 1px solid #ccc; font-size: 12px; line-height: 1.35; }
+.gallery-directory-items > a > span:first-child { color: #777; font-size: 9px; }
+.gallery-directory-items > a:hover { color: #777; }
+.gallery-directory-links { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; border-top: 1px solid #ccc; margin-top: 15px; padding-top: 20px; font-size: 11px; }
+.gallery-position { position: fixed; z-index: 45; right: 3vw; bottom: 4vh; display: flex; align-items: center; gap: 16px; color: #333; font: 400 10px/1.2 var(--sans); }
+.gallery-position > a { display: grid; place-items: center; min-width: 30px; min-height: 36px; font-size: 20px; }
+.gallery-ticks { display: flex; align-items: center; }
+.gallery-ticks > a { display: grid; place-items: center; width: 12px; min-height: 36px; }
+.gallery-ticks > a > span { width: 1px; height: 8px; background: #888; transition: height .2s; }
+.gallery-ticks > a[aria-current] > span { height: 18px; background: #111; }
+.gallery-ticks > a:hover > span { height: 15px; }
+.gallery-exhibition :focus-visible { outline: 2px solid #171717; outline-offset: 5px; }
+.gallery-exhibition .detail-focus:focus-visible { outline-color: #fff; }
+
+@media (max-width: 760px) {
+  .gallery-intro-links { top: 22px; left: 20px; width: calc(100% - 88px); height: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 13px 10px; font-size: 12px; }
+  .gallery-intro-links > a { position: static; gap: 7px; }
+  .gallery-intro-links > a > span { min-width: 18px; font-size: 10px; }
+  .gallery-menu-toggle { top: 14px; right: 11px; }
+  .gallery-brand { top: 23px; left: 20px; font-size: 10px; }
+  .gallery-brand > span { margin-left: 6px; }
+  .gallery-scene .gallery-scene-header { top: 55px; padding: 15px 20px; font-size: 8px; }
+  .gallery-position { bottom: 2.5vh; right: 4%; gap: 10px; font-size: 9px; }
+  .gallery-position > a { font-size: 18px; }
+  .gallery-ticks > a { width: 10px; }
+  .gallery-focus-cross { font-size: 27px; }
+}
+@media (max-width: 380px) {
+  .gallery-intro-links { gap: 12px 5px; font-size: 11px; }
+  .gallery-intro-links > a > span { min-width: 14px; font-size: 9px; }
+  .gallery-position { gap: 7px; }
+  .gallery-ticks > a { width: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html:has(.gallery-exhibition) { scroll-snap-type: none; }
+  .gallery-scene, .gallery-menu-toggle > span, .gallery-ticks > a > span { transition: none !important; }
+}

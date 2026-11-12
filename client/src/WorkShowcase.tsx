@@ -1,15 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
+import WorkSceneMedia, { type SceneItem } from './WorkSceneMedia'
+import './Gallery.css'
 
-type ShowcaseItem = {
-  slug: string
-  title: string
+type ShowcaseItem = SceneItem & {
   category: string
   impact: string
-  technical: string
-  image: string
   company?: string
-  dates?: string
-  tags: readonly string[]
 }
 
 const filters = [
@@ -20,187 +16,186 @@ const filters = [
   { id: 'community', label: 'Community' },
 ] as const
 type Filter = typeof filters[number]['id']
-const categoryFilter = (item: ShowcaseItem): Filter => {
-  if (item.category === 'Community & extracurricular') return 'community'
-  return item.category.toLowerCase() as Filter
-}
-const categoryName = (item: ShowcaseItem) => filters.find((filter) => filter.id === categoryFilter(item))?.label || item.category
-const pad = (n: number) => String(n).padStart(2, '0')
+const categoryFilter = (item: ShowcaseItem) => item.category === 'Community & extracurricular' ? 'community' : item.category.toLowerCase()
+const pad = (value: number) => String(value).padStart(2, '0')
+const title = (item: ShowcaseItem) => item.company || item.title
 const returnKey = 'portfolio-work-return'
-type ReturnPosition = { slug: string; filter: Filter }
+const blurbs: Record<string, string> = {
+  'ontario-government-govtechon': 'Reliable systems for Ontario’s public service.',
+  'vironix-ai': 'Turning video into useful insights.',
+  'artificial-intelligence-real-estate-scraper-filter': 'Finding genuine two-bedroom apartments, faster.',
+  'course-availability-notifier': 'A heads-up when a course seat opens.',
+  'interior-studio-website': 'A bilingual home for an interior design studio.',
+  'getmyportfolio': 'Ideas turned into personal portfolios.',
+  'little-genius-island-website-booking-system': 'Helping families explore, enquire, and book.',
+  'jtc-property-services-website-booking-system': 'Property care, with a simpler path to a quote.',
+  'tutoring': 'Building confidence, one lesson at a time.',
+  'digital-duel': 'A two-player game with custom art and physics.',
+  'robotic-arm-control-system-with-web-ui': 'Live controls and telemetry for a robotic arm.',
+  'secret-santa': 'Less organizing. More gift-giving.',
+  'connect-ops': 'Connecting people and knowledge across public-service teams.',
+  't-a-s-c-website-development': 'A home for a team building autonomous systems.',
+  'under-the-tree-charity': 'Turning community support into winter essentials.',
+}
 
-function readReturnPosition(): ReturnPosition | undefined {
+function readReturnPosition(): { slug: string; filter: Filter } | undefined {
   try {
     const saved = JSON.parse(sessionStorage.getItem(returnKey) || 'null')
     if (saved && typeof saved.slug === 'string' && filters.some((filter) => filter.id === saved.filter)) return saved
-  } catch { /* Browsing still works if session storage is unavailable. */ }
+  } catch { /* Session storage is an optional navigation enhancement. */ }
 }
 
 function initialFilter(): Filter {
-  const params = new URLSearchParams(window.location.search)
-  const value = params.get('category')
+  const value = new URLSearchParams(location.search).get('category')
   if (filters.some((filter) => filter.id === value)) return value as Filter
-  if (!window.location.hash) return readReturnPosition()?.filter || 'all'
-  return 'all'
+  return !location.hash ? readReturnPosition()?.filter || 'all' : 'all'
 }
 
 export default function WorkShowcase({ items }: { items: readonly ShowcaseItem[] }) {
   const [filter, setFilter] = useState<Filter>(initialFilter)
   const [activeSlug, setActiveSlug] = useState('')
-  const directoryRef = useRef<HTMLDetailsElement>(null)
-  // Professional experience leads naturally into client builds, experiments, and community.
-  const ordered = [...items].sort((a, b) =>
-    ['Experience', 'Freelance', 'Projects', 'Community & extracurricular'].indexOf(a.category)
-    - ['Experience', 'Freelance', 'Projects', 'Community & extracurricular'].indexOf(b.category))
+  const [menuOpen, setMenuOpen] = useState(false)
+  const menuButton = useRef<HTMLButtonElement>(null)
+  const menu = useRef<HTMLElement>(null)
+  const order = ['Experience', 'Freelance', 'Projects', 'Community & extracurricular']
+  const ordered = [...items].sort((a, b) => order.indexOf(a.category) - order.indexOf(b.category))
   const visible = ordered.filter((item) => filter === 'all' || categoryFilter(item) === filter)
   const activeIndex = Math.max(0, visible.findIndex((item) => item.slug === activeSlug))
-  const active = visible[activeIndex]
+  const firstId = visible[0] ? `item-${visible[0].slug}` : 'overview'
 
   useEffect(() => {
     document.title = 'Selected work — Ali Hamoudi'
     const saved = readReturnPosition()
-    const hash = decodeURIComponent(window.location.hash.slice(1))
-    const target = hash && hash !== 'overview' ? hash : !hash && saved ? `item-${saved.slug}` : ''
-    const frame = requestAnimationFrame(() => {
-      if (target) document.getElementById(target)?.scrollIntoView({ behavior: 'instant', block: 'start' })
-      else window.scrollTo({ top: 0, behavior: 'instant' })
-    })
+    const hash = location.hash.slice(1)
+    const target = hash && hash !== 'overview' ? hash : !hash && saved ? `item-${saved.slug}` : 'overview'
+    const frame = requestAnimationFrame(() => document.getElementById(target)?.scrollIntoView({ behavior: 'instant' }))
     return () => cancelAnimationFrame(frame)
   }, [])
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
-      const nearest = entries.filter((entry) => entry.isIntersecting)
-        .sort((a, b) => Math.abs(a.boundingClientRect.top) - Math.abs(b.boundingClientRect.top))[0]
-      if (nearest) setActiveSlug((nearest.target as HTMLElement).dataset.slug || '')
-    }, { rootMargin: '-15% 0px -45% 0px', threshold: 0 })
-    document.querySelectorAll('.showcase-entry').forEach((entry) => observer.observe(entry))
+      for (const entry of entries) {
+        if (entry.isIntersecting) setActiveSlug((entry.target as HTMLElement).dataset.slug || '')
+      }
+    }, { rootMargin: '-49% 0px -49% 0px', threshold: 0 })
+    document.querySelectorAll('.gallery-screen').forEach((screen) => observer.observe(screen))
     return () => observer.disconnect()
   }, [filter])
 
   useEffect(() => {
-    const updateFilter = () => setFilter(initialFilter())
-    window.addEventListener('popstate', updateFilter)
-    return () => window.removeEventListener('popstate', updateFilter)
+    const sync = () => setFilter(initialFilter())
+    window.addEventListener('popstate', sync)
+    return () => window.removeEventListener('popstate', sync)
   }, [])
 
   useEffect(() => {
-    const closeDirectory = (event: PointerEvent) => {
-      if (!directoryRef.current?.contains(event.target as Node)) directoryRef.current?.removeAttribute('open')
+    let accumulated = 0
+    let handled = false
+    let unlockAt = 0
+    let releaseTimer = 0
+    const step = (event: WheelEvent) => {
+      if (event.ctrlKey || Math.abs(event.deltaX) > Math.abs(event.deltaY) || !event.deltaY) return
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches || menu.current?.contains(event.target as Node)) return
+      event.preventDefault()
+      window.clearTimeout(releaseTimer)
+      const now = performance.now()
+      releaseTimer = window.setTimeout(() => { handled = false; accumulated = 0 }, Math.max(180, unlockAt - now))
+      if (handled || now < unlockAt) return
+      const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? innerHeight : 1
+      accumulated += event.deltaY * unit
+      if (Math.abs(accumulated) < 30) return
+      const screens = Array.from(document.querySelectorAll<HTMLElement>('.gallery-screen'))
+      const current = screens.reduce((nearest, screen, index) => Math.abs(screen.getBoundingClientRect().top) < Math.abs(screens[nearest].getBoundingClientRect().top) ? index : nearest, 0)
+      const next = Math.max(0, Math.min(screens.length - 1, current + Math.sign(accumulated)))
+      handled = true
+      unlockAt = now + 700
+      window.clearTimeout(releaseTimer)
+      releaseTimer = window.setTimeout(() => { handled = false; accumulated = 0 }, 700)
+      screens[next]?.scrollIntoView({ behavior: 'smooth' })
     }
-    const escapeDirectory = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && directoryRef.current?.open) {
-        directoryRef.current.removeAttribute('open')
-        directoryRef.current.querySelector('summary')?.focus()
-      }
+    window.addEventListener('wheel', step, { passive: false })
+    return () => { window.removeEventListener('wheel', step); window.clearTimeout(releaseTimer) }
+  }, [filter])
+
+  useEffect(() => {
+    if (!menuOpen) return
+    const key = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') { setMenuOpen(false); menuButton.current?.focus() }
     }
-    document.addEventListener('pointerdown', closeDirectory)
-    document.addEventListener('keydown', escapeDirectory)
-    return () => {
-      document.removeEventListener('pointerdown', closeDirectory)
-      document.removeEventListener('keydown', escapeDirectory)
+    const outside = (event: PointerEvent) => {
+      if (!menu.current?.contains(event.target as Node) && !menuButton.current?.contains(event.target as Node)) setMenuOpen(false)
     }
-  }, [])
+    window.addEventListener('keydown', key)
+    window.addEventListener('pointerdown', outside)
+    return () => { window.removeEventListener('keydown', key); window.removeEventListener('pointerdown', outside) }
+  }, [menuOpen])
+
+  function remember(slug: string) {
+    try { sessionStorage.setItem(returnKey, JSON.stringify({ slug, filter })) } catch { /* Optional. */ }
+  }
 
   function changeFilter(next: Filter) {
     setFilter(next)
     setActiveSlug('')
-    directoryRef.current?.removeAttribute('open')
-    const url = new URL(window.location.href)
+    const url = new URL(location.href)
     if (next === 'all') url.searchParams.delete('category')
     else url.searchParams.set('category', next)
     url.hash = 'work-gallery'
-    window.history.replaceState(null, '', url)
+    history.replaceState(null, '', url)
     requestAnimationFrame(() => document.getElementById('work-gallery')?.scrollIntoView({
-      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
-      block: 'start',
+      behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
     }))
   }
 
-  function rememberPosition(slug: string) {
-    try { sessionStorage.setItem(returnKey, JSON.stringify({ slug, filter })) } catch { /* Optional return enhancement. */ }
-  }
-
   return (
-    <div className="work-showcase" id="overview">
-      <header className="showcase-header">
-        <a className="showcase-wordmark" href="/">ali hamoudi <span aria-hidden="true">+</span></a>
-        <nav aria-label="Work and career navigation">
-          <a href="/experience">Experience</a>
-          <a href="/AliHamoudi.pdf" download>Résumé <span aria-hidden="true">↓</span></a>
-          <a href="/note">Let’s work together <span aria-hidden="true">↗</span></a>
-        </nav>
+    <div className="gallery-exhibition">
+      <header className="gallery-header">
+        <a className="gallery-brand" href="/" hidden={!activeSlug}>ali hamoudi <span>/ selected work</span></a>
+        <button className={`gallery-menu-toggle ${menuOpen ? 'is-open' : ''}`} type="button" ref={menuButton} aria-label={menuOpen ? 'Close work index' : 'Open work index'} aria-expanded={menuOpen} aria-controls="gallery-directory" onClick={() => setMenuOpen(!menuOpen)}><span aria-hidden="true">+</span></button>
+        {menuOpen && <nav className="gallery-directory" id="gallery-directory" ref={menu} aria-label="Work index">
+          <p>the index / {pad(visible.length)} works</p>
+          <div className="gallery-filters" role="group" aria-label="Filter work">{filters.map((entry) => <button key={entry.id} type="button" aria-pressed={filter === entry.id} onClick={() => changeFilter(entry.id)}>{entry.label}</button>)}</div>
+          <div className="gallery-directory-items">{visible.map((item, index) => <a key={item.slug} href={`#item-${item.slug}`} onClick={() => setMenuOpen(false)}><span>{pad(index + 1)}</span><span>{title(item)}</span><span aria-hidden="true">↘</span></a>)}</div>
+          <div className="gallery-directory-links"><a href="/">Home ↗</a><a href="/experience">Experience ↗</a><a href="/AliHamoudi.pdf" download>Résumé ↓</a><a href="/note">Let’s talk ↗</a></div>
+        </nav>}
       </header>
 
-      <section className="showcase-intro" aria-labelledby="showcase-title">
-        <div className="showcase-intro-heading">
-          <p className="showcase-label">SELECTED WORK / ALI HAMOUDI</p>
-          <h1 id="showcase-title">a closer look<br />at the work.</h1>
-        </div>
-        <div className="showcase-intro-copy">
-          <p>Digital systems, thoughtful interfaces,<br className="desktop-break" /> and ideas made useful.</p>
-          <p>Scroll to explore. Open a project<br className="desktop-break" /> to step into its world.</p>
-          <a href="#work-gallery" className="showcase-scroll-link">Explore {items.length} works <span aria-hidden="true">↓</span></a>
-        </div>
-        <div className="showcase-audience">
-          <a href="/note"><span>HAVE SOMETHING IN MIND?</span>Let’s build it together <span aria-hidden="true">↗</span></a>
-          <a href="/experience"><span>LOOKING FOR YOUR NEXT ENGINEER?</span>Experience & résumé <span aria-hidden="true">↗</span></a>
-        </div>
+      <section className="gallery-intro gallery-screen home-hero" id="overview" aria-labelledby="gallery-title">
+        <h1 className="visually-hidden" id="gallery-title">Selected work by Ali Hamoudi</h1>
+        <div className="hero-blur" aria-hidden="true"><img src="/images/hero-flower.png" alt="" /></div>
+        <nav className="gallery-intro-links" aria-label="Portfolio links">
+          <a href={`#${firstId}`}><span>01</span> selected work</a>
+          <a href="/note"><span>02</span> start a project</a>
+          <a href="/experience"><span>03</span> experience</a>
+          <a href="/AliHamoudi.pdf" download><span>04</span> résumé</a>
+          <a href="mailto:alihamoudiu18@gmail.com"><span>05</span> email</a>
+          <a href="/"><span>06</span> ali hamoudi<br />software engineer</a>
+        </nav>
+        <a className="hero-cta gallery-start" href={`#${firstId}`}><span>Step into the work</span><span className="hero-cta-arrow" aria-hidden="true">↓</span></a>
+        <div className="hero-image-frame" aria-hidden="true"><img src="/images/hero-flower.png" alt="" /><span className="hero-frame-cross">+</span></div>
+        <div className="hero-editorial"><p>software, systems<br />and ideas<br />made useful.</p><p>a closer look.<br />one project<br />at a time.</p></div>
+        <p className="hero-location">toronto, canada / selected work 01—{pad(visible.length)}</p>
+        <a className="hero-plus hero-plus-bottom" href={`#${firstId}`} aria-label="Scroll to the first work">↓</a>
       </section>
 
-      <div className="showcase-controls" id="work-gallery">
-        <div className="showcase-filters" role="group" aria-label="Filter work">
-          {filters.map((entry) => (
-            <button type="button" key={entry.id} aria-pressed={filter === entry.id} onClick={() => changeFilter(entry.id)}>
-              {entry.label}<sup>{pad(entry.id === 'all' ? items.length : items.filter((item) => categoryFilter(item) === entry.id).length)}</sup>
-            </button>
-          ))}
-        </div>
-        <details className="showcase-directory" ref={directoryRef}>
-          <summary>Quick index <span aria-hidden="true">+</span></summary>
-          <nav aria-label="Jump to a work">
-            {visible.map((item, index) => <a href={`#item-${item.slug}`} key={item.slug} onClick={() => directoryRef.current?.removeAttribute('open')}>
-              <span>{pad(index + 1)}</span><span>{item.company || item.title}</span><span aria-hidden="true">↘</span>
-            </a>)}
-          </nav>
-        </details>
+      <div className="gallery-reel" id="work-gallery" aria-label="Selected work">
+        {visible.map((item, index) => <article key={item.slug} className={`work-detail work-detail-${item.slug} gallery-scene gallery-screen`} id={`item-${item.slug}`} data-slug={item.slug} aria-labelledby={`title-${item.slug}`}>
+          <WorkSceneMedia item={item} gallery active={index === activeIndex || Boolean(activeSlug) && index === activeIndex + 1} />
+          <header className="work-detail-header gallery-scene-header"><span>{pad(index + 1)} / {pad(visible.length)} <span aria-hidden="true">—</span> {item.category}</span></header>
+          <a className="detail-focus gallery-focus-link" href={`/work/${item.slug}`} aria-label={`Explore ${title(item)}`} onClick={() => remember(item.slug)}><span className="gallery-focus-cross" aria-hidden="true">+</span><span className="detail-focus-action">Explore <span aria-hidden="true">↗</span></span></a>
+          {(item.slug === 'course-availability-notifier' || item.slug === 'artificial-intelligence-real-estate-scraper-filter') && <div className="gallery-peek-clip" aria-hidden="true"><img className="detail-art-peek" src={item.image} alt="" /></div>}
+          <div className="detail-copy gallery-copy">
+            <div className="detail-copy-row"><span aria-hidden="true">01</span><h2 id={`title-${item.slug}`}>{title(item)}</h2></div>
+            <div className="detail-copy-row"><span aria-hidden="true">02</span><p>{blurbs[item.slug] || item.impact}</p></div>
+          </div>
+        </article>)}
       </div>
 
-      <div className="showcase-gallery" aria-label="Work showcase">
-        {visible.map((item, index) => (
-          <article className="showcase-entry" id={`item-${item.slug}`} data-slug={item.slug} key={item.slug}>
-            <div className="showcase-entry-meta"><span>{pad(index + 1)} / {pad(visible.length)}</span><span>{categoryName(item)}</span>{item.dates && <span>{item.dates}</span>}</div>
-            <div className="showcase-art-link">
-              <div className="showcase-art" aria-hidden="true">
-                <img className="showcase-art-blur" src={item.image} alt="" loading={index === 0 ? 'eager' : 'lazy'} />
-                <img className="showcase-art-image" src={item.image} alt="" loading={index === 0 ? 'eager' : 'lazy'} />
-                <span className="showcase-art-frame"><span>+</span></span>
-                <span className="showcase-art-open">Take a closer look <span>↗</span></span>
-              </div>
-            </div>
-            <div className="showcase-entry-copy">
-              <h2>{item.company || item.title}</h2>
-              {item.company && <p className="showcase-role">{item.title}</p>}
-              <p className="showcase-impact">{item.impact}</p>
-              <p className="showcase-tools">{item.tags.slice(0, 4).join(' / ')}</p>
-              <a className="showcase-open-link" href={`/work/${item.slug}`} onClick={() => rememberPosition(item.slug)} aria-label={`Explore ${item.company || item.title}`}>Explore the work <span aria-hidden="true">↗</span></a>
-            </div>
-          </article>
-        ))}
-      </div>
-
-      <nav className="showcase-progress" aria-label="Position in the showcase">
-        <span className="showcase-progress-count">{pad(activeIndex + 1)} <span>/ {pad(visible.length)}</span></span>
-        <span className="showcase-progress-name">{active?.company || active?.title}</span>
-        <div className="showcase-progress-marks">{visible.map((item, index) => <a key={item.slug} href={`#item-${item.slug}`} aria-label={`Scroll to ${item.company || item.title}`} aria-current={activeIndex === index ? 'location' : undefined}><span /></a>)}</div>
-        <a href="#overview" className="showcase-back-top" aria-label="Back to showcase introduction">↑</a>
+      <nav className="gallery-position" aria-label="Position in selected work">
+        {activeSlug && <a href="#overview" aria-label="Back to gallery introduction">↑</a>}
+        <span>{activeSlug ? `${pad(activeIndex + 1)} / ${pad(visible.length)}` : `scroll to explore / ${pad(visible.length)}`}</span>
+        <div className="gallery-ticks">{visible.map((item, index) => <a href={`#item-${item.slug}`} key={item.slug} aria-label={`Scroll to ${title(item)}`} aria-current={activeSlug && index === activeIndex ? 'location' : undefined}><span /></a>)}</div>
       </nav>
-
-      <footer className="showcase-footer">
-        <p className="showcase-label">THAT’S THE WORK. WHAT’S NEXT?</p>
-        <a className="showcase-footer-invite" href="/note">let’s make<br />something useful. <span aria-hidden="true">↗</span></a>
-        <div className="showcase-footer-links"><a href="/AliHamoudi.pdf" download>Download résumé ↓</a><a href="mailto:alihamoudiu18@gmail.com">Email ↗</a><a href="https://github.com/alitcs" target="_blank" rel="noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/in/ali-hamoudi/" target="_blank" rel="noreferrer">LinkedIn ↗</a><span>Toronto, Canada</span></div>
-      </footer>
     </div>
   )
 }
