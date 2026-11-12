@@ -2,7 +2,7 @@ import { useEffect, useState, type FormEvent, type ReactNode } from 'react'
 import './App.css'
 import WorkShowcase from './WorkShowcase'
 import './Browsing.css'
-import WorkSceneMedia from './WorkSceneMedia'
+import WorkSceneMedia, { WorkArtPeek } from './WorkSceneMedia'
 
 type Page = 'home' | 'index' | 'experience' | 'projects' | 'freelance' | 'extracurricular' | 'note' | 'work'
 type WorkItem = {
@@ -484,8 +484,8 @@ const freelanceEntries = [
     summary: 'Created a paid Selenium and OpenAI tool that classifies apartment descriptions, filters for genuine two-bedroom listings, and saves results between runs.',
     tags: ['Python', 'AI', 'Automation'],
     imageLabel: 'Apartment filter image',
-    image: '/item-images/04_terminal_expanded.png',
-    hoverImage: '/item-images/apartment-hover.png',
+    image: '/item-images/apartment-base.png',
+    hoverImage: '/item-images/apartment-terminal.png',
     links: [{ label: 'View project', href: 'https://github.com/alitcs/Apartment-Filter' }],
   },
   {
@@ -501,13 +501,14 @@ const freelanceEntries = [
     links: [{ label: 'View project', href: 'https://github.com/alitcs/Course-Availability-Notifier' }],
   },
   {
-    title: 'Interior Studio Website',
+    title: 'Interior Designr',
+    slug: 'interior-studio-website',
     impact: 'Helps clients explore design work and enquire in English or Persian.',
     technical: 'Responsive web UI, bilingual content, interactive galleries',
     type: 'Business website',
     summary: 'Designed and built an interior design website with interactive before-and-after project galleries, English and Persian language options, and a project inquiry form.',
     tags: ['Web design', 'Responsive UI', 'Multilingual'],
-    imageLabel: 'Interior Studio website image',
+    imageLabel: 'Interior Designr website image',
     image: '/item-images/interiordesignr.png',
     hoverImage: '/item-images/interiordesignr-hover.png',
     previewUrl: 'https://interiordesignr.netlify.app/',
@@ -642,7 +643,7 @@ const workItems: WorkItem[] = [
     highlights: entry.highlights,
   })),
   ...freelanceEntries.map((entry) => ({
-    slug: slugify(entry.title),
+    slug: 'slug' in entry ? entry.slug : slugify(entry.title),
     title: entry.title,
     category: 'Freelance',
     summary: entry.summary,
@@ -770,7 +771,7 @@ function FreelancePage() {
       <section className="projects-page-content section-wrap">
         <div className="project-grid">
           {freelanceEntries.map((project, index) => {
-            const cardHref = `/work/${slugify(project.title)}`
+            const cardHref = `/work/${'slug' in project ? project.slug : slugify(project.title)}`
 
             return (
             <article className="project-card linked-card" key={project.title}>
@@ -883,9 +884,7 @@ function WorkDetailPage({ item }: { item?: WorkItem }) {
       ) : (
         <div className="detail-focus detail-focus-empty" aria-hidden="true" />
       )}
-      {(item.slug === 'course-availability-notifier' || item.slug === 'artificial-intelligence-real-estate-scraper-filter') && (
-        <img className="detail-art-peek" src={item.image} alt="" aria-hidden="true" />
-      )}
+      <WorkArtPeek item={item} />
       <div className="detail-copy">
         <div className="detail-copy-row">
           <span aria-hidden="true">01</span>

@@ -20,7 +20,7 @@ const workPresentation: Record<string, { title?: string; previewImage?: string; 
   },
   'interior-studio-website': {
     previewImage: '/gallery-previews/interior-studio-website.png',
-    title: 'Interior Studio',
+    title: 'Interior Designr',
     blurb: 'A bilingual home for an interior design studio.',
     detail: 'Designed and built a responsive studio website with English and Persian content. Interactive before-and-after galleries help visitors explore transformations, while a project inquiry form gives prospective clients a direct way to connect.',
   },

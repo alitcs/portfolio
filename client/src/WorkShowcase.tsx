@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import WorkSceneMedia, { type SceneItem } from './WorkSceneMedia'
+import WorkSceneMedia, { WorkArtPeek, type SceneItem } from './WorkSceneMedia'
 import './Gallery.css'
 
 type ShowcaseItem = SceneItem & {
@@ -61,6 +61,8 @@ export default function WorkShowcase({ items }: { items: readonly ShowcaseItem[]
   const ordered = [...items].sort((a, b) => order.indexOf(a.category) - order.indexOf(b.category))
   const visible = ordered.filter((item) => filter === 'all' || categoryFilter(item) === filter)
   const activeIndex = Math.max(0, visible.findIndex((item) => item.slug === activeSlug))
+  // Warm the next actual websites, even when static-image projects sit between them.
+  const preloadSlugs = new Set(visible.slice(activeIndex).filter((item) => item.previewUrl).slice(0, 3).map((item) => item.slug))
   const firstId = visible[0] ? `item-${visible[0].slug}` : 'overview'
 
   useEffect(() => {
@@ -180,10 +182,10 @@ export default function WorkShowcase({ items }: { items: readonly ShowcaseItem[]
 
       <div className="gallery-reel" id="work-gallery" aria-label="Selected work">
         {visible.map((item, index) => <article key={item.slug} className={`work-detail work-detail-${item.slug} gallery-scene gallery-screen`} id={`item-${item.slug}`} data-slug={item.slug} aria-labelledby={`title-${item.slug}`}>
-          <WorkSceneMedia item={item} gallery active={index === activeIndex || Boolean(activeSlug) && index === activeIndex + 1} />
+          <WorkSceneMedia item={item} gallery active={preloadSlugs.has(item.slug)} />
           <header className="work-detail-header gallery-scene-header"><span>{pad(index + 1)} / {pad(visible.length)} <span aria-hidden="true">—</span> {item.category}</span></header>
           <a className="detail-focus gallery-focus-link" href={`/work/${item.slug}`} aria-label={`Explore ${title(item)}`} onClick={() => remember(item.slug)}><span className="gallery-focus-cross" aria-hidden="true">+</span><span className="detail-focus-action">Explore <span aria-hidden="true">↗</span></span></a>
-          {(item.slug === 'course-availability-notifier' || item.slug === 'artificial-intelligence-real-estate-scraper-filter') && <div className="gallery-peek-clip" aria-hidden="true"><img className="detail-art-peek" src={item.image} alt="" /></div>}
+          {(item.slug === 'course-availability-notifier' || item.slug === 'artificial-intelligence-real-estate-scraper-filter') && <div className="gallery-peek-clip" aria-hidden="true"><WorkArtPeek item={item} /></div>}
           <div className="detail-copy gallery-copy">
             <div className="detail-copy-row"><span aria-hidden="true">01</span><h2 id={`title-${item.slug}`}>{title(item)}</h2></div>
             <div className="detail-copy-row"><span aria-hidden="true">02</span><p>{blurbs[item.slug] || item.impact}</p></div>

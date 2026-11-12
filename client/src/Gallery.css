@@ -10,13 +10,42 @@ html:has(.gallery-exhibition)::-webkit-scrollbar { display: none; }
 .gallery-scene .detail-blur { background: #edededca; backdrop-filter: grayscale(1) blur(18px); -webkit-backdrop-filter: grayscale(1) blur(18px); }
 .gallery-scene .detail-blur-top { background: linear-gradient(to bottom, #ededed, #edededca); }
 .gallery-scene .detail-blur-bottom { background: linear-gradient(to bottom, #edededca, #ededed); }
-.gallery-scene .detail-blur::after { mix-blend-mode: multiply; opacity: .2; }
+.gallery-scene .detail-blur::after { mix-blend-mode: multiply; }
 .gallery-exhibition .gallery-scene .work-detail-backdrop .detail-artwork,
-.gallery-exhibition .gallery-scene .gallery-preview-placeholder,
-.gallery-exhibition .gallery-scene .detail-art-peek { filter: none; }
-.gallery-scene .work-detail-backdrop .gallery-preview-placeholder { object-fit: cover; }
+.gallery-exhibition .gallery-scene .detail-art-peek,
+.gallery-exhibition .gallery-scene .detail-apartment-peek > img { filter: none; }
+.gallery-preview-loading { position: absolute; inset: 0; background: #e4e4e4; }
+.gallery-preview-loading > span { position: absolute; top: var(--focus-top); left: var(--focus-left); width: var(--focus-width); height: var(--focus-height); display: grid; place-items: center; color: #777; font: 400 11px/1.4 var(--sans); }
 .gallery-scene .gallery-live-frame { opacity: 0; }
 .gallery-scene .gallery-live-frame.is-ready { opacity: 1; }
+
+/* Frame the live sites independently of the fixed focus window. */
+.gallery-scene .work-detail-backdrop iframe {
+  position: absolute;
+  left: var(--gallery-preview-x, 0px);
+  top: var(--gallery-preview-y, 0px);
+  width: calc(100% / var(--gallery-preview-viewport, .65));
+  height: calc(100% / var(--gallery-preview-viewport, .65));
+  transform: scale(var(--gallery-preview-scale, .65));
+}
+.gallery-scene.work-detail-connect-ops { --gallery-preview-x: calc(min(36vw, 52svh) - 47vw); }
+.gallery-scene.work-detail-t-a-s-c-website-development { --gallery-preview-scale: .5; --gallery-preview-x: 7vw; --gallery-preview-y: 13svh; }
+.gallery-scene.work-detail-robotic-arm-control-system-with-web-ui { --gallery-preview-scale: .82; --gallery-preview-viewport: .82; --gallery-preview-x: 1vw; --gallery-preview-y: 14svh; }
+.gallery-scene.work-detail-little-genius-island-website-booking-system { --gallery-preview-scale: .52; --gallery-preview-x: 1vw; --gallery-preview-y: 8svh; }
+.gallery-scene.work-detail-interior-studio-website { --gallery-preview-scale: .52; --gallery-preview-x: -3vw; --gallery-preview-y: 8svh; }
+.gallery-scene.work-detail-course-availability-notifier { --gallery-image-x: -3vw; }
+.gallery-scene.work-detail-under-the-tree-charity { --gallery-image-x: -1vw; }
+.gallery-scene.work-detail-under-the-tree-charity .detail-artwork,
+.gallery-scene.work-detail-course-availability-notifier .detail-artwork { left: var(--gallery-image-x); }
+.gallery-scene.work-detail-course-availability-notifier .detail-art-peek { left: calc(22% + var(--gallery-image-x)); }
+
+/* Fit the portrait to its window at every aspect ratio, with no letterbox edges. */
+.gallery-scene.work-detail-tutoring .detail-artwork-fill { display: block; }
+.gallery-scene.work-detail-tutoring .work-detail-backdrop .detail-artwork {
+  left: var(--focus-left); top: var(--focus-top);
+  width: var(--focus-width); height: var(--focus-height);
+  object-fit: cover; object-position: 40% 50%;
+}
 .gallery-scene .work-detail-backdrop { content-visibility: auto; contain-intrinsic-size: auto 100svh; }
 .gallery-scene .gallery-copy { color: #171717; }
 .gallery-copy h2 { margin: 0; color: inherit; font: inherit; letter-spacing: inherit; overflow-wrap: anywhere; }
@@ -69,6 +98,11 @@ html:has(.gallery-exhibition)::-webkit-scrollbar { display: none; }
 .gallery-exhibition .detail-focus:focus-visible { outline-color: #fff; }
 
 @media (max-width: 760px) {
+  .gallery-scene.work-detail-connect-ops { --gallery-preview-x: -6vw; }
+  .gallery-scene.work-detail-t-a-s-c-website-development { --gallery-preview-scale: .46; --gallery-preview-x: 4vw; --gallery-preview-y: 14svh; }
+  .gallery-scene.work-detail-robotic-arm-control-system-with-web-ui { --gallery-preview-scale: .54; --gallery-preview-viewport: .58; --gallery-preview-x: -3vw; --gallery-preview-y: 14svh; }
+  .gallery-scene.work-detail-little-genius-island-website-booking-system,
+  .gallery-scene.work-detail-interior-studio-website { --gallery-preview-scale: .48; --gallery-preview-x: 3vw; --gallery-preview-y: 13svh; }
   .gallery-intro-links { top: 22px; left: 20px; width: calc(100% - 88px); height: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 13px 10px; font-size: 12px; }
   .gallery-intro-links > a { position: static; gap: 7px; }
   .gallery-intro-links > a > span { min-width: 18px; font-size: 10px; }

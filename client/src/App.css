@@ -593,7 +593,8 @@ h1, h2, h3, p { margin-top: 0; }
 .detail-blur-right { top: var(--focus-top); right: 0; left: calc(var(--focus-left) + var(--focus-width)); height: var(--focus-height); }
 .detail-art-peek { position: absolute; z-index: 39; top: 50%; left: 22%; height: auto; transform: translate(-22%, -50%); pointer-events: none; }
 .work-detail-course-availability-notifier .detail-art-peek { width: min(100%, calc(100svh * 1683 / 2103)); clip-path: inset(39.3% 31.7% 53.9% 26.3% round 2%); }
-.work-detail-artificial-intelligence-real-estate-scraper-filter .detail-art-peek { width: min(100%, calc(100svh * 2172 / 1629)); clip-path: inset(33.2% 39.5% 36.3% 14% round 1.1%); }
+.detail-apartment-peek { position: absolute; z-index: 39; top: 50%; left: 22%; width: min(100%, calc(100svh * 1460 / 1078)); aspect-ratio: 1460 / 1078; transform: translate(-22%, -50%); pointer-events: none; }
+.detail-apartment-peek > img { position: absolute; top: 19%; left: 13.3%; width: 72.25%; height: 48.05%; object-fit: fill; }
 .detail-focus { position: absolute; z-index: 38; top: var(--focus-top); left: var(--focus-left); width: var(--focus-width); height: var(--focus-height); display: grid; place-items: center; border: 1px solid #ffffffdd; color: #fff; text-decoration: none; }
 .detail-focus:focus-visible { outline: 3px solid white; outline-offset: 4px; }
 .detail-focus-action { position: absolute; bottom: 16px; left: 50%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 9px 13px; border: 1px solid #ffffffb3; border-radius: 999px; background: #fffef2e8; color: #171b19; font: 500 10px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; opacity: 0; transform: translateX(-50%); transition: opacity .2s ease; }
