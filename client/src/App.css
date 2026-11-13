@@ -452,7 +452,7 @@ h1, h2, h3, p { margin-top: 0; }
   .callout-left { left: 2%; }
 }
 
-.detail-main { height: 100svh; min-height: 0; overflow: hidden; }
+.detail-main { min-height: 100svh; overflow: visible; }
 .detail-main + .site-footer { display: none; }
 .work-detail { height: 100%; min-height: 100svh; position: relative; overflow: hidden; isolation: isolate; background: #101313; color: #fff; }
 .work-detail-backdrop { position: absolute; z-index: -2; inset: 0; overflow: hidden; background: #101313; }
@@ -556,9 +556,9 @@ h1, h2, h3, p { margin-top: 0; }
   .detail-external-links a { font-size: 8px; }
 }
 
-/* The landing is a single screen; the work index has its own route. */
-.home-main { height: 100svh; min-height: 0; overflow: hidden; }
-.home-hero { height: 100%; min-height: 0; }
+/* The landing leads directly into the work reel. */
+.home-main { min-height: 100svh; overflow: visible; }
+.home-hero { height: 100svh; min-height: 0; }
 .home-header .main-nav { max-height: calc(100svh - 80px); overflow-y: auto; }
 .hero-blur { background: radial-gradient(ellipse at center, #b5b8af 0%, #e1e2dd 35%, transparent 72%); filter: blur(35px); }
 .hero-blur::after { display: none; }

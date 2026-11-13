@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 export type SceneItem = {
   slug: string
   title: string
   image: string
   previewUrl?: string
+  previewImage?: string
 }
 
 function GalleryLiveFrame({ item }: { item: SceneItem }) {
@@ -21,9 +22,7 @@ function GalleryLiveFrame({ item }: { item: SceneItem }) {
 
 function GalleryPreview({ item, active }: { item: SceneItem; active: boolean }) {
   const [started, setStarted] = useState(active)
-  useEffect(() => {
-    if (active) setStarted(true)
-  }, [active])
+  if (active && !started) setStarted(true)
 
   return <>
     <div className="gallery-preview-loading"><span>Loading live preview…</span></div>
@@ -51,7 +50,9 @@ export default function WorkSceneMedia({ item, gallery = false, active = true }:
 }) {
   return (
     <div className="work-detail-backdrop" aria-hidden="true">
-      {item.previewUrl ? gallery ? (
+      {item.previewImage ? (
+        <img className="detail-preview-image" src={item.previewImage} alt="" />
+      ) : item.previewUrl ? gallery ? (
         <GalleryPreview item={item} active={active} />
       ) : (
         <iframe src={item.previewUrl} title={`${item.title} preview`} tabIndex={-1} loading="eager" />
@@ -61,10 +62,12 @@ export default function WorkSceneMedia({ item, gallery = false, active = true }:
           <img className="detail-artwork" src={item.image} alt="" />
         </>
       )}
-      <div className="detail-blur detail-blur-top" />
-      <div className="detail-blur detail-blur-bottom" />
-      <div className="detail-blur detail-blur-left" />
-      <div className="detail-blur detail-blur-right" />
+      {gallery ? <div className="detail-blur gallery-matte" /> : <>
+        <div className="detail-blur detail-blur-top" />
+        <div className="detail-blur detail-blur-bottom" />
+        <div className="detail-blur detail-blur-left" />
+        <div className="detail-blur detail-blur-right" />
+      </>}
     </div>
   )
 }

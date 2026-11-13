@@ -1,19 +1,42 @@
 /* The gallery is a reel of the existing detail-page scenes, not a card layout. */
-html:has(.gallery-exhibition) { scroll-snap-type: y mandatory; scroll-padding-top: 0; scrollbar-width: none; }
+html:has(.gallery-exhibition) { scroll-snap-type: none; scroll-padding-top: 0; scrollbar-width: none; }
 html:has(.gallery-exhibition)::-webkit-scrollbar { display: none; }
-.gallery-exhibition { background: #ededed; color: #171717; }
+.gallery-exhibition { --gallery-toolbar-height: 80px; background: #ededed; color: #171717; }
 .gallery-exhibition a { text-decoration: none; }
-.gallery-screen { width: 100%; height: 100svh; min-height: 100svh; scroll-snap-align: start; scroll-snap-stop: always; scroll-margin-top: 0; }
-.gallery-exhibition .gallery-intro.home-hero { height: 100svh; min-height: 100svh; background: #ededed; }
-.gallery-reel { width: 100%; }
+.gallery-screen { width: 100%; height: 100svh; min-height: 100svh; scroll-margin-top: var(--gallery-toolbar-height); }
+.monochrome-shell .gallery-exhibition .home-hero { height: 100svh; min-height: 100svh; background: #ededed; }
+.gallery-exhibition .home-hero::before {
+  inset: 0; width: 100%; height: 100%; mask-image: none;
+  background-attachment: fixed; mix-blend-mode: multiply; opacity: .48;
+}
+.gallery-exhibition .hero-blur {
+  left: 0; width: 100%;
+  mask-image: radial-gradient(ellipse 44% 45% at 56% 45%, #000 0%, #000 35%, transparent 100%);
+}
+.gallery-exhibition .hero-scroll { min-height: 44px; gap: 14px; color: #555; font: 400 11px/1.2 var(--sans); }
+.gallery-exhibition .hero-scroll > span:last-child { font-size: 20px; }
+.gallery-exhibition .hero-cta:hover .hero-cta-arrow { transform: translateY(4px); }
+.gallery-reel { position: relative; width: 100%; }
 .gallery-exhibition .gallery-scene { height: 100svh; min-height: 100svh; background: #ededed; --detail-blur-tint: #edededca; }
-.gallery-scene .detail-blur { background: #edededca; backdrop-filter: grayscale(1) blur(18px); -webkit-backdrop-filter: grayscale(1) blur(18px); }
-.gallery-scene .detail-blur-top { background: linear-gradient(to bottom, #ededed, #edededca); }
-.gallery-scene .detail-blur-bottom { background: linear-gradient(to bottom, #edededca, #ededed); }
+.gallery-matte {
+  inset: 0;
+  clip-path: polygon(evenodd,
+    0 0, 100% 0, 100% 100%, 0 100%, 0 0,
+    var(--focus-left) var(--focus-top),
+    calc(var(--focus-left) + var(--focus-width)) var(--focus-top),
+    calc(var(--focus-left) + var(--focus-width)) calc(var(--focus-top) + var(--focus-height)),
+    var(--focus-left) calc(var(--focus-top) + var(--focus-height)),
+    var(--focus-left) var(--focus-top));
+}
+/* An opaque surround keeps image/frame edges out of the white grain. */
+.gallery-scene .gallery-matte { background: #ededed; backdrop-filter: none; -webkit-backdrop-filter: none; }
 .gallery-scene .detail-blur::after { mix-blend-mode: multiply; }
 .gallery-exhibition .gallery-scene .work-detail-backdrop .detail-artwork,
 .gallery-exhibition .gallery-scene .detail-art-peek,
-.gallery-exhibition .gallery-scene .detail-apartment-peek > img { filter: none; }
+.gallery-exhibition .gallery-scene .detail-apartment-peek > img,
+.gallery-exhibition .detail-preview-image { filter: none; }
+.gallery-exhibition .work-detail-backdrop .detail-preview-image { object-fit: cover; object-position: top left; }
+.gallery-exhibition .work-detail-vironix-ai .detail-preview-image { top: var(--focus-top); left: var(--focus-left); width: max(100%, calc(70svh * 1.5 / .68)); height: auto; transform: scale(.68); transform-origin: top left; }
 .gallery-preview-loading { position: absolute; inset: 0; background: #e4e4e4; }
 .gallery-preview-loading > span { position: absolute; top: var(--focus-top); left: var(--focus-left); width: var(--focus-width); height: var(--focus-height); display: grid; place-items: center; color: #777; font: 400 11px/1.4 var(--sans); }
 .gallery-scene .gallery-live-frame { opacity: 0; }
@@ -33,95 +56,134 @@ html:has(.gallery-exhibition)::-webkit-scrollbar { display: none; }
 .gallery-scene.work-detail-robotic-arm-control-system-with-web-ui { --gallery-preview-scale: .82; --gallery-preview-viewport: .82; --gallery-preview-x: 1vw; --gallery-preview-y: 14svh; }
 .gallery-scene.work-detail-little-genius-island-website-booking-system { --gallery-preview-scale: .52; --gallery-preview-x: 1vw; --gallery-preview-y: 8svh; }
 .gallery-scene.work-detail-interior-studio-website { --gallery-preview-scale: .52; --gallery-preview-x: -3vw; --gallery-preview-y: 8svh; }
-.gallery-scene.work-detail-course-availability-notifier { --gallery-image-x: -3vw; }
-.gallery-scene.work-detail-under-the-tree-charity { --gallery-image-x: -1vw; }
-.gallery-scene.work-detail-under-the-tree-charity .detail-artwork,
-.gallery-scene.work-detail-course-availability-notifier .detail-artwork { left: var(--gallery-image-x); }
-.gallery-scene.work-detail-course-availability-notifier .detail-art-peek { left: calc(22% + var(--gallery-image-x)); }
+.gallery-screen { --gallery-art-center: calc(var(--focus-left) + min(18vw, 26svh)); }
+.gallery-screen.work-detail-course-availability-notifier { --gallery-art-width: min(calc(100svh * 1683 / 2103 * 1.3), 110vw); }
+.gallery-screen.work-detail-under-the-tree-charity { --gallery-art-width: min(calc(100svh * 1683 / 2103 * 1.65), 150vw); }
+.gallery-screen.work-detail-course-availability-notifier .work-detail-backdrop .detail-artwork,
+.gallery-screen.work-detail-under-the-tree-charity .work-detail-backdrop .detail-artwork {
+  width: var(--gallery-art-width); max-width: none; height: auto;
+  top: 50%; left: var(--gallery-art-center);
+  transform: translate(-50%, -50%);
+}
+.gallery-screen.work-detail-under-the-tree-charity .work-detail-backdrop .detail-artwork { left: calc(var(--gallery-art-center) - 2vw); }
 
 /* Fit the portrait to its window at every aspect ratio, with no letterbox edges. */
 .gallery-scene.work-detail-tutoring .detail-artwork-fill { display: block; }
 .gallery-scene.work-detail-tutoring .work-detail-backdrop .detail-artwork {
   left: var(--focus-left); top: var(--focus-top);
-  width: var(--focus-width); height: var(--focus-height);
+  width: min(36vw, 52svh); height: var(--focus-height);
   object-fit: cover; object-position: 40% 50%;
 }
-.gallery-scene .work-detail-backdrop { content-visibility: auto; contain-intrinsic-size: auto 100svh; }
 .gallery-scene .gallery-copy { color: #171717; }
 .gallery-copy h2 { margin: 0; color: inherit; font: inherit; letter-spacing: inherit; overflow-wrap: anywhere; }
-.gallery-focus-cross { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font: 200 34px/1 var(--sans); color: white; mix-blend-mode: difference; pointer-events: none; }
+.gallery-info-toggle { display: inline-flex; align-items: center; gap: 9px; min-height: 36px; margin-top: 6px; padding: 8px 0; border: 0; background: transparent; color: #666; font: 400 11px/1.2 var(--sans); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; cursor: pointer; }
+.gallery-info-toggle:hover { color: #171717; }
+.gallery-exhibition .detail-focus { border: 0; }
+.gallery-focus-link { padding: 0; border-radius: 0; background: transparent; cursor: pointer; }
+.gallery-focus-arrow { position: absolute; right: 14px; bottom: 14px; display: grid; place-items: center; width: 32px; height: 32px; border: 1px solid #ffffff99; background: #edededdb; color: #171717; font: 300 22px/1 var(--sans); pointer-events: none; transition: background .2s ease; }
+.gallery-focus-link:hover .gallery-focus-arrow, .gallery-focus-link:focus-visible .gallery-focus-arrow { background: #fff; }
+.gallery-expanded .detail-copy h2 { margin: 0; color: inherit; font: inherit; letter-spacing: inherit; overflow-wrap: anywhere; }
+.gallery-expanded .work-detail-backdrop .detail-artwork,
+.gallery-expanded .detail-art-peek,
+.gallery-expanded .detail-apartment-peek > img { filter: none; }
+.gallery-expanded button.detail-back-link { padding: 0; border: 0; background: transparent; color: inherit; cursor: pointer; }
+.gallery-expanded button.detail-back-link > span { transform: none; }
+.gallery-expanded .work-detail-header { padding-right: max(8%, 80px); }
+.gallery-exhibition .gallery-expanded { height: auto; --focus-top: 15svh; --focus-height: 70svh; }
+.detail-main .work-detail { --focus-top: 15svh; --focus-height: 70svh; }
+.gallery-expanded .work-detail-backdrop, .detail-main .work-detail-backdrop { height: 100svh; bottom: auto; }
+.gallery-expanded .detail-copy, .detail-main .detail-copy { position: relative; top: auto; left: 66%; width: 31%; transform: none; display: flex; flex-direction: column; justify-content: center; min-height: 100svh; padding-block: 110px 80px; line-height: 1.35; }
+.gallery-expanded .detail-copy-row, .detail-main .detail-copy-row { flex-shrink: 0; }
+.gallery-expanded .detail-copy-row + .detail-copy-row, .detail-main .detail-copy-row + .detail-copy-row { margin-top: 22px; }
+.gallery-expanded .detail-copy-row:nth-child(2), .detail-main .detail-copy-row:nth-child(2) { margin-left: 8%; }
+.gallery-expanded .detail-copy-row:nth-child(3), .detail-main .detail-copy-row:nth-child(3) { margin-left: 16%; }
+.gallery-expanded .detail-copy-row:nth-child(4), .detail-main .detail-copy-row:nth-child(4) { margin-left: 24%; }
+.detail-block-label { margin: 0 0 8px; color: inherit; font: 400 10px/1.2 var(--sans); letter-spacing: .02em; opacity: .65; }
+.detail-points { display: grid; gap: 9px; margin: 0; padding: 0; list-style: none; }
+.detail-points li { position: relative; padding-left: 12px; overflow-wrap: anywhere; }
+.detail-points li::before { content: '·'; position: absolute; left: 0; opacity: .65; }
+.gallery-expanded .detail-apartment-peek, .detail-main .detail-apartment-peek { top: 50svh; }
+.detail-main .detail-art-peek { top: 50svh; }
+.gallery-expanded .detail-copy .detail-role, .detail-main .detail-copy .detail-role { margin-top: 10px; font-size: .8em; line-height: 1.4; opacity: .8; }
+.detail-project-link { display: inline-flex; align-items: center; gap: 9px; min-height: 36px; margin-top: 8px; color: inherit; font-size: .8em; text-decoration: underline !important; text-underline-offset: 4px; }
+.gallery-expanded.work-detail-tutoring, .gallery-expanded.work-detail-ontario-government-govtechon, .detail-main .work-detail-tutoring, .detail-main .work-detail-ontario-government-govtechon { background: #fff; }
 .gallery-peek-clip { position: absolute; z-index: 39; inset: 0; pointer-events: none; clip-path: inset(var(--focus-top) calc(100% - var(--focus-left) - var(--focus-width)) calc(100% - var(--focus-top) - var(--focus-height)) var(--focus-left)); }
 .gallery-scene .gallery-scene-header { justify-content: flex-end; padding-right: 8%; color: #555; font-size: 10px; }
 .gallery-scene-header > span > span { margin-inline: 9px; color: #999; }
 
-/* The opening screen borrows the landing page's flower, crop, and staggered links. */
-.gallery-intro-links { position: absolute; z-index: 40; top: 5.3vh; left: 5vw; width: min(500px, 42vw); height: 270px; font: 400 clamp(13px, 1.1vw, 16px)/1.05 var(--sans); }
-.gallery-intro-links > a { position: absolute; display: flex; align-items: flex-start; gap: 13px; min-height: 24px; color: #171717; }
-.gallery-intro-links > a > span { min-width: 24px; font-size: 11px; padding-top: 2px; }
-.gallery-intro-links > a:hover { color: #777; }
-.gallery-intro-links > a:nth-child(1) { top: 0; left: 0; }
-.gallery-intro-links > a:nth-child(2) { top: 3.2vh; left: 55%; }
-.gallery-intro-links > a:nth-child(3) { top: 7.7vh; left: 25%; }
-.gallery-intro-links > a:nth-child(4) { top: 12.2vh; left: 69%; }
-.gallery-intro-links > a:nth-child(5) { top: 17.4vh; left: 48%; }
-.gallery-intro-links > a:nth-child(6) { top: 23vh; left: 0; }
-.gallery-intro .gallery-start { z-index: 40; }
-.gallery-intro .hero-editorial { z-index: 40; }
-.gallery-intro .hero-location { z-index: 40; }
-.gallery-intro .hero-plus { z-index: 40; }
-
-/* Navigation floats over the scene, as on the landing and individual work pages. */
-.gallery-header { position: fixed; inset: 0 0 auto; z-index: 60; height: 0; }
-.gallery-brand { position: absolute; top: 31px; left: 5vw; padding-block: 8px; color: #171717; font: 400 11px/1.2 var(--sans); }
-.gallery-brand[hidden] { display: none; }
-.gallery-brand > span { color: #777; margin-left: 10px; }
-.gallery-menu-toggle { position: absolute; top: 2.4vh; right: 2.1vw; display: grid; place-items: center; width: 46px; height: 46px; border: 0; background: transparent; color: #171717; cursor: pointer; }
-.gallery-menu-toggle > span { font: 200 46px/1 var(--sans); transition: transform .2s; }
-.gallery-menu-toggle.is-open > span { transform: rotate(45deg); }
-.gallery-directory { position: absolute; top: 80px; right: 3vw; width: min(420px, calc(100vw - 36px)); max-height: calc(100svh - 110px); overflow-y: auto; overscroll-behavior: contain; padding: 25px; border: 1px solid #c2c2c2; background: #f3f3f3f7; backdrop-filter: blur(20px); color: #171717; }
-.gallery-directory > p { font-size: 11px; color: #666; margin: 0 0 18px; }
-.gallery-filters { display: flex; flex-wrap: wrap; gap: 0 18px; padding-bottom: 15px; }
-.gallery-filters button { padding: 8px 0; min-height: 36px; background: none; border: 0; font: 400 11px/1.3 var(--sans); color: #777; cursor: pointer; }
-.gallery-filters button[aria-pressed='true'] { color: #111; text-decoration: underline; text-underline-offset: 6px; }
-.gallery-directory-items > a { display: grid; grid-template-columns: 24px 1fr 15px; align-items: center; gap: 12px; min-height: 48px; padding-block: 12px; border-top: 1px solid #ccc; font-size: 12px; line-height: 1.35; }
-.gallery-directory-items > a > span:first-child { color: #777; font-size: 9px; }
-.gallery-directory-items > a:hover { color: #777; }
-.gallery-directory-links { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; border-top: 1px solid #ccc; margin-top: 15px; padding-top: 20px; font-size: 11px; }
+/* Filters stay visible while browsing the work. */
+.gallery-toolbar {
+  position: sticky; top: 0; z-index: 60; isolation: isolate;
+  display: grid; grid-template-columns: minmax(120px, 1fr) auto;
+  align-items: center; gap: 20px; min-height: var(--gallery-toolbar-height);
+  padding: 12px 5vw; background: #ededed; color: #171717;
+}
+.gallery-toolbar::before {
+  content: ''; position: absolute; z-index: -1; inset: 0; pointer-events: none;
+  background: url('/images/film-grain.svg') 0 0 / 180px 180px fixed;
+  mix-blend-mode: multiply; opacity: .48;
+}
+.gallery-toolbar-heading { display: grid; gap: 5px; }
+.gallery-toolbar-heading h2 { margin: 0; font: 400 12px/1.2 var(--sans); }
+.gallery-toolbar-heading > span { color: #777; font: 400 10px/1.2 var(--sans); }
+.gallery-filters { display: flex; align-items: center; gap: 4px; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+.gallery-filters::-webkit-scrollbar { display: none; }
+.gallery-filters button {
+  display: inline-flex; align-items: center; gap: 9px; flex-shrink: 0;
+  min-height: 44px; padding: 10px 13px; border: 1px solid transparent; border-radius: 0;
+  background: transparent; color: #666; font: 400 11px/1.2 var(--sans); cursor: pointer;
+  transition: border-color .18s ease, color .18s ease;
+}
+.gallery-filters button:hover { border-color: #aaa; color: #171717; }
+.gallery-filters button[aria-pressed='true'] { border-color: #171717; color: #171717; }
+.gallery-filter-count { font-size: 9px; opacity: .6; }
 .gallery-position { position: fixed; z-index: 45; right: 3vw; bottom: 4vh; display: flex; align-items: center; gap: 16px; color: #333; font: 400 10px/1.2 var(--sans); }
 .gallery-position > a { display: grid; place-items: center; min-width: 30px; min-height: 36px; font-size: 20px; }
-.gallery-ticks { display: flex; align-items: center; }
-.gallery-ticks > a { display: grid; place-items: center; width: 12px; min-height: 36px; }
-.gallery-ticks > a > span { width: 1px; height: 8px; background: #888; transition: height .2s; }
-.gallery-ticks > a[aria-current] > span { height: 18px; background: #111; }
-.gallery-ticks > a:hover > span { height: 15px; }
+.gallery-position[hidden] { display: none; }
 .gallery-exhibition :focus-visible { outline: 2px solid #171717; outline-offset: 5px; }
 .gallery-exhibition .detail-focus:focus-visible { outline-color: #fff; }
 
+/* Keep the terminal and its source artwork inside the media column. */
+@media (min-width: 761px) {
+  .gallery-expanded.work-detail-artificial-intelligence-real-estate-scraper-filter,
+  .detail-main .work-detail-artificial-intelligence-real-estate-scraper-filter { --focus-width: 56vw; }
+  .gallery-expanded.work-detail-artificial-intelligence-real-estate-scraper-filter .detail-artwork,
+  .detail-main .work-detail-artificial-intelligence-real-estate-scraper-filter .detail-artwork { left: 7%; width: 56%; object-position: center; }
+  .gallery-expanded .detail-apartment-peek, .detail-main .detail-apartment-peek { display: none; }
+}
+
 @media (max-width: 760px) {
+  .detail-main .work-detail { --focus-top: 15svh; --focus-height: 50svh; }
+  .gallery-exhibition .home-hero .hero-cta { top: 24%; left: 6%; font-size: 18px; }
+  .gallery-scene.work-detail-tutoring .work-detail-backdrop .detail-artwork { width: 52vw; }
+  .gallery-screen { --gallery-art-center: calc(var(--focus-left) + 26vw); }
+  .gallery-screen.work-detail-course-availability-notifier { --gallery-art-center: calc(var(--focus-left) + 29vw); --gallery-art-width: min(calc(100svh * 1683 / 2103 * 1.3), 122vw); }
+  .gallery-screen.work-detail-under-the-tree-charity { --gallery-art-width: min(calc(100svh * 1683 / 2103 * 1.65), 190vw); }
+  .gallery-screen.work-detail-under-the-tree-charity .work-detail-backdrop .detail-artwork { top: calc(50% - 5svh); }
+  .gallery-exhibition .work-detail-vironix-ai .detail-preview-image { width: max(100%, calc(50svh * 1.5 / .68)); }
   .gallery-scene.work-detail-connect-ops { --gallery-preview-x: -6vw; }
   .gallery-scene.work-detail-t-a-s-c-website-development { --gallery-preview-scale: .46; --gallery-preview-x: 4vw; --gallery-preview-y: 14svh; }
   .gallery-scene.work-detail-robotic-arm-control-system-with-web-ui { --gallery-preview-scale: .54; --gallery-preview-viewport: .58; --gallery-preview-x: -3vw; --gallery-preview-y: 14svh; }
   .gallery-scene.work-detail-little-genius-island-website-booking-system,
   .gallery-scene.work-detail-interior-studio-website { --gallery-preview-scale: .48; --gallery-preview-x: 3vw; --gallery-preview-y: 13svh; }
-  .gallery-intro-links { top: 22px; left: 20px; width: calc(100% - 88px); height: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 13px 10px; font-size: 12px; }
-  .gallery-intro-links > a { position: static; gap: 7px; }
-  .gallery-intro-links > a > span { min-width: 18px; font-size: 10px; }
-  .gallery-menu-toggle { top: 14px; right: 11px; }
-  .gallery-brand { top: 23px; left: 20px; font-size: 10px; }
-  .gallery-brand > span { margin-left: 6px; }
+  .gallery-exhibition { --gallery-toolbar-height: 112px; }
+  .gallery-toolbar { grid-template-columns: 1fr; gap: 3px; padding: 10px 20px 7px; }
+  .gallery-toolbar-heading { display: flex; align-items: baseline; gap: 10px; }
+  .gallery-toolbar-heading h2 { font-size: 11px; }
+  .gallery-filters { grid-column: 1 / -1; gap: 2px; margin-inline: -6px; }
+  .gallery-filters button { padding-inline: 8px; font-size: 10.5px; }
+  .gallery-filter-count { display: none; }
   .gallery-scene .gallery-scene-header { top: 55px; padding: 15px 20px; font-size: 8px; }
   .gallery-position { bottom: 2.5vh; right: 4%; gap: 10px; font-size: 9px; }
   .gallery-position > a { font-size: 18px; }
-  .gallery-ticks > a { width: 10px; }
-  .gallery-focus-cross { font-size: 27px; }
+  .gallery-exhibition .gallery-expanded { height: auto; --focus-top: 15svh; --focus-height: 50svh; }
+  .gallery-expanded .detail-copy, .detail-main .detail-copy { position: relative; top: auto; left: auto; width: 84%; min-height: 0; display: block; margin: 69svh 8% 0; padding: 0 0 80px; transform: none; }
+  .gallery-expanded .detail-copy-row:nth-child(n + 2), .detail-main .detail-copy-row:nth-child(n + 2) { margin-left: 0; margin-top: 20px; }
 }
 @media (max-width: 380px) {
-  .gallery-intro-links { gap: 12px 5px; font-size: 11px; }
-  .gallery-intro-links > a > span { min-width: 14px; font-size: 9px; }
-  .gallery-position { gap: 7px; }
-  .gallery-ticks > a { width: 8px; }
+  .gallery-toolbar { padding-inline: 16px; }
+  .gallery-filters button { padding-inline: 8px; font-size: 10px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  html:has(.gallery-exhibition) { scroll-snap-type: none; }
-  .gallery-scene, .gallery-menu-toggle > span, .gallery-ticks > a > span { transition: none !important; }
+  .gallery-scene, .gallery-filters button { transition: none !important; }
 }

@@ -9,6 +9,7 @@
  *   overlay.setBoxes(false); // hide boxes
  *   overlay.setLinks(false); // hide lines
  *   overlay.pause(); overlay.resume(); overlay.destroy();
+ *   overlay.setActive(false); // suspend an offscreen layer and release its bitmap
  *
  * The canvas is transparent and ignores the mouse, so it can sit over any UI.
  * Pass document.body (or nothing) to cover the whole viewport.
@@ -18,6 +19,7 @@
     target = target || document.body;
     const fullscreen = target === document.body || target === document.documentElement;
     const canvas = document.createElement('canvas');
+    canvas.dataset.blobOverlay = '';
     canvas.setAttribute('aria-hidden', 'true');
     Object.assign(canvas.style, {
       position: fullscreen ? 'fixed' : 'absolute', inset: '0', width: '100%', height: '100%',
@@ -42,6 +44,8 @@
     let clusters = [];
     let nextId = 1;
     let paused = false;
+    let active = options.active ?? true;
+    let destroyed = false;
     let sceneTime = 0;
     let lastFrame;
     let lastDetection = 0;
@@ -50,22 +54,43 @@
     let frame;
     let cssWidth = 1;
     let cssHeight = 1;
+    let pixelRatio = 1;
+
+    function requestRender() {
+      if (active && !destroyed && frame === undefined) frame = requestAnimationFrame(animate);
+    }
+
+    function stopFrame() {
+      cancelAnimationFrame(frame);
+      frame = undefined;
+      lastFrame = undefined;
+    }
 
     function resize() {
       const bounds = fullscreen ? { width: innerWidth, height: innerHeight } : target.getBoundingClientRect();
+      const changed = cssWidth !== Math.max(1, bounds.width) || cssHeight !== Math.max(1, bounds.height);
       cssWidth = Math.max(1, bounds.width);
       cssHeight = Math.max(1, bounds.height);
-      const ratio = Math.min(devicePixelRatio || 1, 2);
-      canvas.width = Math.round(cssWidth * ratio);
-      canvas.height = Math.round(cssHeight * ratio);
+      pixelRatio = Math.min(devicePixelRatio || 1, 2);
+      if (active) {
+        const width = Math.round(cssWidth * pixelRatio);
+        const height = Math.round(cssHeight * pixelRatio);
+        if (canvas.width !== width) canvas.width = width;
+        if (canvas.height !== height) canvas.height = height;
+      } else {
+        canvas.width = canvas.height = 0;
+      }
       sample.width = 320;
       sample.height = Math.max(100, Math.round(320 * cssHeight / cssWidth));
-      tracks = [];
-      visibleTracks = [];
-      visibleLinks = [];
-      blobs = [];
-      clusters = [];
-      needsDetection = true;
+      if (changed) {
+        tracks = [];
+        visibleTracks = [];
+        visibleLinks = [];
+        blobs = [];
+        clusters = [];
+        needsDetection = true;
+      }
+      requestRender();
     }
 
     // Stands in for the foliage detector: clustered, flickering connected-component-like regions.
@@ -279,6 +304,8 @@
     }
 
     function animate(timestamp) {
+      frame = undefined;
+      if (!active || destroyed) return;
       const delta = lastFrame === undefined ? 0 : Math.min((timestamp - lastFrame) / 1000, .1);
       lastFrame = timestamp;
       const elapsed = paused ? 0 : delta * settings.speed;
@@ -304,14 +331,13 @@
       }
       context.clearRect(0, 0, canvas.width, canvas.height);
       drawTracking();
-      frame = requestAnimationFrame(animate);
+      if (!paused && settings.speed > 0) requestRender();
     }
 
     const observer = !fullscreen && global.ResizeObserver ? new ResizeObserver(resize) : null;
     if (observer) observer.observe(target);
     else addEventListener('resize', resize);
     resize();
-    frame = requestAnimationFrame(animate);
 
     return {
       canvas,
@@ -320,24 +346,35 @@
         if (count !== settings.count) {
           settings.count = count;
           needsDetection = true;
+          requestRender();
         }
       },
       getCount() { return settings.count; },
-      setSpeed(value) { settings.speed = Math.max(0, Math.min(3, Number(value) || 0)); },
+      setSpeed(value) { settings.speed = Math.max(0, Math.min(3, Number(value) || 0)); requestRender(); },
       getSpeed() { return settings.speed; },
       getRegionCount() { return tracks.length; },
-      setBoxes(value) { settings.boxes = Boolean(value); },
+      setBoxes(value) { settings.boxes = Boolean(value); requestRender(); },
       setLinks(value) {
         const enabled = Boolean(value);
         if (enabled === settings.links) return;
         settings.links = enabled;
         if (enabled) syncVisibleLinks();
         else visibleLinks = [];
+        requestRender();
       },
-      pause() { paused = true; },
-      resume() { paused = false; },
+      pause() { paused = true; stopFrame(); },
+      resume() { paused = false; requestRender(); },
+      setActive(value) {
+        const next = Boolean(value);
+        if (next === active || destroyed) return;
+        active = next;
+        stopFrame();
+        if (active) resize();
+        else canvas.width = canvas.height = 0;
+      },
       destroy() {
-        cancelAnimationFrame(frame);
+        destroyed = true;
+        stopFrame();
         if (observer) observer.disconnect();
         else removeEventListener('resize', resize);
         canvas.remove();
