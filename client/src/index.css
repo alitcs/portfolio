@@ -1,10 +1,12 @@
 * { box-sizing: border-box; }
 
-html { min-width: 320px; scroll-behavior: smooth; }
+html { --site-scale: .8; --layout-height: calc(100svh / var(--site-scale)); min-width: 320px; scroll-behavior: smooth; zoom: var(--site-scale); }
 
 body { margin: 0; min-width: 320px; min-height: 100vh; }
 
 a { color: inherit; }
+
+.arrow-icon { display: inline-block; flex-shrink: 0; vertical-align: -.125em; }
 
 button, a { -webkit-tap-highlight-color: transparent; }
 

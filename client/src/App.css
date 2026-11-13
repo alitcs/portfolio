@@ -460,7 +460,7 @@ h1, h2, h3, p { margin-top: 0; }
 .work-detail-backdrop::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, #02080e65 0%, transparent 22%, #06111b25 54%, #02080e8c 100%); }
 .work-detail-header { position: absolute; z-index: 40; top: 0; right: 0; left: 0; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 28px clamp(22px, 5vw, 78px); color: #fff; font: 10px/1.2 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
 .detail-back-link { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; }
-.detail-back-link > span { width: 29px; height: 29px; display: grid; place-items: center; border: 1px solid #fff9; border-radius: 50%; font: 300 22px/1 var(--sans); transform: rotate(45deg); }
+.detail-back-link > span { width: 29px; height: 29px; display: grid; place-items: center; border: 1px solid #fff9; border-radius: 50%; font: 300 22px/1 var(--sans); transform: none; }
 .detail-back-link:hover > span { background: #fff; color: #141615; }
 .detail-header-index { color: #ffffffc5; }
 .detail-header-index span { padding-inline: 8px; color: #ffffff75; }
@@ -572,25 +572,15 @@ h1, h2, h3, p { margin-top: 0; }
 
 .work-detail {
   --focus-left: 7%;
-  --focus-top: 15%;
+  --focus-top: 15svh;
   --focus-width: min(36vw, 52svh);
-  --focus-height: 70%;
-  transition: --focus-width .4s ease;
-}
-.work-detail:has(.detail-focus:hover), .work-detail:has(.detail-focus:focus-visible) {
-  --focus-width: 56vw;
+  --focus-height: 70svh;
 }
 .work-detail-backdrop iframe { width: 153.846%; height: 153.846%; display: block; border: 0; pointer-events: none; background: #202625; transform: scale(.65); transform-origin: top left; }
 .work-detail-backdrop img { width: 100%; height: 100%; top: 0; left: 0; display: block; object-fit: cover; object-position: center; }
 .work-detail-backdrop .detail-artwork-fill { filter: blur(25px) brightness(.65); transform: scale(1.08); }
 .work-detail-backdrop .detail-artwork { object-fit: contain; object-position: 22% 50%; }
 .work-detail-backdrop::after { display: none; }
-.detail-blur { position: absolute; background: var(--detail-blur-tint, #09101088); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
-.detail-blur::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: url('/images/film-grain.svg') 0 0 / 180px 180px fixed; mix-blend-mode: soft-light; opacity: .48; }
-.detail-blur-top { inset: 0 0 auto; height: var(--focus-top); }
-.detail-blur-bottom { inset: calc(var(--focus-top) + var(--focus-height)) 0 0; }
-.detail-blur-left { top: var(--focus-top); left: 0; width: var(--focus-left); height: var(--focus-height); }
-.detail-blur-right { top: var(--focus-top); right: 0; left: calc(var(--focus-left) + var(--focus-width)); height: var(--focus-height); }
 .detail-art-peek { position: absolute; z-index: 39; top: 50%; left: 22%; height: auto; transform: translate(-22%, -50%); pointer-events: none; }
 .work-detail-course-availability-notifier .detail-art-peek { width: min(100%, calc(100svh * 1683 / 2103)); clip-path: inset(39.3% 31.7% 53.9% 26.3% round 2%); }
 .detail-apartment-peek { position: absolute; z-index: 39; top: 50%; left: 22%; width: min(100%, calc(100svh * 1460 / 1078)); aspect-ratio: 1460 / 1078; transform: translate(-22%, -50%); pointer-events: none; }
@@ -661,7 +651,6 @@ h1, h2, h3, p { margin-top: 0; }
   .hero-image-frame { width: clamp(120px, 38vw, 190px); height: 36%; top: 64%; }
   .hero-cta { top: 30%; }
   .work-detail { --focus-left: 6%; --focus-top: 15%; --focus-width: 52vw; --focus-height: 50%; }
-  .work-detail:has(.detail-focus:hover), .work-detail:has(.detail-focus:focus-visible) { --focus-width: 86vw; }
   .detail-copy { top: 69%; left: 8%; width: 84%; font-size: clamp(10px, 2.8vw, 13px); transform: none; }
   .work-detail-ontario-government-govtechon .work-detail-backdrop .detail-artwork { width: 44vw; left: 32%; top: 40%; }
   .detail-unavailable { padding: 12px; font-size: 9px; }

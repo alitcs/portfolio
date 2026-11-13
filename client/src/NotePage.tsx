@@ -1,3 +1,4 @@
+import ArrowIcon from './ArrowIcon'
 import { useState, type FormEvent } from 'react'
 export default function NotePage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -52,7 +53,7 @@ export default function NotePage() {
       <p className="section-kicker">NOTE RECEIVED</p>
       <h1>Thanks for reaching out.</h1>
       <p className="note-success-copy">Your message was accepted. I appreciate you taking the time to write.</p>
-      <a className="button button-primary" href="/">Back to home <span aria-hidden="true">↗︎</span>
+      <a className="button button-primary" href="/">Back to home <span aria-hidden="true"><ArrowIcon /></span>
       </a>
     </div>) : (<>
       <div className="note-heading">
@@ -60,7 +61,7 @@ export default function NotePage() {
         <h1>A good idea<br />
           <em>starts with hello.</em>
         </h1>
-        <p>A project, an opportunity, or something you think I should see. I’d love to hear about it. Prefer email? <a className="note-email" href="mailto:alihamoudiu18@gmail.com">alihamoudiu18@gmail.com ↗</a>
+        <p>A project, an opportunity, or something you think I should see. I’d love to hear about it. Prefer email? <a className="note-email" href="mailto:alihamoudiu18@gmail.com">alihamoudiu18@gmail.com <ArrowIcon /></a>
         </p>
       </div>
       <div className="note-layout">
@@ -99,7 +100,7 @@ export default function NotePage() {
           {error && <p className="note-error" role="alert">{error} You can also <a href="mailto:alihamoudiu18@gmail.com">email me directly</a>.</p>}
           <button className="note-submit" type="submit" disabled={isSubmitting}>
             <span>{isSubmitting ? 'Sending note...' : 'Send note'}</span>
-            <span aria-hidden="true">{isSubmitting ? '···' : '↗︎'}</span>
+            <span aria-hidden="true">{isSubmitting ? '···' : <ArrowIcon />}</span>
           </button>
           <p className="note-privacy">Your email is only used to reply to your note.</p>
         </form>

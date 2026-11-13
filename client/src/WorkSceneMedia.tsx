@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type CSSProperties } from 'react'
 
 export type SceneItem = {
   slug: string
@@ -30,10 +30,7 @@ function GalleryPreview({ item, active }: { item: SceneItem; active: boolean }) 
   </>
 }
 
-export function WorkArtPeek({ item }: { item: SceneItem }) {
-  if (item.slug === 'course-availability-notifier') {
-    return <img className="detail-art-peek" src={item.image} alt="" aria-hidden="true" />
-  }
+function WorkArtPeek({ item }: { item: SceneItem }) {
   if (item.slug === 'artificial-intelligence-real-estate-scraper-filter') {
     return <div className="detail-apartment-peek" aria-hidden="true">
       <img src="/item-images/apartment-terminal.png" alt="" />
@@ -42,32 +39,34 @@ export function WorkArtPeek({ item }: { item: SceneItem }) {
   return null
 }
 
-// The gallery can adjust each crop without changing its individual work page.
-export default function WorkSceneMedia({ item, gallery = false, active = true }: {
+function SceneArtwork({ item }: { item: SceneItem }) {
+  const [aspect, setAspect] = useState(1)
+  return <div className="scene-artwork" style={{ '--artwork-aspect': aspect } as CSSProperties}>
+    <img className="detail-artwork" src={item.image} alt="" onLoad={(event) => {
+      const image = event.currentTarget
+      setAspect(image.naturalWidth / image.naturalHeight)
+    }} />
+    <WorkArtPeek item={item} />
+  </div>
+}
+
+export default function WorkSceneMedia({ item, active = true }: {
   item: SceneItem
-  gallery?: boolean
   active?: boolean
 }) {
   return (
     <div className="work-detail-backdrop" aria-hidden="true">
-      {item.previewImage ? (
-        <img className="detail-preview-image" src={item.previewImage} alt="" />
-      ) : item.previewUrl ? gallery ? (
-        <GalleryPreview item={item} active={active} />
-      ) : (
-        <iframe src={item.previewUrl} title={`${item.title} preview`} tabIndex={-1} loading="eager" />
-      ) : (
-        <>
-          <img className="detail-artwork-fill" src={item.image} alt="" />
-          <img className="detail-artwork" src={item.image} alt="" />
-        </>
-      )}
-      {gallery ? <div className="detail-blur gallery-matte" /> : <>
-        <div className="detail-blur detail-blur-top" />
-        <div className="detail-blur detail-blur-bottom" />
-        <div className="detail-blur detail-blur-left" />
-        <div className="detail-blur detail-blur-right" />
-      </>}
+      <img className="scene-background" src={item.previewImage || item.image} alt="" />
+      <div className="scene-surround" />
+      <div className="scene-media">
+        {item.previewImage ? (
+          <img className="detail-preview-image" src={item.previewImage} alt="" />
+        ) : item.previewUrl ? (
+          <GalleryPreview item={item} active={active} />
+        ) : (
+          <SceneArtwork item={item} />
+        )}
+      </div>
     </div>
   )
 }

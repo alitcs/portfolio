@@ -1,3 +1,4 @@
+import ArrowIcon from './ArrowIcon'
 import { useEffect, useState } from 'react'
 import './App.css'
 import WorkShowcase from './WorkShowcase'
@@ -5,9 +6,10 @@ import './Browsing.css'
 import WorkSceneMedia from './WorkSceneMedia'
 import WorkDetailContent from './WorkDetailContent'
 import ProjectInquiryPage from './ProjectInquiryPage'
-import { galleryHref, legacyGalleryFilter } from './galleryNavigation'
+import { legacyGalleryFilter } from './galleryNavigation'
 import { workItems, type WorkItem } from './data/work'
 import './Responsive.css'
+import './Landing.css'
 
 type Page = 'home' | 'index' | 'project' | 'work'
 type BlobOverlay = {
@@ -63,12 +65,14 @@ function App() {
       for (const [target, { overlay, inView }] of records) {
         if (!inView) continue
         const sectionBounds = target.getBoundingClientRect()
+        const scaleX = sectionBounds.width / target.offsetWidth || 1
+        const scaleY = sectionBounds.height / target.offsetHeight || 1
         const masks = elements.flatMap((bounds) => {
           if (bounds.bottom <= sectionBounds.top || bounds.top >= sectionBounds.bottom || bounds.right <= sectionBounds.left || bounds.left >= sectionBounds.right) return []
-          const x = bounds.left - sectionBounds.left + bounds.width / 2
-          const y = bounds.top - sectionBounds.top + bounds.height / 2
-          const radiusX = bounds.width / 2 + 20
-          const radiusY = bounds.height / 2 + 16
+          const x = (bounds.left - sectionBounds.left + bounds.width / 2) / scaleX
+          const y = (bounds.top - sectionBounds.top + bounds.height / 2) / scaleY
+          const radiusX = bounds.width / 2 / scaleX + 20
+          const radiusY = bounds.height / 2 / scaleY + 16
           return [`radial-gradient(ellipse ${radiusX}px ${radiusY}px at ${x}px ${y}px, rgba(0,0,0,.3) 0%, rgba(0,0,0,.3) 65%, #000 100%)`]
         })
         overlay.canvas.style.maskImage = masks.join(', ')
@@ -169,30 +173,14 @@ function App() {
   return (
     <div className={`site-shell ${page !== 'work' ? 'monochrome-shell' : ''}`}>
       <a className="skip-link" href="#main-content">Skip to content</a>
-      {page !== 'work' && page !== 'project' && <header className={`site-header ${isPortfolio ? 'home-header' : ''}`}>
-        <a className="wordmark" href="/" aria-label="Ali Hamoudi, home">
-          <span className="wordmark-mark">AH</span>
-          <span className="wordmark-copy">
-            <strong>Ali Hamoudi</strong>
-            <span>Toronto, Canada</span>
-          </span>
-        </a>
-        {isPortfolio ? (
+      {isPortfolio && <header className="site-header home-header">
           <nav className="header-contacts home-contacts" aria-label="Contact and profile links">
-            <a href={galleryHref()}><span>01</span><span className="home-nav-label">Selected work <i aria-hidden="true">↓</i></span></a>
-            <a href={galleryHref('experience')}><span>02</span><span className="home-nav-label">Experience <i aria-hidden="true">↗</i></span></a>
-            <a href="/AliHamoudi.pdf" download aria-label="Download résumé as a PDF"><span>03</span><span className="home-nav-label">Download résumé <small>PDF ↓</small></span></a>
-            <a href="mailto:alihamoudiu18@gmail.com"><span>04</span><span className="home-nav-label">Email <i aria-hidden="true">↗</i></span></a>
-            <a href={galleryHref('experience')} aria-label="About Ali Hamoudi — view experience"><span>05</span><span className="home-nav-label">Ali Hamoudi<br />Software engineer <i aria-hidden="true">↗</i></span></a>
+            <a href="https://www.linkedin.com/in/ali-hamoudi/" target="_blank" rel="noreferrer"><span>01</span><span className="home-nav-label">LinkedIn <i aria-hidden="true"><ArrowIcon /></i></span></a>
+            <a href="https://github.com/alitcs" target="_blank" rel="noreferrer"><span>02</span><span className="home-nav-label">GitHub <i aria-hidden="true"><ArrowIcon /></i></span></a>
+            <a href="mailto:alihamoudiu18@gmail.com"><span>03</span><span className="home-nav-label">Email <i aria-hidden="true"><ArrowIcon /></i></span></a>
+            <a href="tel:+14378694831" aria-label="Call 437-869-4831"><span>04</span><span className="home-nav-label">437-869-4831 <i aria-hidden="true"><ArrowIcon /></i></span></a>
+            <a href="/AliHamoudi.pdf" download aria-label="Download résumé as a PDF"><span>05</span><span className="home-nav-label">Download résumé <small>PDF <ArrowIcon direction="down" /></small></span></a>
           </nav>
-        ) : (
-          <nav className="header-contacts" aria-label="Contact links">
-            <a href="https://www.linkedin.com/in/ali-hamoudi/" target="_blank" rel="noreferrer"><span>01</span> LinkedIn</a>
-            <a href="https://github.com/alitcs" target="_blank" rel="noreferrer"><span>02</span> GitHub</a>
-            <a href="mailto:alihamoudiu18@gmail.com"><span>03</span> Email</a>
-            <a href="/AliHamoudi.pdf" download><span>04</span> Resume</a>
-          </nav>
-        )}
       </header>}
 
       <main id="main-content" key={isPortfolio ? 'portfolio' : `${page}-${workSlug}`} className={`page-main ${page === 'work' ? 'detail-main' : ''} ${isPortfolio ? 'home-main' : ''}`}>
@@ -206,8 +194,8 @@ function App() {
           <a className="footer-mark" href="/">AH<span>✳</span></a>
           <span>Designed &amp; built with care.</span>
           <div className="footer-links">
-            <a href="https://github.com/alitcs" target="_blank" rel="noreferrer">GitHub ↗︎</a>
-            <a href="https://www.linkedin.com/in/ali-hamoudi/" target="_blank" rel="noreferrer">LinkedIn ↗︎</a>
+            <a href="https://github.com/alitcs" target="_blank" rel="noreferrer">GitHub <ArrowIcon /></a>
+            <a href="https://www.linkedin.com/in/ali-hamoudi/" target="_blank" rel="noreferrer">LinkedIn <ArrowIcon /></a>
           </div>
         </footer>
       )}
@@ -226,9 +214,9 @@ function HomePage() {
         <div className="hero-actions">
           <a className="hero-cta" href="#work-gallery">
             <span>See my work</span>
-            <span className="hero-cta-arrow" aria-hidden="true">↓</span>
+            <span className="hero-cta-arrow" aria-hidden="true"><ArrowIcon direction="down" /></span>
           </a>
-          <a className="hero-build-cta" href="/start-project"><span>Want to build something?</span><span aria-hidden="true">↗</span></a>
+          <a className="hero-build-cta" href="/start-project"><span>Want to build something?</span><span aria-hidden="true"><ArrowIcon /></span></a>
         </div>
         <div className="hero-image-frame" aria-hidden="true">
           <img src="/images/hero-flower.png" alt="" />
@@ -239,8 +227,9 @@ function HomePage() {
           <p>software, design<br />and ideas<br />made tangible.</p>
         </div>
         <div className="hero-footer">
-          <p className="hero-location">toronto, canada / selected work 01—{String(workItems.length).padStart(2, '0')}</p>
-          <a className="hero-scroll" href="#work-gallery"><span>scroll to explore</span><span aria-hidden="true">↓</span></a>
+          <p className="hero-signature">Ali Hamoudi<span>Software engineer</span></p>
+          <p className="hero-location">toronto, canada</p>
+          <a className="hero-scroll" href="#work-gallery"><span>scroll to explore</span><span aria-hidden="true"><ArrowIcon direction="down" /></span></a>
         </div>
       </section>
     </>
@@ -257,7 +246,7 @@ function WorkDetailPage({ item }: { item?: WorkItem }) {
       <section className="work-not-found">
         <p>404 / This frame is empty</p>
         <h1>That work could not be found.</h1>
-        <a href="/">Return to the index <span aria-hidden="true">↗</span></a>
+        <a href="/">Return to the index <span aria-hidden="true"><ArrowIcon /></span></a>
       </section>
     )
   }

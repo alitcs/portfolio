@@ -1,3 +1,4 @@
+import ArrowIcon from './ArrowIcon'
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import './ProjectInquiry.css'
 
@@ -64,7 +65,7 @@ export default function ProjectInquiryPage() {
 
   return <div className="inquiry-page">
     <header className="inquiry-nav">
-      <a href="/" aria-label="Return to portfolio"><span aria-hidden="true">←</span> Portfolio</a>
+      <a href="/" aria-label="Return to portfolio"><span aria-hidden="true"><ArrowIcon direction="left" /></span> Portfolio</a>
       <span>ali hamoudi / let’s build</span>
     </header>
 
@@ -77,7 +78,7 @@ export default function ProjectInquiryPage() {
         <p className="inquiry-kicker">Project submitted</p>
         <h1 id="inquiry-success-title" ref={successTitle} tabIndex={-1}>Thanks for sharing<br />your idea.</h1>
         <p>Your project details have been submitted. I’ll get back to you at the email you provided.</p>
-        <a className="inquiry-back-button" href="/">Back to portfolio <span aria-hidden="true">↗</span></a>
+        <a className="inquiry-back-button" href="/">Back to portfolio <span aria-hidden="true"><ArrowIcon /></span></a>
       </section>
     ) : (
       <div className="inquiry-layout">
@@ -120,8 +121,8 @@ export default function ProjectInquiryPage() {
               <label htmlFor="project-timeline">Timeline <span>(optional)</span></label>
               <input id="project-timeline" name="timeline" maxLength={180} placeholder="A specific date, a rough idea, or no rush" />
             </div>
-            {error && <p className="inquiry-error" ref={errorMessage} role="alert" tabIndex={-1}>{error} <a href="mailto:alihamoudiu18@gmail.com">Email me <span aria-hidden="true">↗</span></a></p>}
-            <button className="inquiry-submit" type="submit" disabled={status === 'submitting'}><span>{status === 'submitting' ? 'Sending your idea…' : 'Send project idea'}</span><span aria-hidden="true">{status === 'submitting' ? '…' : '↗'}</span></button>
+            {error && <p className="inquiry-error" ref={errorMessage} role="alert" tabIndex={-1}>{error} <a href="mailto:alihamoudiu18@gmail.com">Email me <span aria-hidden="true"><ArrowIcon /></span></a></p>}
+            <button className="inquiry-submit" type="submit" disabled={status === 'submitting'}><span>{status === 'submitting' ? 'Sending your idea…' : 'Send project idea'}</span><span aria-hidden="true">{status === 'submitting' ? '…' : <ArrowIcon />}</span></button>
           </fieldset>
           <p className="inquiry-privacy">I’ll only use your details to respond to your inquiry.</p>
         </form>
