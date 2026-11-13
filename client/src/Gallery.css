@@ -21,7 +21,7 @@ html:has(.gallery-exhibition)::-webkit-scrollbar { display: none; }
 .gallery-matte {
   inset: 0;
   clip-path: polygon(evenodd,
-    0 0, 100% 0, 100% 100%, 0 100%, 0 0,
+    -1px -1px, calc(100% + 1px) -1px, calc(100% + 1px) calc(100% + 1px), -1px calc(100% + 1px), -1px -1px,
     var(--focus-left) var(--focus-top),
     calc(var(--focus-left) + var(--focus-width)) var(--focus-top),
     calc(var(--focus-left) + var(--focus-width)) calc(var(--focus-top) + var(--focus-height)),

@@ -7,6 +7,7 @@ import WorkDetailContent from './WorkDetailContent'
 import ProjectInquiryPage from './ProjectInquiryPage'
 import { galleryHref, legacyGalleryFilter } from './galleryNavigation'
 import { workItems, type WorkItem } from './data/work'
+import './Responsive.css'
 
 type Page = 'home' | 'index' | 'project' | 'work'
 type BlobOverlay = {
@@ -237,8 +238,10 @@ function HomePage() {
           <p>building useful<br />things for<br />real people.</p>
           <p>software, design<br />and ideas<br />made tangible.</p>
         </div>
-        <p className="hero-location">toronto, canada / selected work 01—{String(workItems.length).padStart(2, '0')}</p>
-        <a className="hero-scroll" href="#work-gallery"><span>scroll to explore</span><span aria-hidden="true">↓</span></a>
+        <div className="hero-footer">
+          <p className="hero-location">toronto, canada / selected work 01—{String(workItems.length).padStart(2, '0')}</p>
+          <a className="hero-scroll" href="#work-gallery"><span>scroll to explore</span><span aria-hidden="true">↓</span></a>
+        </div>
       </section>
     </>
   )

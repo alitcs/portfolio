@@ -53,7 +53,10 @@ export default function WorkShowcase({ items, intro }: { items: readonly Showcas
     const hash = location.hash.slice(1)
     const explicitCategory = new URLSearchParams(location.search).has('category')
     const target = hash || (explicitCategory ? 'work-gallery' : returningFromDetail && saved?.filter === filter ? `item-${saved.slug}` : 'overview')
-    const frame = requestAnimationFrame(() => (document.getElementById(target) || document.getElementById('work-gallery'))?.scrollIntoView({ behavior: 'instant' }))
+    const frame = requestAnimationFrame(() => {
+      if (target === 'overview') window.scrollTo({ top: 0, behavior: 'instant' })
+      else (document.getElementById(target) || document.getElementById('work-gallery'))?.scrollIntoView({ behavior: 'instant' })
+    })
     return () => cancelAnimationFrame(frame)
   }, [])
 
@@ -118,6 +121,12 @@ export default function WorkShowcase({ items, intro }: { items: readonly Showcas
           </div>
           <div className="gallery-filters" role="group" aria-label="Filter work">
             {filters.map((entry) => <button key={entry.id} type="button" aria-pressed={filter === entry.id} aria-controls="gallery-items" onClick={() => changeFilter(entry.id)}>{entry.label}<span className="gallery-filter-count" aria-hidden="true">{pad(counts.get(entry.id) || 0)}</span></button>)}
+          </div>
+          <div className="gallery-filter-select">
+            <label className="visually-hidden" htmlFor="gallery-category">Filter work</label>
+            <select id="gallery-category" value={filter} aria-controls="gallery-items" onChange={(event) => changeFilter(event.target.value as Filter)}>
+              {filters.map((entry) => <option key={entry.id} value={entry.id}>{entry.label}</option>)}
+            </select>
           </div>
         </header>
         <div className="gallery-items" id="gallery-items">
