@@ -6,6 +6,8 @@
 
 ## Github: https://github.com/alitcs
 
+## Portfolio: https://alihamoudi.com/
+
 ## City: Toronto
 
 # Work Experience
@@ -125,7 +127,80 @@ On the WordPress side, Ali balances contributor empowerment with safety: whiteli
 
 Ali Hamoudi is a full-stack software engineer on a large government enterprise intranet and media-delivery platform, working fluently across a Go (`chi`) backend, a Nuxt/Vue frontend, and a WordPress/PHP CMS. His work spans backend API development and framework modernization, cloud storage migration to AWS S3, Redis caching and concurrency correctness, security hardening (SQL injection, access control, upload/content validation), and a broad range of frontend and CMS UX improvements. He is a strong root-cause debugger of hard, environment-specific and concurrency bugs, a security-conscious and quality-focused coder, and a clear communicator who ships complete, well-tested, vertically integrated features within a Kubernetes/Helm/GitOps delivery model.
 
-## Vironix AI - https://vironixai.net/
+### Additional Government Work — August 12 to November 12, 2026 Review
+
+**Context:** Enterprise public-sector intranet and content-management platform. This review period describes the supplied update, not the full employment period. Existing experience above is retained; the details below expand the accomplishment bank.
+
+#### Media storage, reliability, and automated testing
+
+- Modernized Go media delivery by replacing a MinIO-specific client with the AWS SDK for Go's S3 client, using injected storage interfaces rather than constructing clients inside legacy handlers.
+- Added mocks and Go unit tests for object retrieval, streaming, and presigned URL workflows, making storage integrations easier to test independently.
+- Extended notification concurrency safeguards with per-recipient Redis `SETNX` claims, expiration, release after failed sends, retry handling, and regression tests for competing workers. These controls reduce duplicate sends when background jobs overlap; they do not establish exactly-once delivery under every failure.
+- Corrected reminder-date validation to compare calendar dates so reminders scheduled on a post's publication day are not unintentionally rejected.
+- Added media audit events for creation, updates, and deletion using UTC timestamps and parameterized database statements. Release status remains to be confirmed.
+- Corrected breadcrumb URL generation and section/tag navigation to address broken links and 404s.
+
+#### Global alerts across the API, frontend, and CMS
+
+- Developed an image-based global-alert enhancement across the Go API, Vue/Nuxt interface, and WordPress administration.
+- Added image-only presentation, safe links, URL and form validation, meaningful alternative text, and keyboard-focus restoration.
+- Included a non-destructive database/schema upgrade that preserves existing alerts. The enhancement appears in feature-branch history; merge and production-release status remain to be confirmed.
+
+#### Security, access, and editorial integrity
+
+- Adjusted media-document Content Security Policy rules to support required same-origin assets and embedded content while retaining script restrictions.
+- Implemented parameterized duplicate-comment checks using the post, parent comment, author, and content, returning a clear conflict response for duplicate submissions.
+- Added client- and server-side image-widget validation and guarded against invalid existing images that could break rendering.
+- Improved delegated publishing by preserving original author attribution and validating that requested author changes select an authorized delegate.
+- Added an administrator-only dashboard shortcut and regression tests to help preserve existing section-level access policies.
+- Applied consistent content-visibility rules across WordPress quick edit, bulk edit, and post-save workflows.
+
+#### Reader experience, accessibility, and CMS usability
+
+- Built comment sorting by newest, oldest, and popularity; improved pagination boundaries and automatic scrolling after comment submission.
+- Improved subscription confirmations and settings guidance, escaping dynamic values in confirmation messages.
+- Repaired missing items in CMS widget "Show All" views, duplicated introductory text, and thumbnail-setting controls.
+- Improved regional-news links and screen-reader behavior, responsive navigation, and the draft-preview overlay.
+- Removed raw HTML from search-result titles and corrected search skip-link behavior.
+- Allowed supported icon markup in text widgets and fixed long-content overflow in comment administration.
+- Applied accessibility checks and remediation for keyboard navigation, focus targets, image descriptions, skip links, and screen-reader output, guided by AODA/WCAG practices. This work is not a claim of site-wide certification or audited full compliance.
+
+#### Additional skills and tools reflected in the update
+
+- **Storage and backend design:** AWS SDK for Go, S3-compatible storage, MinIO integration, dependency injection, interfaces, background processing, presigned URLs.
+- **Reliability and quality:** Expiring Redis keys, atomic operations, retry handling, Go unit tests, mocks, concurrency regression tests, UTC audit logging.
+- **Security and data integrity:** Content Security Policy, URL validation, parameterized SQL, role-based access checks, upload validation, duplicate detection, delegated-author validation.
+- **Accessibility/debugging tools reported in the supplied summary:** Accessibility Insights, WAVE, and MailHog. Personal hands-on use remains to be confirmed before listing these as established skills.
+- **Working strengths reinforced by this review:** Cross-stack debugging, incremental legacy modernization, accessibility and editorial empathy, regression testing, and collaboration through Git branches and pull requests.
+
+#### Private verification notes for future resume tailoring
+
+These notes retain qualifications from the supplied update alongside the existing profile; they do not remove or silently revise earlier claims.
+
+- The update combines a supplied work summary with locally available Git history. Branches and commits do not establish every contribution, review, merge, or production release.
+- **Counts:** 40+ pull requests and 20+ Jira work items were reported but not independently verified. Confirm the timeframe and whether the totals refer to authored, merged, reviewed, or otherwise contributed work before using them as accomplishments.
+- **Release status:** Global-alert enhancements and media audit events were found in feature-branch history. Confirm merge/release status before describing them as shipped to production.
+- **State management:** Inspected application/dashboard code uses Pinia. A branch name containing `redux` does not establish use of the Redux library; personal Redux experience is unconfirmed.
+- **SQL-injection claim:** The existing profile's specific vulnerability-fix claim under IOPS-3553 was not independently identifiable in the update's available local history. Parameterized duplicate-comment SQL is supported separately; confirm the specific vulnerability contribution before using that claim in an application.
+- **Timing:** Menu/section migrations, the WordPress plugin-status endpoint, and read-only authorization work have local branch tips dated before August 12, 2026. They remain part of the overall experience, but a later merge/release should be verified before assigning them to this review period.
+- **Impact and compliance:** User counts, traffic, memory savings, uptime, eliminated vulnerabilities, exactly-once delivery, and site-wide accessibility compliance are not independently established by this update. Preserve distinctions between implementation, measured impact, and audited outcomes.
+- **Platform keywords:** Docker, Kubernetes, Helm, Elasticsearch, and MariaDB appear in broader platform context; that context alone does not verify personal hands-on use of each technology.
+
+#### Private evidence pointers supplied with the update
+
+These commit references are lookup aids from the supplied document, not independently checked repository evidence or resume content.
+
+| Work | Evidence |
+| --- | --- |
+| Media storage and testability | API commits `35604572` and `6159a888` |
+| Notification concurrency | API commit `0dd667bd`; contrib commit `9066dfe9` |
+| Global alerts and schema preservation | API commit `9148815c`; contrib commits `254fcf51` and `6eb64d9a` |
+| Accessibility | API commits `e7609962`, `e73bf9ec`, and `07eaeba2` |
+| Duplicate comments, image uploads, and bylines | Contrib commits `87435419`, `3601a13b`, and `b022d682` |
+| Navigation and comments | API commits `bda7aa12`, `0ee47911`, and `c012b086` |
+| Media audit events | Media commit `b6664bc` |
+
+## Vironix AI - https://vironixai.ca/
 
 **Role:** Founding Software Engineer / Technical Co-Founder  
 **Dates:** Sep 2025 – Present  
@@ -189,13 +264,98 @@ Ali Hamoudi is a full-stack software engineer on a large government enterprise i
 
 ---
 
+### Additional VironixAI Work — November 12, 2026 Update
+
+**Confirmed role in the supplied document:** Technical Co-Founder / Founding Software Engineer. **Company/location/tenure:** VironixAI, Toronto, ON, September 2025–Present. **Current primary domain reported in the update:** https://vironixai.ca/ (migration from https://vironixai.net/).
+
+**Recent-work review:** August 12–November 12, 2026, separate from full employment dates. The following expands the existing profile with application development, cloud operations, deployment troubleshooting, and developer-payment responsibilities. Evidence descriptions and qualifications come from the supplied master document; no repository or cloud verification was performed while adding this material.
+
+#### Production domain migration and cloud operations
+
+- Executed the reported production migration from `vironixai.net` to `vironixai.ca`, coordinating Cloud DNS, HTTPS load balancing, managed TLS certificates, Cloud Run custom domains, and path-preserving Netlify 301 redirects.
+- Created a public DNS zone, updated registrar nameserver delegation, managed A/TXT/CNAME records, and completed domain ownership and Search Console verification.
+- Routed apex and `www` traffic through a global external HTTPS load balancer, provisioned certificate coverage, and attached a certificate to an existing target proxy while retaining legacy certificates.
+- Configured `editor.vironixai.ca` on the existing Cloud Run editor service, including ownership verification and HTTPS setup.
+- Added forced permanent redirects from both legacy apex and `www` domains, preserving deep links with `:splat` before the SPA fallback.
+- Managed Cloud Run configuration and redeployments using versioned secrets, runtime environment settings, and container images in Artifact Registry; worked across Google Cloud, Netlify, Squarespace, and GitHub.
+- Updated password-reset link configuration and investigated Stripe redirect settings during migration.
+
+#### Frontend/backend CI/CD and production debugging
+
+- Fixed the frontend GitHub Actions pipeline to retrieve `VITE_EDITOR_URL` from Google Secret Manager and pass it into Docker/Vite builds, addressing outdated production editor routing.
+- Added CI configuration masking with `::add-mask::`. The frontend Dockerfile already contained the corresponding `ARG`/`ENV` declarations; the change completed the workflow-to-build connection.
+- Diagnosed separate Express API and Google Cloud Storage CORS failures following the domain migration. The supplied summary reports that allowlist updates restored authentication flows, editor session creation, and access to existing video projects while retaining legacy origins.
+- Traced API allowed origins through `CLIENT_URL` and `getClientUrls()`; the reported fix changed configuration rather than introducing new CORS middleware.
+- Used browser Network and Console tools to investigate signup, password reset, editor sessions, and old project loading. Distinguished static Vite build-time configuration from runtime service settings.
+
+#### Full-stack internship application feature
+
+- Built a responsive React/TypeScript application page and Express submission endpoint using Tailwind CSS, Wouter, and the existing API configuration.
+- Implemented form state, accessible labels, required fields, length limits, loading behavior, success/error feedback with status/alert semantics, and field clearing after successful submission.
+- Added server-side Zod constraints and normalization, reused `waitlistLimiter`, and escaped user-supplied values before embedding them in HTML email.
+- Routed submissions through the existing `emailService.sendEmail` integration with recipients configured by `INTERN_APPLICATION_EMAIL`; documented the setting in `.env.example`.
+- Handled invalid input (`400`), missing recipient configuration (`503`), email delivery failures (`502`), unexpected errors (`500`), and successful submissions (`201`).
+- Simplified the initial form from name/email/experience/motivation to name/email/motivation, moved the route from `/internapplication` to `/intern`, and aligned the backend schema and email content.
+- **Delivery status:** Implemented on `origin/interns`. The supplied review found the commits outside reviewed `main` ancestry; merge, launch, applicant volume, and conversion outcomes are not established.
+
+#### Transactional email and deployment configuration
+
+- Corrected a historical Resend sender fallback, trimmed configured sender values, and added a domain-mismatch warning to aid configuration troubleshooting.
+- Added the `EMAIL_FROM=EMAIL_FROM:latest` Secret Manager binding to the backend Cloud Run deployment workflow so the transactional sender can be supplied through the release pipeline.
+- The supplied summary reports configuring a Resend sending domain, DKIM/provider-specific DNS records, and a DMARC policy, with sending-domain DNS verification completed; also investigated partial verification and distinguished sending-domain verification from incoming-mail MX configuration.
+- **Completion context:** The September fallback change was from `.net` to `.ai`; later team changes restored a `.net` fallback. The warning is a configuration diagnostic, not a live domain-verification check. Final `.ca` sender activation and successful delivery are unconfirmed; the runtime binding alone does not establish either.
+
+#### Contribution review and developer payouts
+
+- Reviewed developer code changes to assess completed work and created corresponding payouts, connecting technical contribution review with developer compensation and startup engineering operations.
+- This responsibility comes from the direct user account preserved in the supplied document. It is separate from customer-facing Stripe subscriptions and credit billing.
+- Payment tooling, compensation formulas, amounts, developer counts, cadence, automation, and transfer-completion status were not supplied; no payroll-system, Stripe Connect, tax-administration, or accounting-ownership claim is established.
+
+#### Earlier contributions — outside the recent review window
+
+- **February 2026 — signup and subscription checkout:** Connected Firebase signup to an authenticated Stripe checkout request using the user's ID token and selected plan; handled checkout errors and redirected to the returned checkout URL. Added helpers for customer creation with Firebase metadata, subscription sessions, and webhook signature verification/event construction, and corrected shared plan-price environment keys.
+- **March 2026 — Windows development:** Adjusted development scripts, Vite server configuration, and ignore rules for Windows compatibility.
+- **April 2026 — video analytics:** Refined hook-power and replayability scoring transformations, filler-word weighting, zero-score behavior, and minimum early-audio signal values in analytics/scoring services. No measured prediction-accuracy or engagement improvement was established.
+
+#### Additional technology and platform context
+
+- **Hands-on work described in the update:** Google Cloud Run, Cloud DNS, HTTPS load balancing, managed TLS, Cloud Storage, Secret Manager, Artifact Registry, GitHub Actions/YAML, Docker/Vite build configuration, DNS, CORS, Netlify redirects, Zod, Resend, and email DNS authentication.
+- The platform is team-built. Repository presence of Firebase auth, analytics integrations, Gemini/Vertex AI assistance, FFmpeg processing, the editor, billing, and workers does not by itself establish personal implementation of every subsystem.
+- The reviewed worker deployment targets Google Compute Engine; Cloud Run services and worker hosting are distinct. YAML workflow changes do not by themselves establish Kubernetes, Terraform, Helm, or authorship of Cloud Run service manifests.
+- Interviewing 50+ candidates and AI usage-cost/credit-pricing analysis remain reported broader-tenure responsibilities; their timing and counts are not established by Git or necessarily confined to this review window.
+
+#### Private evidence ledger and qualifications
+
+The supplied review attributes six recent commits to the confirmed Git identity `alitcs`: four in reviewed `main` and two on `origin/interns`. It examined local refs without fetching; this records the supplied November 12 review, not an independent check of current remote history. Commit counts are lookup aids rather than impact metrics.
+
+| Date | Supplied commit | Contribution and reported status |
+| --- | --- | --- |
+| September 1, 2026 | `e8240705` | Historical email sender fallback, trimming, and warning; ancestor of reviewed `main`. |
+| October 6, 2026 | `272e1803` | Internship page/route, Express endpoint, Zod schema, recipient configuration; `origin/interns`, outside reviewed `main` ancestry. |
+| October 8, 2026 | `4e4d81d5` | Simplified `/intern` page, fields, validation, and email; same unmerged-branch qualification. |
+| November 11, 2026 | `7c9ec48e` | Legacy apex/`www` path-preserving redirects; ancestor of reviewed `main`. |
+| November 11, 2026 | `6d545cd9` | Secret Manager editor URL, Docker build argument, CI masking; ancestor of reviewed `main`. |
+| November 11, 2026 | `23260268` | Backend `EMAIL_FROM` secret binding; reviewed `HEAD`/`main`. |
+| February 12, 2026 | `6d59d9d4` | Earlier signup, Stripe helpers, and shared plan configuration. |
+| March 3, 2026 | `8e33dcaf` | Earlier Windows development compatibility. |
+| April 20–23, 2026 | `945e0a1f`, `89fad8e3`, `169a6d84` | Earlier video analytics scoring iterations. |
+
+- Cloud-console migration tasks, successful HTTPS, and restored production flows are reported in the supplied summary. The review did not inspect cloud audit logs, deployment runs, live DNS, or browser sessions. Tracked `cors_storage.json` still lists legacy origins and cannot independently verify the live bucket update.
+- The internship branch's historical files differ from the separate careers implementation in reviewed `main`; the feature is described as built, not launched.
+- Title confirmation and payout responsibilities come from the user account recorded in the document; start date/location come from the supplied experience summary rather than Git.
+- No verified uptime, latency improvement, cost savings, revenue increase, applicant conversion, user count, or payout total was established. No new impact figures are inferred from these changes.
+- The source notes AI assistance with the frontend workflow fix; interview examples can distinguish the investigation, decisions, and validation personally performed.
+
 # Projects
 
 ## Digital Duel - https://github.com/alitcs/Digital-Duel
 
+**Website:** [digitalduel.netlify.app](https://digitalduel.netlify.app/)
+
 ### Project Overview
 
 - Designed and built **Digital Duel**, a local two-player, top-down 2D shooter in C using SDL2.
+- Developed and deployed a browser-based game version with keyboard and touch controls, hand-drawn artwork, and custom physics.
 - Developed a complete playable game loop featuring a main menu, active gameplay, game-over state, player resets, projectile combat, collision detection, and real-time movement.
 - Implemented two independent player control schemes, directional aiming and shooting, projectile cooldowns, arena obstacles, and opponent collision detection.
 - Created all game graphics by hand, including the menu, arena, player, projectile, and game-over artwork.
@@ -284,9 +444,12 @@ Ali Hamoudi is a full-stack software engineer on a large government enterprise i
 
 ## Robotic Arm Control System with Web UI - https://github.com/alitcs/Robotic-Arm-UI
 
+**Website:** [roboticarmcontrol.netlify.app](https://roboticarmcontrol.netlify.app/)
+
 ### Project Overview
 
 - Built a browser-based dashboard for monitoring commands produced by a local robotic arm keyboard-control system.
+- Created a dedicated project website at https://roboticarmcontrol.netlify.app/ for the robotic arm control web UI.
 - Connected a Python keyboard-input backend to the browser through a local WebSocket server.
 - Displayed six motor-channel values as live gauges and showed the latest command packet alongside a scrollable packet log.
 - Added connection status and automatic reconnection when the WebSocket server disconnects.
@@ -336,11 +499,15 @@ Ali Hamoudi is a full-stack software engineer on a large government enterprise i
 
 # Freelance Work
 
+Paid client software and website projects, plus an owner-operated portfolio-building service. Tutoring combines private freelance clients with employment at Little Genius Island and Best Brains. Charity work is listed separately below.
+
+**Source review — November 12, 2026:** Reviewed the linked public repositories and live website HTML, including deployed inquiry/signup definitions and JTC's quote page. Client relationships, payment, ownership, and the apartment tool's hundreds-of-hours time savings come from Ali's account; they are not measurements established by the public source code. Forms were inspected without submitting inquiries.
+
 ## Course Availability Notifier - https://github.com/alitcs/Course-Availability-Notifier
 
 ### Project Overview
 
-- Developed a Python automation tool for students who needed to monitor high-demand university courses for newly available seats.
+- Created a paid Python/Selenium web-crawling and browser-automation tool for a client to monitor high-demand university courses and receive an automated text message when a seat became available.
 - Automated login, navigation, repeated course-page checks, and SMS notifications when enrollment availability changed.
 - Designed the tool to work with institution-specific registration portals by allowing customized XPath selectors and login settings.
 - Was paid by students to create and customize the automation for their course-registration workflows.
@@ -350,7 +517,7 @@ Ali Hamoudi is a full-stack software engineer on a large government enterprise i
 - Used Selenium WebDriver to automate browser interaction with course-registration websites.
 - Supported existing Chrome profiles to preserve login sessions, cookies, and multi-factor authentication state.
 - Implemented repeated availability checks with configurable polling intervals.
-- Integrated Twilio-style SMS notifications to alert students when a course became available.
+- Integrated a phone/SMS API to send automated availability alerts, using Twilio tooling for the notification workflow.
 - Automatically stopped monitoring after detecting an available seat and sending a notification.
 
 ### Technologies
@@ -364,14 +531,18 @@ Ali Hamoudi is a full-stack software engineer on a large government enterprise i
 
 - Delivered a paid automation solution for students competing for limited course enrollment spaces.
 - Reduced the need for students to manually refresh registration portals throughout the day.
-- Helped students respond more quickly when seats became available in high-demand courses.
+- Helped the client act immediately on newly available seats and compete to be among the first to enroll, without manually refreshing the portal; enrollment itself remained the client's action.
 - Customized the tool for different students, institutions, course pages, and notification requirements.
 
-## Interior Studio Website - https://interiordesignr.netlify.app/
+**Public source context:** The shared repository is a reusable template with institution-specific selectors, credentials, and SMS initialization/send logic left for configuration; the completed paid client workflow is described by Ali.
+
+## Interior Design R / Interior Studio Website - https://interiordesignr.netlify.app/
+
+**Source:** https://github.com/alitcs/interiordesignR
 
 ### Project Overview
 
-- Designed and built a website presenting an interior design and decoration service and its work.
+- Delivered a paid freelance website for an interior design business to attract prospective clients and turn interest in its work into project inquiries.
 - Created a visual, responsive experience that guides visitors from the project portfolio to an inquiry form.
 
 ### Website Development
@@ -380,12 +551,20 @@ Ali Hamoudi is a full-stack software engineer on a large government enterprise i
 - Added English and Persian language options to make the site accessible to visitors in both languages.
 - Built a project inquiry form for visitors to share their name, email address, and details about their space.
 - Deployed the website on Netlify.
+- Built the site with React, TypeScript, and Vite, including English/Persian and right-to-left presentation support.
+- Connected the project-inquiry workflow to Netlify Forms, with a hidden honeypot field for spam deterrence and structured collection of contact details and project requirements.
 
-## GetMyPortfolio Website - https://getmyportfolio.com/
+### Business Impact
+
+- Gave the business a client-acquisition channel combining visual proof of its work, clear contact actions, and an online project inquiry form for follow-up.
+
+## 99 Portfolio / GetMyPortfolio — Owner-Operated Service - https://getmyportfolio.com/
+
+**Source:** https://github.com/alitcs/freelance-portfolios
 
 ### Project Overview
 
-- Designed and built a website for a service offering custom portfolio websites that are designed, built, and maintained for customers.
+- Owns and operates this portfolio-building service; designed and built the website so visitors can contact Ali directly and apply to have him create a custom portfolio for them.
 - Presented the service and its process to help prospective customers understand what to expect.
 
 ### Website Development
@@ -393,8 +572,16 @@ Ali Hamoudi is a full-stack software engineer on a large government enterprise i
 - Created a responsive experience explaining the steps from the initial inquiry through portfolio design, review, and launch.
 - Added a customer inquiry form to collect contact information and details about the prospective customer's work.
 - Used clear calls to action to guide visitors toward starting a portfolio inquiry.
+- Implemented the site in React, TypeScript, and Vite with a Netlify Forms application capturing name, professional field, email/phone contact, and project details.
+- Added contact validation, submission/loading feedback, a honeypot, and a direct-email fallback that preserves entered details if submission fails.
+
+### Business Purpose
+
+- Created a direct channel for generating and qualifying leads for Ali's own paid freelance portfolio design, development, and maintenance services.
 
 ## JTC Property Services Website - https://majestic-youtiao-4bc24e.netlify.app/
+
+**Original source:** https://github.com/alitcs/JTC-Website
 
 ### Project Overview
 
@@ -434,7 +621,8 @@ Ali Hamoudi is a full-stack software engineer on a large government enterprise i
 
 ### Project Overview
 
-- Developed a Python automation tool that filters apartment listings on Apartments.com based on user-defined search criteria.
+- Created a paid apartment-search tool for a client, using Python, Selenium web crawling, and AI APIs to find online listings matching the client's specified criteria.
+- Combined the client's location, price, and bedroom search filters with OpenAI-based description analysis to reduce time spent reviewing unsuitable listings.
 - Automated browser navigation through apartment listings using Selenium WebDriver.
 - Used OpenAI's GPT model to determine whether listings advertised as two-bedroom units were actually two-bedroom apartments rather than one-bedroom units with a den, closet, or similar space.
 - Stored matching apartment URLs in a JSON file for later reference.
@@ -465,12 +653,16 @@ Ali Hamoudi is a full-stack software engineer on a large government enterprise i
 ### Business Impact
 
 - A client paid me to develop and customize this apartment-listing filtering service for their housing search.
+- Saved the client hundreds of hours of manual apartment searching and listing review, according to Ali's account of the engagement.
+- Delivered a persistent shortlist of matching listing URLs, distinguishing newly found results so the client could focus on relevant apartments rather than repeatedly screening the same listings.
 
 ## Little Genius Island Website & Booking System - https://littlegeniusisland.ca/
 
+**Source:** https://github.com/alitcs/little-genius
+
 ### Project Overview
 
-- Built and designed a client-facing website for a service business looking to improve its online presence and convert more inquiries into booked work.
+- Delivered a paid freelance website for Little Genius Island, an education and childcare business, to attract new families and collect program applications online.
 - Created a responsive, professional website with clear service information, contact details, and a structured booking workflow for prospective clients.
 - Implemented a lead-generation and scheduling system that helped the business manage customer inquiries and appointments more efficiently.
 - Designed the site to support customer trust, business credibility, and a smoother intake process for new clients.
@@ -479,7 +671,9 @@ Ali Hamoudi is a full-stack software engineer on a large government enterprise i
 ### Website Development
 
 - Developed a multi-page responsive website with clear service sections, business information, and strong calls to action tailored to customer acquisition.
-- Added a booking and quote-request workflow so clients could request services and provide project details without needing direct back-and-forth for every appointment.
+- Built service-specific signup forms for daycare, piano lessons, and private tutoring, allowing families to choose programs or tutoring subjects and provide child and parent/contact information.
+- Added calendar and weekly availability-selection interfaces so families can specify suitable and unsuitable days/times, helping the business coordinate lessons and appointments.
+- Organized applications through a multi-step signup workflow, with contact validation and Netlify Forms submission for business follow-up.
 - Created an easy-to-navigate structure across service offerings, company overview, and contact information to improve customer decision-making.
 - Built the interface with lightweight, maintainable frontend code and a consistent design system for mobile and desktop screens.
 - Wired the booking and inquiry process into a workflow that reduced administrative overhead and made it easier for the business to manage incoming demand.
@@ -487,7 +681,7 @@ Ali Hamoudi is a full-stack software engineer on a large government enterprise i
 ### Business Impact
 
 - Delivered a paid client project that gave a service business a stronger online presence and a more efficient incoming-lead system.
-- Helped a business making tens of thousands of dollars monthly by recruiting new clients and managing the booking system through a streamlined digital workflow.
+- Helped the business gather prospective clients through program information, clear application actions, and structured intake of learning needs and scheduling preferences.
 - Created a direct customer acquisition and scheduling process that supported repeat bookings, improved lead follow-up, and reduced manual coordination work.
 - Increased the business's ability to turn website visitors into booked customers while keeping operations more organized and scalable.
 
@@ -495,22 +689,24 @@ Ali Hamoudi is a full-stack software engineer on a large government enterprise i
 
 - **Languages:** HTML5, CSS3, TypeScript, React
 - **Frontend:** Responsive web design, mobile-friendly layouts, conversion-focused UI design
-- **Integrations:** Booking/inquiry form flow, contact and quote intake process
+- **Integrations:** Netlify Forms, program applications, contact intake, calendar and weekly availability selection
 - **Concepts:** Lead generation, client acquisition, scheduling workflows, business website development, responsive UX design
 
-## Tutoring - Freelance - Little Genius Island (littlegeniusisland.ca) - Best Brains (bestbrains.com)
+## Tutoring — Private Freelance Clients & Employment at Little Genius Island and Best Brains
+
+**Employers:** [Little Genius Island](https://littlegeniusisland.ca/) and [Best Brains](https://bestbrains.com/). Private tutoring was paid freelance work; tutoring at the two companies was employment.
 
 ### Overview
 
-- Provided tutoring to students from **Grade 3 through Grade 12** across mathematics, calculus, functions, physics, English, and programming.
+- Tutored children and teenagers **ages 6–18** in mathematics, calculus, advanced functions, physics, and English.
 - Worked with students at different grade levels and skill levels, adapting explanations, practice problems, and lesson structure to their individual needs.
-- Tutored students through a combination of **private freelance work**, **Best Brains**, and **Little Genius Island**.
+- Worked with **private freelance clients** and as an **employed tutor at Little Genius Island and Best Brains**.
 - Supported both elementary and high-school students, ranging from foundational English reading and writing to senior-level calculus, functions, and physics.
 
 ### Subjects & Grade Levels
 
-- **Grades 3–8:** Mathematics, English, and programming/coding
-- **Grades 11–12:** Functions, calculus, mathematics, and physics
+- **Younger students:** Foundational mathematics, English reading, and writing, with instruction adapted to the student's age and level.
+- **Older/high-school students:** Calculus, advanced functions, physics, mathematics, and English.
 - Provided individualized instruction focused on understanding concepts, solving problems, completing schoolwork, and building confidence with course material.
 
 ### Skills Demonstrated
@@ -521,6 +717,8 @@ Ali Hamoudi is a full-stack software engineer on a large government enterprise i
 - Problem-solving and guided practice
 - Working independently with students and families
 - Communication, patience, and mentorship
+
+# Community Involvement
 
 ## Under The Tree Charity
 

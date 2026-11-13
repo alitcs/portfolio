@@ -1,0 +1,286 @@
+
+\documentclass[10pt,letterpaper]{article}
+
+% ==========================================
+% PACKAGES
+% ==========================================
+
+\usepackage[
+    left=0.60in,
+    right=0.60in,
+    top=0.55in,
+    bottom=0.45in
+]{geometry}
+
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{microtype}
+\usepackage{ragged2e}
+\usepackage{hyperref}
+\usepackage{graphicx}
+
+% ==========================================
+% GENERAL FORMATTING
+% ==========================================
+
+\pagestyle{empty}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\setlength{\tabcolsep}{0pt}
+
+\linespread{1.04}
+
+\hypersetup{
+    colorlinks=false,
+    pdfborder={0 0 0}
+}
+
+% ==========================================
+% SECTION FORMATTING
+% ==========================================
+
+\titleformat{\section}
+    {\normalfont\scshape\normalsize}
+    {}{0pt}{}
+    [\vspace{-4pt}\titlerule]
+
+\titlespacing*{\section}
+    {0pt}{9pt}{5pt}
+
+% ==========================================
+% BULLET POINTS
+% ==========================================
+
+\setlist[itemize]{
+    leftmargin=1.45em,
+    label=\textbullet,
+    topsep=2pt,
+    partopsep=0pt,
+    parsep=0pt,
+    itemsep=1pt
+}
+
+% ==========================================
+% CUSTOM RESUME COMMANDS
+% ==========================================
+
+\newcommand{\resumeHeading}[2]{%
+    \noindent
+    \begin{tabular*}{\textwidth}
+        {@{}l@{\extracolsep{\fill}}r@{}}
+        \textbf{#1} & #2
+    \end{tabular*}%
+}
+
+\newcommand{\resumeSubheading}[2]{%
+    \noindent
+    \begin{tabular*}{\textwidth}
+        {@{}l@{\extracolsep{\fill}}r@{}}
+        \textit{#1} & \textit{#2}
+    \end{tabular*}%
+}
+
+\newcommand{\resumeEntry}[4]{%
+    \resumeHeading{#1}{#2}\par
+    \resumeSubheading{#3}{#4}\par
+}
+
+\newcommand{\resumeProject}[1]{%
+    \textbf{#1}\par
+}
+
+\newcommand{\resumeBulletsStart}{%
+    \begin{itemize}
+}
+
+\newcommand{\resumeBulletsEnd}{%
+    \end{itemize}
+}
+
+% ==========================================
+% DOCUMENT
+% ==========================================
+
+\begin{document}
+
+% ==========================================
+% HEADER
+% ==========================================
+
+\begin{center}
+    {\Huge \scshape Ali Hamoudi} \\ \vspace{4pt}
+    \small
+    \raisebox{-0.1\height}{}
+    437-869-4831 ~
+    \href{mailto:ali.hamoudi@torontomu.ca}{
+        \raisebox{-0.2\height}{}
+        \underline{ali.hamoudi@torontomu.ca}
+    } ~
+    \href{https://www.linkedin.com/in/ali-hamoudi-63387b33a/}{
+        \raisebox{-0.2\height}{}
+        \underline{LinkedIn}
+    } ~
+    \href{https://github.com/alitcs}{
+        \raisebox{-0.2\height}{}
+        \underline{GitHub}
+    }
+    \vspace{-8pt}
+\end{center}
+
+% ==========================================
+% EDUCATION
+% ==========================================
+
+\section{Education}
+
+\resumeEntry
+    {University of Houston}
+    {May 2024}
+    {BS in Computer Science, Minor in Mathematics}
+    {Houston, TX}
+
+\hspace{1.45em}\textbf{GPA:} 3.84
+
+% ==========================================
+% EXPERIENCE
+% ==========================================
+
+\section{Experience}
+
+\resumeEntry
+    {University of Houston}
+    {Jun. 2023 -- Present}
+    {Undergraduate Research Assistant}
+    {Houston, TX}
+
+\resumeBulletsStart
+    \item Designed an API in \textbf{Python} to parse medical software images, streamlining interactivity for physicians
+    \item Developed a mobile app in \textbf{React Native} for a therapy chat-bot with large language models
+\resumeBulletsEnd
+
+\vspace{5pt}
+
+\resumeEntry
+    {Amazon}
+    {May 2023 -- Aug. 2023}
+    {Software Engineer Intern}
+    {Austin, TX}
+
+\resumeBulletsStart
+    \item Designed a notifications interface in \textbf{Kotlin} for \textbf{AWS Supply Chain}, relaying necessary customer feedback
+    \item Initiated proactive discussions for a design that reduces traffic, saving costs by 50\% on customer transactions
+    \item Integrated success and failure notifications for demand plan creation, derived forecast creation, forecast workflows
+\resumeBulletsEnd
+
+\vspace{5pt}
+
+\resumeEntry
+    {University of Houston}
+    {Sep. 2022 -- Sep. 2023}
+    {Undergraduate Teaching Assistant}
+    {Houston, TX}
+
+\resumeBulletsStart
+    \item Supported 120+ students in structured procedural programming and elementary data structures in \textbf{C++}
+    \item Led weekly labs, code-reviewed and provided feedback for multiple C++ programming assignments
+\resumeBulletsEnd
+
+\vspace{5pt}
+
+\resumeEntry
+    {Buzly}
+    {Jun. 2022 -- Aug. 2022}
+    {Software Engineer Intern}
+    {Sacramento, CA}
+
+\resumeBulletsStart
+    \item Engineered the back-end for a dashboard providing statistics and analytics from over 12,000+ users for universities
+    \item Implemented \textbf{AWS Cognito} to manage user registration and authentication, increasing developer productivity
+\resumeBulletsEnd
+
+\vspace{5pt}
+
+\resumeEntry
+    {Seatgull}
+    {Feb. 2022 -- Dec. 2022}
+    {Software Engineer Intern}
+    {College Station, TX}
+
+\resumeBulletsStart
+    \item Created a course scheduler connected to 60 universities with over 850,000 students using \textbf{React} and \textbf{Typescript}
+    \item Initiated a mobile application built with \textbf{React Native}, accessibility on mobile platforms for 60\% of users
+\resumeBulletsEnd
+
+% ==========================================
+% PROJECTS
+% ==========================================
+
+\section{Projects}
+
+\resumeProject{CoCo Bot}
+
+\resumeBulletsStart
+    \item Developed a Discord bot in \textbf{Typescript} with interactive and engaging commands, for over 1000+ users
+    \item Leveraged \textbf{Google Cloud Sheets API} to automate member points, eliminating manual accounting tasks
+\resumeBulletsEnd
+
+\vspace{5pt}
+
+\resumeProject{GoGo}
+
+\resumeBulletsStart
+    \item Developed a back-end API in \textbf{Go} to interface with a PostgreSQL database and preserve complex data relationships
+    \item Migrated from monolithic back-end to serverless \textbf{AWS Lambda} functions, reducing infrastructure costs by 100\%
+\resumeBulletsEnd
+
+\vspace{5pt}
+
+\resumeProject{Downtime}
+
+\resumeBulletsStart
+    \item Constructed a \textbf{React Native} mobile application that focus in-person hangouts for 100+ university students
+    \item Designed a wrapper for \textbf{Firebase} and 20+ \textbf{Google Cloud} functions for scheduled events like hangout termination
+\resumeBulletsEnd
+
+% ==========================================
+% LEADERSHIP
+% ==========================================
+
+\section{Leadership}
+
+\resumeHeading
+    {Code[Coogs] --- Founding Chief Technology Officer}
+    {Sep. 2021 -- Present}
+
+\resumeBulletsStart
+    \item Cooperated with chief officers to make decisions leading to a growth of over 200 new members
+    \item Collaborated with 6 other facilitators for technical interview prep workshops hosting over 60 students
+\resumeBulletsEnd
+
+\vspace{5pt}
+
+\resumeHeading
+    {CougarCS --- Webmaster}
+    {Sep. 2021 -- Present}
+
+\resumeBulletsStart
+    \item Conducted thorough code reviews for 20+ developers, promoting overall code quality and maintainability
+    \item Led 4 developer teams through building open-source software to streamline registration for 1800+ members
+\resumeBulletsEnd
+
+% ==========================================
+% RELEVANT INFORMATION
+% ==========================================
+
+\section{Relevant Information}
+
+\textbf{Languages:} JavaScript, Typescript, C++, Python, HTML/CSS, SQL, Java, Rust, Go
+
+\textbf{Other:} AWS, Google Cloud, React, Git, Docker, Linux, AWS Certified Cloud Practitioner
+
+\end{document}
