@@ -40,6 +40,18 @@
 .home-hero .hero-location { position: absolute; left: 50%; bottom: 7%; margin: 0; transform: translateX(-50%); white-space: nowrap; font-size: clamp(9px, .9vw, 13px); }
 .gallery-exhibition .home-hero .hero-scroll { position: absolute; right: 3.3%; bottom: 6.1%; gap: 8px; min-height: 44px; margin: 0; padding: 8px; font-size: clamp(8px, .8vw, 11px); }
 .gallery-exhibition .home-hero .hero-scroll > span:last-child { font-size: clamp(14px, 1.4vw, 20px); }
+/* A small desktop type increase keeps the compact mobile composition intact. */
+@media (min-width: 1001px) {
+  .home-header .home-contacts a, .hero-signature { font-size: clamp(12.375px, 1.2375vw, 18px); }
+  .home-header .home-contacts a > span:first-child { font-size: clamp(10.125px, .9vw, 12.375px); }
+  .home-nav-label small { font-size: 10.125px; }
+  .monochrome-shell .home-hero .hero-actions .hero-cta { font-size: clamp(11.25px, 1.8vw, 28.125px); }
+  .home-hero .hero-build-cta { font-size: clamp(10.125px, 1.2375vw, 18px); }
+  .home-hero .hero-editorial { font-size: clamp(11.25px, 1.40625vw, 20.25px); }
+  .home-hero .hero-location { font-size: clamp(10.125px, 1.0125vw, 14.625px); }
+  .gallery-exhibition .home-hero .hero-scroll { font-size: clamp(9px, .9vw, 12.375px); }
+}
+
 @media (hover: none) {
   .monochrome-shell .home-hero .hero-actions .hero-cta, .home-hero .hero-build-cta { min-height: calc(44px / var(--site-scale)); }
 }

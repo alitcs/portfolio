@@ -11,6 +11,18 @@ body, #root, .home-main, .detail-main, .inquiry-page { min-height: var(--layout-
 .gallery-info-toggle, .detail-project-link { min-height: 44px; }
 
 @media (min-width: 1001px) {
+  .detail-copy { font-size: clamp(14.625px, 1.2375vw, 19.125px); }
+  .gallery-info-toggle { font-size: 12.375px; }
+  .detail-block-label, .gallery-scene .gallery-scene-header { font-size: 11.25px; }
+  .gallery-toolbar-heading h2 { font-size: 16.875px; }
+  .gallery-toolbar-heading > span, .gallery-filter-label { font-size: 12.375px; }
+  .gallery-filters button {
+    min-height: calc(48.4px / var(--site-scale)); padding: 13.2px 16.5px; gap: 13.2px;
+    font-size: 13.2px;
+  }
+  .gallery-filter-count { font-size: 11px; }
+  .gallery-position { gap: 17.6px; font-size: 11px; }
+  .gallery-position > a { min-width: 33px; min-height: 39.6px; font-size: 22px; }
   .gallery-exhibition .gallery-screen, .detail-main .work-detail { --focus-top: calc((var(--layout-height) - var(--focus-height)) / 2); }
   /* Landscape previews show their full width, as they do on smaller screens. */
   .work-detail:has(.gallery-preview-loading), .work-detail:has(.detail-preview-image),
@@ -23,7 +35,7 @@ body, #root, .home-main, .detail-main, .inquiry-page { min-height: var(--layout-
 
 @media (min-width: 1001px) and (max-width: 1200px) {
   .work-detail { --focus-width: 48vw; }
-  .gallery-expanded .detail-copy, .detail-main .detail-copy { left: 60%; width: 36%; font-size: 15px; }
+  .gallery-expanded .detail-copy, .detail-main .detail-copy { left: 60%; width: 36%; font-size: 16.875px; }
   .gallery-expanded .detail-copy-row:nth-child(n + 2), .detail-main .detail-copy-row:nth-child(n + 2) { margin-left: 0; }
 }
 
