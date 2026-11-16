@@ -73,20 +73,7 @@ body, #root, .home-main, .detail-main, .inquiry-page { min-height: var(--layout-
   .gallery-focus-arrow { width: 28px; height: 28px; right: 10px; bottom: 10px; font-size: 18px; }
   .work-detail .detail-focus-action { bottom: 10px; padding: 7px 10px; font-size: 9px; }
 
-  .inquiry-page { padding: 18px var(--mobile-gutter) 50px; }
-  .inquiry-layout { grid-template-columns: 1fr; gap: 36px; width: 100%; max-width: 680px; margin-top: 40px; }
-  .inquiry-intro h1, .inquiry-success h1 { font-size: clamp(30px, 6vw, 46px); }
-  .inquiry-intro > p:last-of-type, .inquiry-success > p:last-of-type { font-size: 12px; }
-  .inquiry-field label { font-size: 11px; }
-  .inquiry-prompts { display: none; }
-  .inquiry-field input, .inquiry-field textarea { font-size: 16px; }
-  .inquiry-field textarea { height: 170px; min-height: 150px; }
-  .inquiry-required, .inquiry-field-hint, .inquiry-privacy { font-size: 10px; line-height: 1.5; }
-  .inquiry-back-button { width: min(100%, 280px); min-width: 0; }
-}
 
-@media (min-width: 600px) and (max-width: 1000px) {
-  .inquiry-contact-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 359px) {
