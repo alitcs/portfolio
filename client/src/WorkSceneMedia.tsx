@@ -30,15 +30,6 @@ function GalleryPreview({ item, active }: { item: SceneItem; active: boolean }) 
   </>
 }
 
-function WorkArtPeek({ item }: { item: SceneItem }) {
-  if (item.slug === 'artificial-intelligence-real-estate-scraper-filter') {
-    return <div className="detail-apartment-peek" aria-hidden="true">
-      <img src="/item-images/apartment-terminal.png" alt="" />
-    </div>
-  }
-  return null
-}
-
 function SceneArtwork({ item }: { item: SceneItem }) {
   const [aspect, setAspect] = useState(1)
   return <div className="scene-artwork" style={{ '--artwork-aspect': aspect } as CSSProperties}>
@@ -46,7 +37,6 @@ function SceneArtwork({ item }: { item: SceneItem }) {
       const image = event.currentTarget
       setAspect(image.naturalWidth / image.naturalHeight)
     }} />
-    <WorkArtPeek item={item} />
   </div>
 }
 

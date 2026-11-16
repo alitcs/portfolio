@@ -3,6 +3,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 import WorkSceneMedia from './WorkSceneMedia'
 import WorkDetailContent, { type DetailItem } from './WorkDetailContent'
 import { galleryFilters as filters, legacyGalleryFilter, type GalleryFilter as Filter } from './galleryNavigation'
+import { cancelFloatingScroll, floatTo, installGalleryMomentum } from './motion'
 import './Gallery.css'
 
 type ShowcaseItem = DetailItem
@@ -33,6 +34,7 @@ export default function WorkShowcase({ items, intro }: { items: readonly Showcas
   const [expandedSlug, setExpandedSlug] = useState('')
   const exhibitionRef = useRef<HTMLDivElement>(null)
   const toolbarRef = useRef<HTMLElement>(null)
+  const reelRef = useRef<HTMLElement>(null)
   const order = ['Experience', 'Freelance', 'Projects', 'Community & extracurricular']
   const ordered = [...items].sort((a, b) => order.indexOf(a.category) - order.indexOf(b.category))
   const visible = ordered.filter((item) => filter === 'all' || categoryFilter(item) === filter)
@@ -40,6 +42,13 @@ export default function WorkShowcase({ items, intro }: { items: readonly Showcas
   // Warm the next actual websites, even when static-image projects sit between them.
   const preloadSlugs = new Set(visible.slice(activeIndex).filter((item) => item.previewUrl && !item.previewImage).slice(0, 3).map((item) => item.slug))
   const counts = new Map(filters.map((entry) => [entry.id, ordered.filter((item) => entry.id === 'all' || categoryFilter(item) === entry.id).length]))
+
+  useEffect(() => () => cancelFloatingScroll(), [])
+
+  useEffect(() => {
+    if (expandedSlug || !reelRef.current) return
+    return installGalleryMomentum(reelRef.current)
+  }, [expandedSlug, filter])
 
   useEffect(() => {
     const toolbar = toolbarRef.current
@@ -88,12 +97,7 @@ export default function WorkShowcase({ items, intro }: { items: readonly Showcas
     if (!expandedSlug) return
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key !== 'Escape') return
-      setExpandedSlug('')
-      requestAnimationFrame(() => {
-        const item = document.getElementById(`item-${expandedSlug}`)
-        item?.scrollIntoView({ behavior: 'instant' })
-        item?.querySelector<HTMLButtonElement>('.gallery-focus-link')?.focus({ preventScroll: true })
-      })
+      collapse(expandedSlug)
     }
     window.addEventListener('keydown', closeOnEscape)
     return () => window.removeEventListener('keydown', closeOnEscape)
@@ -101,6 +105,7 @@ export default function WorkShowcase({ items, intro }: { items: readonly Showcas
 
   useEffect(() => {
     const sync = () => {
+      cancelFloatingScroll()
       setFilter(initialFilter())
       setExpandedSlug('')
       requestAnimationFrame(() => document.getElementById(location.hash.slice(1) || 'work-gallery')?.scrollIntoView({ behavior: 'instant' }))
@@ -110,25 +115,29 @@ export default function WorkShowcase({ items, intro }: { items: readonly Showcas
   }, [])
 
   function expand(slug: string) {
+    const start = window.scrollY
     setExpandedSlug(slug)
     try { sessionStorage.setItem(returnKey, JSON.stringify({ slug, filter })) } catch { /* Optional. */ }
     requestAnimationFrame(() => {
-      document.getElementById(`item-${slug}`)?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' })
+      const item = document.getElementById(`item-${slug}`)
+      if (item) floatTo(item, start, 480)
       document.querySelector<HTMLButtonElement>(`#item-${slug} .detail-back-link`)?.focus({ preventScroll: true })
     })
   }
 
   function collapse(slug: string) {
+    const start = window.scrollY
     setExpandedSlug('')
     requestAnimationFrame(() => {
       const item = document.getElementById(`item-${slug}`)
-      item?.scrollIntoView({ behavior: 'instant' })
+      if (item) floatTo(item, start, 480)
       item?.querySelector<HTMLButtonElement>('.gallery-focus-link')?.focus({ preventScroll: true })
     })
   }
 
   function changeFilter(next: Filter) {
     if (next === filter) return
+    const start = window.scrollY
     setFilter(next)
     setActiveSlug('')
     setExpandedSlug('')
@@ -138,28 +147,33 @@ export default function WorkShowcase({ items, intro }: { items: readonly Showcas
     else url.searchParams.set('category', next)
     url.hash = 'work-gallery'
     history.pushState(null, '', url)
-    requestAnimationFrame(() => document.getElementById('work-gallery')?.scrollIntoView({
-      behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
-    }))
+    requestAnimationFrame(() => {
+      const gallery = document.getElementById('work-gallery')
+      if (gallery) floatTo(gallery, start)
+    })
   }
 
   return (
     <div className="gallery-exhibition" ref={exhibitionRef}>
       {intro}
-      <section className="gallery-reel" id="work-gallery" aria-labelledby="gallery-title">
+      <section className="gallery-reel" id="work-gallery" ref={reelRef} aria-labelledby="gallery-title">
         <header className="gallery-toolbar" ref={toolbarRef}>
           <div className="gallery-toolbar-heading">
-            <h2 id="gallery-title">selected work</h2>
-            <span role="status" aria-live="polite">{pad(visible.length)} works</span>
+            <div className="gallery-toolbar-title"><span className="gallery-section-marker" aria-hidden="true" /><h2 id="gallery-title">selected work</h2></div>
+            <span className="gallery-result-count" role="status" aria-live="polite" aria-atomic="true">
+              <span className="gallery-result-category">{filters.find((entry) => entry.id === filter)?.label}</span>
+              <span className="gallery-result-divider" aria-hidden="true">/</span>
+              <span>{pad(visible.length)} <span className="gallery-result-total">of {pad(ordered.length)} works</span></span>
+            </span>
           </div>
           <div className="gallery-filter-controls">
             <span className="gallery-filter-label" id="gallery-filter-label"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M3 6h18M6 12h12m-8 6h4" /></svg>Filter by</span>
             <div className="gallery-filters" role="group" aria-labelledby="gallery-filter-label">
-              {filters.map((entry) => <button key={entry.id} type="button" aria-pressed={filter === entry.id} aria-controls="gallery-items" onClick={() => changeFilter(entry.id)}><span>{entry.label}</span><span className="gallery-filter-count" aria-hidden="true">{pad(counts.get(entry.id) || 0)}</span></button>)}
+              {filters.map((entry) => <button key={entry.id} type="button" aria-pressed={filter === entry.id} aria-controls="gallery-items" onClick={() => changeFilter(entry.id)}><span className="gallery-filter-name">{entry.label}</span><span className="gallery-filter-count" aria-hidden="true">{pad(counts.get(entry.id) || 0)}</span></button>)}
             </div>
           </div>
         </header>
-        <div className="gallery-items" id="gallery-items">
+        <div className="gallery-items" id="gallery-items" key={filter}>
         {visible.map((item, index) => <article key={item.slug} className={`work-detail work-detail-${item.slug} gallery-screen ${expandedSlug === item.slug ? 'gallery-expanded' : 'gallery-scene'}`} id={`item-${item.slug}`} data-slug={item.slug} aria-labelledby={`title-${item.slug}`}>
           <WorkSceneMedia item={item} active={preloadSlugs.has(item.slug)} />
           {expandedSlug === item.slug ? (

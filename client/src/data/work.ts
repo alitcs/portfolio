@@ -56,7 +56,7 @@ export const workItems: readonly WorkItem[] = [
     summary: 'A paid client tool that classifies property listings against location, budget, and bedroom criteria.',
     highlights: ['Retained a shortlist across runs, avoiding duplicates and highlighting new matches.', 'Saved clients hundreds of hours of manual searching and review.'],
     technical: 'Python, Selenium, AI APIs, persistent JSON results.',
-    image: '/item-images/apartment-base.png',
+    image: '/item-images/apartment-terminal.png',
     links: [{ label: 'View project', href: 'https://github.com/alitcs/Apartment-Filter' }],
   },
   {
