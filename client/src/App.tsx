@@ -263,8 +263,8 @@ function HomePage() {
           <span className="hero-frame-cross">+</span>
         </div>
         <div className="hero-editorial" aria-label="Portfolio introduction">
-          <p>building useful<br />things for<br />real people.</p>
-          <p>software, design<br />and ideas<br />made tangible.</p>
+          <p>building useful things for real people — from AI pipelines to client intake and management systems (CRM).</p>
+          <p>bringing ideas to life through software and design.</p>
         </div>
         <div className="hero-footer">
           <p className="hero-signature">Ali Hamoudi<span>Software engineer</span></p>
