@@ -32,6 +32,9 @@
 .home-hero .hero-build-cta > span:last-child { font-size: clamp(12px, 1.25vw, 18px); }
 .home-hero .hero-build-cta:hover { border-color: #171717; background: #ededed80; }
 .gallery-exhibition .home-hero .hero-image-frame { position: absolute; top: 54%; left: 40%; width: clamp(72px, 15vw, 225px); height: auto; max-height: 56%; aspect-ratio: .36; margin: 0; transform: translate(-50%, -50%); }
+@media (min-width: 1001px) {
+  .gallery-exhibition .home-hero .hero-image-frame { left: 44%; }
+}
 .home-hero .hero-frame-cross { font-size: clamp(16px, 2.65vw, 38px); }
 .home-hero .hero-editorial { position: absolute; top: 51%; left: 55%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(10px, 5vw, 90px); width: min(37%, 460px); font: 400 clamp(10px, 1.25vw, 18px)/1.2 var(--sans); }
 .home-hero .hero-footer { display: contents; }
