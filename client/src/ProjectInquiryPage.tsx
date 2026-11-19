@@ -30,10 +30,10 @@ export default function ProjectInquiryPage() {
 
     const form = event.currentTarget
     const data = new FormData(form)
-    for (const field of ['name', 'email', 'idea']) {
+    for (const field of ['name', 'contact', 'idea']) {
       const value = String(data.get(field) || '').trim()
       if (!value) {
-        setError('Please add your name, email, and a little about your idea.')
+        setError('Please add your name, contact details, and idea.')
         form.querySelector<HTMLInputElement | HTMLTextAreaElement>(`[name="${field}"]`)?.focus()
         return
       }
@@ -65,7 +65,7 @@ export default function ProjectInquiryPage() {
 
   return <div className="inquiry-page">
     <header className="inquiry-nav">
-      <a href="/" aria-label="Return to portfolio"><span aria-hidden="true"><ArrowIcon direction="left" /></span> Portfolio</a>
+      <a href="/" aria-label="Return to portfolio"><span aria-hidden="true"><ArrowIcon direction="left" /></span> Back to portfolio</a>
       <span>ali hamoudi / let’s build</span>
     </header>
 
@@ -75,56 +75,40 @@ export default function ProjectInquiryPage() {
           <circle cx="40" cy="40" r="36" />
           <path d="m24 40 11 11 22-24" />
         </svg>
-        <p className="inquiry-kicker">Project submitted</p>
-        <h1 id="inquiry-success-title" ref={successTitle} tabIndex={-1}>Thanks for sharing<br />your idea.</h1>
-        <p>Your project details have been submitted. I’ll get back to you at the email you provided.</p>
+        <h1 id="inquiry-success-title" ref={successTitle} tabIndex={-1}>Idea received.</h1>
+        <p>I’ll be in touch.</p>
         <a className="inquiry-back-button" href="/">Back to portfolio <span aria-hidden="true"><ArrowIcon /></span></a>
       </section>
     ) : (
       <div className="inquiry-layout">
         <section className="inquiry-intro" aria-labelledby="inquiry-title">
-          <p className="inquiry-kicker">An idea starts here</p>
           <h1 id="inquiry-title">What do you<br />want to build?</h1>
-          <p>A new website, a useful tool, or an idea you’re still figuring out. Tell me what you have in mind.</p>
-          <div className="inquiry-prompts">
-            <h2>A few things you can share</h2>
-            <ol>
-              <li><span aria-hidden="true">01</span><p>What it should do, and who it’s for.</p></li>
-              <li><span aria-hidden="true">02</span><p>Whether you’re starting fresh or improving something that exists.</p></li>
-              <li><span aria-hidden="true">03</span><p>Any must-have features, references, or deadlines.</p></li>
-            </ol>
-            <p>No polished brief needed. A few sentences are enough.</p>
-          </div>
+          <p>A few words is all it takes.</p>
+          <figure className="inquiry-flower" aria-hidden="true"><img src="/images/hero-flower.png" alt="" /><span>+</span></figure>
         </section>
 
-        <form className="inquiry-form" name="portfolio-project" method="POST" action="/" data-netlify="true" netlify-honeypot="bot-field" aria-label="Tell me about your project" aria-busy={status === 'submitting'} onSubmit={handleSubmit}>
+        <form className="inquiry-form" name="portfolio-project" method="POST" action="/" data-netlify="true" netlify-honeypot="bot-field" aria-labelledby="inquiry-title" aria-busy={status === 'submitting'} onSubmit={handleSubmit}>
           <input type="hidden" name="form-name" value="portfolio-project" />
           <p hidden><label>Leave this empty <input name="bot-field" tabIndex={-1} autoComplete="off" /></label></p>
-          <p className="inquiry-required">Your name, email, and idea are required. Everything else is optional.</p>
           <fieldset disabled={status === 'submitting'}>
             <div className="inquiry-contact-fields">
               <div className="inquiry-field">
-                <label htmlFor="project-name">Your name</label>
-                <input id="project-name" name="name" autoComplete="name" maxLength={120} placeholder="Your name" required />
+                <label htmlFor="project-name"><span className="inquiry-field-index" aria-hidden="true">01</span>Name</label>
+                <input id="project-name" name="name" autoComplete="name" maxLength={120} required />
               </div>
               <div className="inquiry-field">
-                <label htmlFor="project-email">Your email</label>
-                <input id="project-email" name="email" type="email" autoComplete="email" maxLength={254} placeholder="you@example.com" required />
+                <label htmlFor="project-contact"><span className="inquiry-field-index" aria-hidden="true">02</span>Contact</label>
+                <input id="project-contact" name="contact" type="text" maxLength={254} placeholder="Email, phone, or @handle" required />
               </div>
             </div>
             <div className="inquiry-field">
-              <label htmlFor="project-idea">What would you like to build?</label>
-              <textarea id="project-idea" name="idea" rows={7} maxLength={5000} placeholder="The idea, the problem it solves, and anything you’d like me to know…" aria-describedby="project-idea-hint" required />
-              <p id="project-idea-hint" className="inquiry-field-hint">Links to examples or inspiration are welcome.</p>
-            </div>
-            <div className="inquiry-field">
-              <label htmlFor="project-timeline">Timeline <span>(optional)</span></label>
-              <input id="project-timeline" name="timeline" maxLength={180} placeholder="A specific date, a rough idea, or no rush" />
+              <label htmlFor="project-idea"><span className="inquiry-field-index" aria-hidden="true">03</span>Your idea</label>
+              <textarea id="project-idea" name="idea" rows={6} maxLength={5000} placeholder="A little about what you have in mind…" required />
             </div>
             {error && <p className="inquiry-error" ref={errorMessage} role="alert" tabIndex={-1}>{error} <a href="mailto:alihamoudiu18@gmail.com">Email me <span aria-hidden="true"><ArrowIcon /></span></a></p>}
-            <button className="inquiry-submit" type="submit" disabled={status === 'submitting'}><span>{status === 'submitting' ? 'Sending your idea…' : 'Send project idea'}</span><span aria-hidden="true">{status === 'submitting' ? '…' : <ArrowIcon />}</span></button>
+            <button className="inquiry-submit" type="submit" disabled={status === 'submitting'}><span>{status === 'submitting' ? 'Sending your idea…' : 'Send idea'}</span><span aria-hidden="true">{status === 'submitting' ? '…' : <ArrowIcon />}</span></button>
           </fieldset>
-          <p className="inquiry-privacy">I’ll only use your details to respond to your inquiry.</p>
+          <p className="inquiry-privacy">Only used to reply.</p>
         </form>
       </div>
     )}

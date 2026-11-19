@@ -1,5 +1,7 @@
 import ArrowIcon from './ArrowIcon'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState, type MouseEvent } from 'react'
+import { flushSync } from 'react-dom'
+import { cancelFloatingScroll, floatTo, transitionPage } from './motion'
 import './App.css'
 import WorkShowcase from './WorkShowcase'
 import './Browsing.css'
@@ -10,6 +12,7 @@ import { legacyGalleryFilter } from './galleryNavigation'
 import { workItems, type WorkItem } from './data/work'
 import './Responsive.css'
 import './Landing.css'
+import './Motion.css'
 
 type Page = 'home' | 'index' | 'project' | 'work'
 type BlobOverlay = {
@@ -44,6 +47,42 @@ function App() {
   const [workSlug, setWorkSlug] = useState(getWorkSlug)
   const [section, setSection] = useState(() => window.location.hash.slice(1))
   const isPortfolio = page === 'home' || page === 'index'
+  const navigating = useRef(false)
+
+  useEffect(() => () => cancelFloatingScroll(), [])
+
+  function navigate(event: MouseEvent<HTMLDivElement>) {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+    const link = (event.target as Element).closest<HTMLAnchorElement>('a[href]')
+    if (!link || link.target || link.hasAttribute('download') || link.classList.contains('skip-link')) return
+    const url = new URL(link.href)
+    if (url.origin !== location.origin || !/^\/(?:|home|index|start-project|note|work\/[\w-]+)$/.test(url.pathname)) return
+    if (url.pathname === location.pathname && url.search === location.search && url.hash) {
+      const target = document.getElementById(url.hash.slice(1))
+      if (!target) return
+      event.preventDefault()
+      history.pushState(null, '', url)
+      setSection(url.hash.slice(1))
+      floatTo(target)
+      return
+    }
+    event.preventDefault()
+    if (navigating.current) return
+    navigating.current = true
+    const origin = link.getBoundingClientRect()
+    void transitionPage(() => {
+      history.pushState(null, '', url)
+      flushSync(() => {
+        setPage(getPage())
+        setWorkSlug(getWorkSlug())
+        setSection(url.hash.slice(1))
+      })
+      window.scrollTo({ top: 0, behavior: 'instant' })
+      const heading = document.querySelector<HTMLElement>('#main-content h1')
+      heading?.setAttribute('tabindex', '-1')
+      heading?.focus({ preventScroll: true })
+    }, origin, url.pathname === '/start-project').finally(() => { navigating.current = false })
+  }
 
   useEffect(() => {
     const createOverlay = window.BlobOverlay?.create
@@ -152,6 +191,7 @@ function App() {
 
   useEffect(() => {
     const updateLocation = () => {
+      cancelFloatingScroll()
       setPage(getPage())
       setWorkSlug(getWorkSlug())
       setSection(window.location.hash.slice(1))
@@ -166,12 +206,12 @@ function App() {
 
   useEffect(() => {
     if (!section && page !== 'home' && page !== 'index') {
-      window.scrollTo(0, 0)
+      window.scrollTo({ top: 0, behavior: 'instant' })
     }
   }, [page, section])
 
   return (
-    <div className={`site-shell ${page !== 'work' ? 'monochrome-shell' : ''}`}>
+    <div className={`site-shell ${page !== 'work' ? 'monochrome-shell' : ''}`} onClick={navigate}>
       <a className="skip-link" href="#main-content">Skip to content</a>
       {isPortfolio && <header className="site-header home-header">
           <nav className="header-contacts home-contacts" aria-label="Contact and profile links">
@@ -213,18 +253,18 @@ function HomePage() {
         </div>
         <div className="hero-actions">
           <a className="hero-cta" href="#work-gallery">
-            <span>See my work</span>
+            <span className="hero-action-number" aria-hidden="true">01</span><span className="hero-action-label">see my work</span>
             <span className="hero-cta-arrow" aria-hidden="true"><ArrowIcon direction="down" /></span>
           </a>
-          <a className="hero-build-cta" href="/start-project"><span>Want to build something?</span><span aria-hidden="true"><ArrowIcon /></span></a>
+          <a className="hero-build-cta" href="/start-project"><span className="hero-action-number" aria-hidden="true">02</span><span className="hero-action-label">want me to build something?</span><span className="hero-action-arrow" aria-hidden="true"><ArrowIcon /></span></a>
         </div>
         <div className="hero-image-frame" aria-hidden="true">
           <img src="/images/hero-flower.png" alt="" />
           <span className="hero-frame-cross">+</span>
         </div>
         <div className="hero-editorial" aria-label="Portfolio introduction">
-          <p>building useful<br />things for<br />real people.</p>
-          <p>software, design<br />and ideas<br />made tangible.</p>
+          <p>building useful things for real people — from AI pipelines to client intake and management systems (CRM).</p>
+          <p>bringing ideas to life through software and design.</p>
         </div>
         <div className="hero-footer">
           <p className="hero-signature">Ali Hamoudi<span>Software engineer</span></p>

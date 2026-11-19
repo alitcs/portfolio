@@ -40,6 +40,6 @@ npm run lint
 ## Project inquiries
 
 - “Want to build something?” opens `/start-project`, a dedicated project inquiry page. The old `/note` URL also opens this form.
-- The form collects a name, reply email, project idea, and optional timeline. Required-field and email validation run before submission. A pending state prevents duplicate submissions; failed requests preserve the entered details and offer a retry or direct email.
+- The form collects a name, one contact method (email, phone, handle, or profile link), and project idea. All three fields are required and trimmed before submission. A pending state prevents duplicate submissions; failed requests preserve the entered details and offer a retry or direct email.
 - Accepted submissions replace the form with a checkmark, confirmation, and Back to portfolio button. The success heading receives focus and the page returns to the top, including on mobile.
 - Delivery uses the existing Netlify Forms integration. The `portfolio-project` form and its fields are mirrored in `index.html` for build-time detection. Deploy to Netlify with form detection enabled to receive real submissions. The Vite development server does not handle form delivery. Browser QA uses mocked POST responses to exercise success and failure without sending inquiries.
