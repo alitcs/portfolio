@@ -35,17 +35,19 @@ body, #root, .home-main, .detail-main, .inquiry-page { min-height: var(--layout-
 @media (max-width: 1000px) {
   .site-shell { --mobile-gutter: clamp(28px, 8vw, 64px); }
   .gallery-exhibition .gallery-screen, .detail-main .work-detail {
-    --focus-left: calc((100% - var(--focus-width)) / 2); --focus-top: 90px;
+    --focus-left: 9%; --focus-top: max(125px, calc(var(--gallery-scene-height, var(--layout-height)) * .17));
     --focus-width: calc(100vw - var(--mobile-gutter) * 2); --focus-height: clamp(170px, 48vw, 360px);
-    height: auto; min-height: 0; padding-top: calc(var(--focus-top) + var(--focus-height) + 36px); padding-bottom: 80px;
+    height: auto; min-height: var(--gallery-scene-height, var(--layout-height)); padding-top: calc(var(--focus-top) + var(--focus-height) + 100px); padding-bottom: 100px;
   }
   .detail-main .work-detail { min-height: var(--layout-height); }
   .gallery-screen .work-detail-header, .detail-main .work-detail-header { top: 0; padding: 10px var(--mobile-gutter); min-height: 80px; }
   .gallery-scene .gallery-scene-header { font-size: 17.5px; }
   .gallery-screen .work-detail-backdrop, .detail-main .work-detail-backdrop { height: 100%; bottom: 0; }
   .gallery-screen .detail-copy, .detail-main .detail-copy { position: relative; top: auto; left: auto; width: auto; min-height: 0; display: block; margin: 0 var(--mobile-gutter); padding: 0; transform: none; font-size: 20px; line-height: 1.4; }
+  .gallery-scene .gallery-copy { width: 63%; margin-left: 28%; margin-right: 9%; }
   .gallery-screen .detail-copy-row, .detail-main .detail-copy-row { grid-template-columns: 24px minmax(0, 1fr); gap: 12px; }
   .gallery-screen .detail-copy-row:nth-child(n + 2), .detail-main .detail-copy-row:nth-child(n + 2) { margin-top: 24px; margin-left: 0; }
+  .gallery-scene .detail-copy-row:nth-child(2) { margin-top: 32px; }
   .gallery-screen .detail-copy h2, .detail-main .detail-copy h1 { font: inherit; }
   .gallery-screen .detail-copy .detail-role, .detail-main .detail-copy .detail-role { font-size: 17.5px; line-height: 1.4; }
   .gallery-focus-mark { right: 10px; bottom: 10px; width: 30px; height: 30px; }

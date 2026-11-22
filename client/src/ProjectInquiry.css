@@ -56,12 +56,14 @@
 }
 @media (max-width: 600px) {
   .inquiry-nav > span { display: none; }
-  .inquiry-layout { margin-top: 44px; gap: 36px; }
+  .inquiry-page { padding: 32px 8% 90px; }
+  .inquiry-layout { margin-top: 110px; gap: 100px; }
   .inquiry-intro { padding-right: 0; }
-  .inquiry-intro h1 { max-width: 85%; }
-  .inquiry-intro > p { max-width: 85%; }
+  .inquiry-intro h1 { max-width: 90%; font-size: 38px; }
+  .inquiry-intro > p { max-width: 82%; margin-top: 32px; }
   .inquiry-flower { display: none; }
-  .inquiry-contact-fields { grid-template-columns: 1fr; }
-  .inquiry-submit { width: 100%; }
+  .inquiry-contact-fields { grid-template-columns: 1fr; gap: 44px; }
+  .inquiry-form fieldset { gap: 44px; }
+  .inquiry-submit { justify-self: start; width: auto; min-width: 180px; }
 }
 @media (prefers-reduced-motion: reduce) { .inquiry-field input, .inquiry-field textarea, .inquiry-submit { transition: none; } }

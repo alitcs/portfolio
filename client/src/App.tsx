@@ -43,12 +43,20 @@ function getWorkSlug() {
 
 function App() {
   const [page, setPage] = useState<Page>(getPage)
+  const [compactViewport, setCompactViewport] = useState(() => window.matchMedia('(max-width: 700px)').matches)
   const [workSlug, setWorkSlug] = useState(getWorkSlug)
   const [section, setSection] = useState(() => window.location.hash.slice(1))
   const isPortfolio = page === 'home' || page === 'index'
   const navigating = useRef(false)
 
   useEffect(() => () => cancelFloatingScroll(), [])
+
+  useEffect(() => {
+    const query = window.matchMedia('(max-width: 700px)')
+    const sync = () => setCompactViewport(query.matches)
+    query.addEventListener('change', sync)
+    return () => query.removeEventListener('change', sync)
+  }, [])
 
   function navigate(event: MouseEvent<HTMLDivElement>) {
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
@@ -89,7 +97,7 @@ function App() {
     if (!createOverlay || !main || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
     const records = new Map<HTMLElement, { overlay: BlobOverlay; inView: boolean }>()
-    const sections = '#overview, .gallery-expanded, .inquiry-page, .detail-main > .work-detail'
+    const sections = '#overview, .gallery-screen, .inquiry-page, .detail-main > .work-detail'
     let maskFrame = 0
     let disposed = false
 
@@ -97,7 +105,7 @@ function App() {
       maskFrame = 0
       if (disposed) return
       const elements = Array.from(document.querySelectorAll(
-        'h1, h2, h3, p, label, input, textarea, button, .header-contacts a, .hero-actions, .gallery-toolbar, .inquiry-nav',
+        'h1, h2, h3, p, label, input, textarea, button, .header-contacts a, .hero-actions, .gallery-toolbar, .gallery-scene-header, .gallery-info-toggle, .inquiry-nav',
       )).map((element) => element.getBoundingClientRect()).filter((bounds) => bounds.width && bounds.height)
 
       for (const [target, { overlay, inView }] of records) {
@@ -142,20 +150,26 @@ function App() {
         records.delete(target)
       }
       for (const target of targets) {
-        if (records.has(target)) continue
-        const overlay = createOverlay(target, {
-          count: target.id === 'overview' ? 10 : page === 'project' ? 5 : 7,
-          speed: 0.38,
-          zIndex: 35,
-          active: false,
-        })
+        let record = records.get(target)
+        if (!record) {
+          const overlay = createOverlay(target, {
+            count: target.id === 'overview' ? (compactViewport ? 6 : 10) : page === 'project' ? (compactViewport ? 3 : 5) : (compactViewport ? 4 : 7),
+            speed: compactViewport ? 0.3 : 0.38,
+            zIndex: 35,
+            active: false,
+          })
+          record = { overlay, inView: false }
+          records.set(target, record)
+          visibilityObserver.observe(target)
+        }
+        const { overlay } = record
         const lightWork = target.classList.contains('work-detail-tutoring') || target.classList.contains('work-detail-ontario-government-govtechon')
         const isDetail = page === 'work' || target.classList.contains('gallery-expanded')
-        overlay.canvas.style.opacity = page === 'project' ? '0.18' : '0.23'
+        overlay.canvas.style.opacity = target.classList.contains('gallery-scene')
+          ? (compactViewport ? '0.28' : '0.32')
+          : (compactViewport || page === 'project' ? '0.18' : '0.23')
         overlay.canvas.style.mixBlendMode = isDetail && !lightWork ? 'screen' : 'multiply'
-        if (!isDetail || lightWork) overlay.canvas.style.filter = 'brightness(0)'
-        records.set(target, { overlay, inView: false })
-        visibilityObserver.observe(target)
+        overlay.canvas.style.filter = !isDetail || lightWork ? 'brightness(0)' : 'none'
       }
       scheduleMasks()
     }
@@ -185,7 +199,7 @@ function App() {
       for (const { overlay } of records.values()) overlay.destroy()
       records.clear()
     }
-  }, [page, workSlug])
+  }, [page, workSlug, compactViewport])
 
   useEffect(() => {
     const updateLocation = () => {
