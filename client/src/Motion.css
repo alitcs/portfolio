@@ -16,9 +16,8 @@ html { --motion-ease: cubic-bezier(.22, 1, .36, 1); }
 .gallery-expanded .detail-copy-row:nth-child(4) { animation-delay: .12s; }
 .gallery-scene .gallery-copy { animation: detail-arrive .35s var(--motion-ease) both; }
 .gallery-items { animation: work-arrive .7s var(--motion-ease) both; }
-.gallery-focus-arrow { transition: background .25s ease, transform .45s var(--motion-ease); }
-.gallery-focus-link:hover .gallery-focus-arrow { transform: translate(3px, -3px); }
-.gallery-focus-link:active .gallery-focus-arrow { transform: scale(.92); }
+.gallery-focus-mark { transition: background .25s ease, transform .2s ease; }
+.gallery-focus-link:active .gallery-focus-mark { transform: scale(.92); }
 .gallery-filters button:active { background: #ffffffc0; }
 .gallery-filters button::after { transform: scaleX(0); transform-origin: left; transition: transform .55s var(--motion-ease), background .25s ease; }
 .gallery-filters button[aria-pressed='true']::after, .gallery-filters button:hover::after { transform: scaleX(1); }

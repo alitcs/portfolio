@@ -37,8 +37,9 @@ h1, h2, h3, p { margin-top: 0; }
 
 .site-shell { min-height: 100vh; overflow: clip; }
 .section-wrap { width: min(1320px, calc(100% - 112px)); margin-inline: auto; }
-.skip-link { position: fixed; z-index: 20; top: 10px; left: 10px; padding: 12px 16px; background: var(--ink); color: var(--white); transform: translateY(-160%); }
+.skip-link { position: fixed; z-index: 100; top: 10px; left: 10px; display: inline-flex; align-items: center; min-height: 55px; padding: 12px 16px; background: var(--ink); color: var(--white); font-size: 20px; transform: translateY(-160%); }
 .skip-link:focus { transform: translateY(0); }
+#main-content:focus { outline: none; }
 
 .site-header { width: min(1440px, calc(100% - 112px)); min-height: 106px; margin-inline: auto; display: flex; align-items: center; justify-content: space-between; gap: 32px; position: relative; z-index: 10; border-bottom: 1px solid var(--line); }
 .wordmark { display: inline-flex; align-items: center; gap: 12px; min-width: 212px; text-decoration: none; }

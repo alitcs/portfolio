@@ -1,54 +1,44 @@
-import ArrowIcon from './ArrowIcon'
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from 'react'
+import { flushSync } from 'react-dom'
 import WorkSceneMedia from './WorkSceneMedia'
-import WorkDetailContent, { type DetailItem } from './WorkDetailContent'
-import { galleryFilters as filters, legacyGalleryFilter, type GalleryFilter as Filter } from './galleryNavigation'
-import { cancelFloatingScroll, floatTo, installGalleryMomentum } from './motion'
+import WorkDetailContent from './WorkDetailContent'
+import type { WorkItem } from './data/work'
+import { galleryDetailHref, galleryFilters as filters, galleryReturnKey as returnKey, legacyGalleryFilter, type GalleryFilter as Filter } from './galleryNavigation'
+import { cancelFloatingScroll, floatTo } from './motion'
 import './Gallery.css'
 
-type ShowcaseItem = DetailItem
-
-const categoryFilter = (item: ShowcaseItem) => item.category === 'Community & extracurricular' ? 'community' : item.category.toLowerCase()
-const pad = (value: number) => String(value).padStart(2, '0')
-const title = (item: ShowcaseItem) => item.galleryTitle || item.title
-const returnKey = 'portfolio-work-return'
+const categoryFilter = (item: WorkItem) => item.category === 'Community & extracurricular' ? 'community' : item.category.toLowerCase()
+const categoryLabel = (item: WorkItem) => filters.find(entry => entry.id === categoryFilter(item))?.label || item.category
+const title = (item: WorkItem) => item.galleryTitle || item.title
 
 function readReturnPosition(): { slug: string; filter: Filter } | undefined {
   try {
     const saved = JSON.parse(sessionStorage.getItem(returnKey) || 'null')
-    if (saved && typeof saved.slug === 'string' && filters.some((filter) => filter.id === saved.filter)) return saved
-  } catch { /* Session storage is an optional navigation enhancement. */ }
+    if (saved && typeof saved.slug === 'string' && filters.some(filter => filter.id === saved.filter)) return saved
+  } catch { /* Navigation also works without session storage. */ }
 }
 
 function initialFilter(): Filter {
   const value = new URLSearchParams(location.search).get('category')
-  if (filters.some((filter) => filter.id === value)) return value as Filter
+  if (filters.some(filter => filter.id === value)) return value as Filter
   const legacy = legacyGalleryFilter(location.pathname)
   if (legacy) return legacy
   return location.pathname === '/index' && !location.hash ? readReturnPosition()?.filter || 'all' : 'all'
 }
 
-export default function WorkShowcase({ items, intro }: { items: readonly ShowcaseItem[]; intro: ReactNode }) {
+export default function WorkShowcase({ items, intro }: { items: readonly WorkItem[]; intro: ReactNode }) {
   const [filter, setFilter] = useState<Filter>(initialFilter)
   const [activeSlug, setActiveSlug] = useState('')
-  const [expandedSlug, setExpandedSlug] = useState('')
+  const [expandedSlug, setExpandedSlug] = useState<string>(() => history.state?.expandedWork || '')
   const exhibitionRef = useRef<HTMLDivElement>(null)
   const toolbarRef = useRef<HTMLElement>(null)
-  const reelRef = useRef<HTMLElement>(null)
   const order = ['Experience', 'Freelance', 'Projects', 'Community & extracurricular']
   const ordered = [...items].sort((a, b) => order.indexOf(a.category) - order.indexOf(b.category))
-  const visible = ordered.filter((item) => filter === 'all' || categoryFilter(item) === filter)
-  const activeIndex = Math.max(0, visible.findIndex((item) => item.slug === activeSlug))
-  // Warm the next actual websites, even when static-image projects sit between them.
-  const preloadSlugs = new Set(visible.slice(activeIndex).filter((item) => item.previewUrl && !item.previewImage).slice(0, 3).map((item) => item.slug))
-  const counts = new Map(filters.map((entry) => [entry.id, ordered.filter((item) => entry.id === 'all' || categoryFilter(item) === entry.id).length]))
+  const visible = ordered.filter(item => filter === 'all' || categoryFilter(item) === filter)
+  const activeIndex = Math.max(0, visible.findIndex(item => item.slug === activeSlug))
+  const preloadSlugs = new Set(visible.slice(activeIndex).filter(item => item.previewUrl && !item.previewImage).slice(0, 3).map(item => item.slug))
 
   useEffect(() => () => cancelFloatingScroll(), [])
-
-  useEffect(() => {
-    if (expandedSlug || !reelRef.current) return
-    return installGalleryMomentum(reelRef.current)
-  }, [expandedSlug, filter])
 
   useEffect(() => {
     const toolbar = toolbarRef.current
@@ -65,82 +55,124 @@ export default function WorkShowcase({ items, intro }: { items: readonly Showcas
     const filter = initialFilter()
     document.title = 'Ali Hamoudi — Software engineer'
     const saved = readReturnPosition()
-    const returningFromDetail = location.pathname === '/index' && !location.search && !location.hash
+    const returning = location.pathname === '/index' && !location.search && !location.hash
     if (legacyGalleryFilter(location.pathname) || location.pathname === '/index') {
       const url = new URL(location.href)
       url.pathname = '/'
       if (filter !== 'all') url.searchParams.set('category', filter)
-      if (!url.hash) url.hash = returningFromDetail && saved?.filter === filter ? `item-${saved.slug}` : 'work-gallery'
+      if (!url.hash) url.hash = returning && saved?.filter === filter ? `item-${saved.slug}` : 'work-gallery'
       history.replaceState(null, '', url)
     }
-    const hash = location.hash.slice(1)
-    const explicitCategory = new URLSearchParams(location.search).has('category')
-    const target = hash || (explicitCategory ? 'work-gallery' : returningFromDetail && saved?.filter === filter ? `item-${saved.slug}` : 'overview')
+    const target = location.hash.slice(1) || (new URLSearchParams(location.search).has('category') ? 'work-gallery' : 'overview')
     const frame = requestAnimationFrame(() => {
       if (target === 'overview') window.scrollTo({ top: 0, behavior: 'instant' })
-      else (document.getElementById(target) || document.getElementById('work-gallery'))?.scrollIntoView({ behavior: 'instant' })
+      else {
+        const destination = document.getElementById(target) || document.getElementById('work-gallery')
+        destination?.scrollIntoView({ behavior: 'instant' })
+        if (target.startsWith('item-') && !history.state?.expandedWork) destination?.querySelector<HTMLAnchorElement>('.gallery-title-toggle')?.focus({ preventScroll: true })
+      }
     })
     return () => cancelAnimationFrame(frame)
   }, [])
 
   useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) setActiveSlug((entry.target as HTMLElement).dataset.slug || '')
-      }
-    }, { rootMargin: '-49% 0px -49% 0px', threshold: 0 })
-    document.querySelectorAll('.gallery-screen, #overview').forEach((screen) => observer.observe(screen))
-    return () => observer.disconnect()
+    let frame = 0
+    const updatePosition = () => {
+      frame = 0
+      const toolbar = toolbarRef.current?.getBoundingClientRect()
+      const screens = Array.from(document.querySelectorAll<HTMLElement>('.gallery-screen'))
+      if (!toolbar || toolbar.top > 1 || !screens.length) return
+      const readingLine = toolbar.height + (innerHeight - toolbar.height) * .35
+      const current = screens.find(screen => screen.getBoundingClientRect().bottom > readingLine)
+      setActiveSlug(current?.dataset.slug || '')
+    }
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(updatePosition) }
+    schedule()
+    window.addEventListener('scroll', schedule, { passive: true })
+    window.addEventListener('resize', schedule)
+    return () => {
+      cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', schedule)
+      window.removeEventListener('resize', schedule)
+    }
   }, [filter])
 
   useEffect(() => {
     if (!expandedSlug) return
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape') return
-      collapse(expandedSlug)
+    let frame = 0
+    const checkPosition = () => {
+      frame = 0
+      const item = document.getElementById(`item-${expandedSlug}`)
+      if (!item) return
+      const bounds = item.getBoundingClientRect()
+      const toolbarHeight = toolbarRef.current?.getBoundingClientRect().height || 0
+      // Let the visitor read long details normally; collapse only after leaving the scene.
+      const leavingBelow = bounds.bottom <= toolbarHeight + 32
+      if (!leavingBelow && bounds.top < innerHeight - 32) return
+      flushSync(() => setExpandedSlug(''))
+      if (history.state?.expandedWork === expandedSlug) history.replaceState(null, '', location.href)
+      if (leavingBelow) {
+        const heightChange = item.getBoundingClientRect().bottom - bounds.bottom
+        window.scrollBy({ top: heightChange, behavior: 'instant' })
+      }
     }
-    window.addEventListener('keydown', closeOnEscape)
-    return () => window.removeEventListener('keydown', closeOnEscape)
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(checkPosition) }
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') closeDetails(expandedSlug)
+    }
+    window.addEventListener('scroll', schedule, { passive: true })
+    window.addEventListener('keydown', onKey)
+    return () => {
+      cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', schedule)
+      window.removeEventListener('keydown', onKey)
+    }
   }, [expandedSlug])
 
   useEffect(() => {
     const sync = () => {
       cancelFloatingScroll()
       setFilter(initialFilter())
-      setExpandedSlug('')
-      requestAnimationFrame(() => document.getElementById(location.hash.slice(1) || 'work-gallery')?.scrollIntoView({ behavior: 'instant' }))
+      setExpandedSlug(history.state?.expandedWork || '')
+      requestAnimationFrame(() => document.getElementById(location.hash.slice(1) || 'overview')?.scrollIntoView({ behavior: 'instant' }))
     }
     window.addEventListener('popstate', sync)
     return () => window.removeEventListener('popstate', sync)
   }, [])
 
-  function expand(slug: string) {
+  function openDetails(event: MouseEvent<HTMLAnchorElement>, item: WorkItem) {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+    event.preventDefault()
     const start = window.scrollY
-    setExpandedSlug(slug)
-    try { sessionStorage.setItem(returnKey, JSON.stringify({ slug, filter })) } catch { /* Optional. */ }
+    try { sessionStorage.setItem(returnKey, JSON.stringify({ slug: item.slug, filter })) } catch { /* Optional. */ }
+    const url = new URL(location.href)
+    url.hash = `item-${item.slug}`
+    history.replaceState(null, '', url)
+    history.pushState({ expandedWork: item.slug }, '', url)
+    setExpandedSlug(item.slug)
     requestAnimationFrame(() => {
-      const item = document.getElementById(`item-${slug}`)
-      if (item) floatTo(item, start, 480)
-      document.querySelector<HTMLButtonElement>(`#item-${slug} .detail-back-link`)?.focus({ preventScroll: true })
+      const destination = document.getElementById(`item-${item.slug}`)
+      if (destination) floatTo(destination, start, 420)
+      destination?.querySelector<HTMLButtonElement>('.detail-back-link')?.focus({ preventScroll: true })
     })
   }
 
-  function collapse(slug: string) {
+  function closeDetails(slug: string) {
     const start = window.scrollY
     setExpandedSlug('')
+    if (history.state?.expandedWork) history.replaceState(null, '', location.href)
     requestAnimationFrame(() => {
-      const item = document.getElementById(`item-${slug}`)
-      if (item) floatTo(item, start, 480)
-      item?.querySelector<HTMLButtonElement>('.gallery-focus-link')?.focus({ preventScroll: true })
+      const destination = document.getElementById(`item-${slug}`)
+      if (destination) floatTo(destination, start, 420)
+      destination?.querySelector<HTMLAnchorElement>('.gallery-info-toggle')?.focus({ preventScroll: true })
     })
   }
 
   function changeFilter(next: Filter) {
     if (next === filter) return
-    const start = window.scrollY
     setFilter(next)
-    setActiveSlug('')
     setExpandedSlug('')
+    setActiveSlug('')
     const url = new URL(location.href)
     url.pathname = '/'
     if (next === 'all') url.searchParams.delete('category')
@@ -149,56 +181,35 @@ export default function WorkShowcase({ items, intro }: { items: readonly Showcas
     history.pushState(null, '', url)
     requestAnimationFrame(() => {
       const gallery = document.getElementById('work-gallery')
-      if (gallery) floatTo(gallery, start)
+      if (gallery) floatTo(gallery)
     })
   }
 
-  return (
-    <div className="gallery-exhibition" ref={exhibitionRef}>
-      {intro}
-      <section className="gallery-reel" id="work-gallery" ref={reelRef} aria-labelledby="gallery-title">
-        <header className="gallery-toolbar" ref={toolbarRef}>
-          <div className="gallery-toolbar-heading">
-            <div className="gallery-toolbar-title"><span className="gallery-section-marker" aria-hidden="true" /><h2 id="gallery-title">selected work</h2></div>
-            <span className="gallery-result-count" role="status" aria-live="polite" aria-atomic="true">
-              <span className="gallery-result-category">{filters.find((entry) => entry.id === filter)?.label}</span>
-              <span className="gallery-result-divider" aria-hidden="true">/</span>
-              <span>{pad(visible.length)} <span className="gallery-result-total">of {pad(ordered.length)} works</span></span>
-            </span>
-          </div>
-          <div className="gallery-filter-controls">
-            <span className="gallery-filter-label" id="gallery-filter-label"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M3 6h18M6 12h12m-8 6h4" /></svg>Filter by</span>
-            <div className="gallery-filters" role="group" aria-labelledby="gallery-filter-label">
-              {filters.map((entry) => <button key={entry.id} type="button" aria-pressed={filter === entry.id} aria-controls="gallery-items" onClick={() => changeFilter(entry.id)}><span className="gallery-filter-name">{entry.label}</span><span className="gallery-filter-count" aria-hidden="true">{pad(counts.get(entry.id) || 0)}</span></button>)}
-            </div>
-          </div>
-        </header>
-        <div className="gallery-items" id="gallery-items" key={filter}>
+  return <div className="gallery-exhibition" ref={exhibitionRef}>
+    {intro}
+    <section className="gallery-reel" id="work-gallery" aria-labelledby="gallery-title">
+      <header className="gallery-toolbar" ref={toolbarRef}>
+        <h2 id="gallery-title">selected work</h2>
+        <div className="gallery-filters" role="group" aria-label="Filter selected work">
+          {filters.map(entry => <button key={entry.id} type="button" aria-pressed={filter === entry.id} aria-controls="gallery-items" onClick={() => changeFilter(entry.id)}>{entry.label}</button>)}
+        </div>
+        <a className="gallery-home-link" href="#overview">home</a>
+        <span className="visually-hidden" role="status" aria-live="polite">{filters.find(entry => entry.id === filter)?.label}: {visible.length} items</span>
+      </header>
+      <div className="gallery-items" id="gallery-items" key={filter}>
         {visible.map((item, index) => <article key={item.slug} className={`work-detail work-detail-${item.slug} gallery-screen ${expandedSlug === item.slug ? 'gallery-expanded' : 'gallery-scene'}`} id={`item-${item.slug}`} data-slug={item.slug} aria-labelledby={`title-${item.slug}`}>
-          <WorkSceneMedia item={item} active={preloadSlugs.has(item.slug)} />
-          {expandedSlug === item.slug ? (
-            <WorkDetailContent
-              item={item}
-              index={index}
-              total={visible.length}
-              onClose={() => collapse(item.slug)}
-            />
-          ) : <>
-            <header className="work-detail-header gallery-scene-header"><span>{pad(index + 1)} / {pad(visible.length)} <span aria-hidden="true">—</span> {item.category === 'Community & extracurricular' ? 'Extracurricular' : item.category}</span></header>
-            <button type="button" className="detail-focus gallery-focus-link" aria-label={`Explore ${title(item)}`} aria-expanded={false} onClick={() => expand(item.slug)}><span className="gallery-focus-arrow" aria-hidden="true"><ArrowIcon /></span></button>
+          <WorkSceneMedia item={item} active={preloadSlugs.has(item.slug) || expandedSlug === item.slug} />
+          {expandedSlug === item.slug ? <WorkDetailContent item={item} index={index} total={visible.length} onClose={() => closeDetails(item.slug)} /> : <>
+            <header className="work-detail-header gallery-scene-header"><span>{categoryLabel(item)}</span></header>
+            <a className="detail-focus gallery-focus-link" href={galleryDetailHref(item.slug, filter)} onClick={event => openDetails(event, item)} aria-label={`View ${title(item)} details`} aria-expanded={false}><span className="gallery-focus-mark" aria-hidden="true">+</span></a>
             <div className="detail-copy gallery-copy">
-              <div className="detail-copy-row"><span aria-hidden="true">01</span><h2 id={`title-${item.slug}`}><button type="button" className="gallery-title-toggle" aria-expanded={false} onClick={() => expand(item.slug)}>{title(item)}</button></h2></div>
-              <div className="detail-copy-row"><span aria-hidden="true">02</span><div><p>{item.blurb}</p><button type="button" className="gallery-info-toggle" aria-expanded={false} onClick={() => expand(item.slug)}>View details <span aria-hidden="true"><ArrowIcon /></span></button></div></div>
+              <div className="detail-copy-row"><span aria-hidden="true">01</span><h2 id={`title-${item.slug}`}><a className="gallery-title-toggle" href={galleryDetailHref(item.slug, filter)} onClick={event => openDetails(event, item)} aria-expanded={false}>{title(item)}</a></h2></div>
+              <div className="detail-copy-row"><span aria-hidden="true">02</span><div><p>{item.blurb}</p><a className="gallery-info-toggle" href={galleryDetailHref(item.slug, filter)} onClick={event => openDetails(event, item)} aria-expanded={false}>view details</a></div></div>
             </div>
           </>}
         </article>)}
-        </div>
-      </section>
-
-      <nav className="gallery-position" aria-label="Position in selected work" hidden={!activeSlug || expandedSlug === activeSlug}>
-        {activeSlug && <a href="#overview" aria-label="Back to top"><ArrowIcon direction="up" /></a>}
-        <span>{activeSlug ? `${pad(activeIndex + 1)} / ${pad(visible.length)}` : `scroll to explore / ${pad(visible.length)}`}</span>
-      </nav>
-    </div>
-  )
+      </div>
+    </section>
+    <footer className="gallery-outro"><a href="/start-project">Start a project</a><a href="#overview">Back to top</a></footer>
+  </div>
 }

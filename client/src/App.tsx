@@ -1,4 +1,3 @@
-import ArrowIcon from './ArrowIcon'
 import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import { flushSync } from 'react-dom'
 import { cancelFloatingScroll, floatTo, transitionPage } from './motion'
@@ -87,10 +86,10 @@ function App() {
   useEffect(() => {
     const createOverlay = window.BlobOverlay?.create
     const main = document.getElementById('main-content')
-    if (!createOverlay || !main) return
+    if (!createOverlay || !main || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
     const records = new Map<HTMLElement, { overlay: BlobOverlay; inView: boolean }>()
-    const sections = '#overview, .gallery-screen, .inquiry-page, .detail-main > .work-detail'
+    const sections = '#overview, .gallery-expanded, .inquiry-page, .detail-main > .work-detail'
     let maskFrame = 0
     let disposed = false
 
@@ -98,7 +97,7 @@ function App() {
       maskFrame = 0
       if (disposed) return
       const elements = Array.from(document.querySelectorAll(
-        'h1, h2, h3, p, label, input, textarea, button, .header-contacts a, .hero-actions, .gallery-toolbar, .gallery-position, .inquiry-nav',
+        'h1, h2, h3, p, label, input, textarea, button, .header-contacts a, .hero-actions, .gallery-toolbar, .inquiry-nav',
       )).map((element) => element.getBoundingClientRect()).filter((bounds) => bounds.width && bounds.height)
 
       for (const [target, { overlay, inView }] of records) {
@@ -136,8 +135,6 @@ function App() {
     const syncSections = () => {
       if (disposed) return
       const targets = new Set(main.querySelectorAll<HTMLElement>(sections))
-      // Give error screens and any page without individual sections an anchored layer too.
-      if (!targets.size) targets.add(main)
       for (const [target, record] of records) {
         if (targets.has(target)) continue
         visibilityObserver.unobserve(target)
@@ -147,15 +144,16 @@ function App() {
       for (const target of targets) {
         if (records.has(target)) continue
         const overlay = createOverlay(target, {
-          count: page === 'project' ? 14 : page === 'work' ? 30 : 38,
-          speed: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 0.7,
+          count: target.id === 'overview' ? 10 : page === 'project' ? 5 : 7,
+          speed: 0.38,
           zIndex: 35,
           active: false,
         })
         const lightWork = target.classList.contains('work-detail-tutoring') || target.classList.contains('work-detail-ontario-government-govtechon')
-        overlay.canvas.style.opacity = page === 'project' ? '0.25' : page === 'work' ? '0.55' : '0.5'
-        overlay.canvas.style.mixBlendMode = page === 'work' && !lightWork ? 'screen' : 'multiply'
-        if (page !== 'work' || lightWork) overlay.canvas.style.filter = 'brightness(0)'
+        const isDetail = page === 'work' || target.classList.contains('gallery-expanded')
+        overlay.canvas.style.opacity = page === 'project' ? '0.18' : '0.23'
+        overlay.canvas.style.mixBlendMode = isDetail && !lightWork ? 'screen' : 'multiply'
+        if (!isDetail || lightWork) overlay.canvas.style.filter = 'brightness(0)'
         records.set(target, { overlay, inView: false })
         visibilityObserver.observe(target)
       }
@@ -215,30 +213,20 @@ function App() {
       <a className="skip-link" href="#main-content">Skip to content</a>
       {isPortfolio && <header className="site-header home-header">
           <nav className="header-contacts home-contacts" aria-label="Contact and profile links">
-            <a href="https://www.linkedin.com/in/ali-hamoudi/" target="_blank" rel="noreferrer"><span>01</span><span className="home-nav-label">LinkedIn <i aria-hidden="true"><ArrowIcon /></i></span></a>
-            <a href="https://github.com/alitcs" target="_blank" rel="noreferrer"><span>02</span><span className="home-nav-label">GitHub <i aria-hidden="true"><ArrowIcon /></i></span></a>
-            <a href="mailto:alihamoudiu18@gmail.com"><span>03</span><span className="home-nav-label">Email <i aria-hidden="true"><ArrowIcon /></i></span></a>
-            <a href="tel:+14378694831" aria-label="Call 437-869-4831"><span>04</span><span className="home-nav-label">437-869-4831 <i aria-hidden="true"><ArrowIcon /></i></span></a>
-            <a href="/AliHamoudi.pdf" download aria-label="Download résumé as a PDF"><span>05</span><span className="home-nav-label">Download résumé <small>PDF <ArrowIcon direction="down" /></small></span></a>
+            <a href="https://www.linkedin.com/in/ali-hamoudi/" target="_blank" rel="noreferrer"><span className="home-link-index" aria-hidden="true">01</span><span className="home-nav-label">LinkedIn</span><span className="visually-hidden"> (opens in a new tab)</span></a>
+            <a href="https://github.com/alitcs" target="_blank" rel="noreferrer"><span className="home-link-index" aria-hidden="true">02</span><span className="home-nav-label">GitHub</span><span className="visually-hidden"> (opens in a new tab)</span></a>
+            <a href="mailto:alihamoudiu18@gmail.com"><span className="home-link-index" aria-hidden="true">03</span><span className="home-nav-label">Email</span></a>
+            <a href="tel:+14378694831" aria-label="Call 437-869-4831"><span className="home-link-index" aria-hidden="true">04</span><span className="home-nav-label">437-869-4831</span></a>
+            <a href="/AliHamoudi.pdf" download><span className="home-link-index" aria-hidden="true">05</span><span className="home-nav-label">Download résumé <small>PDF</small></span></a>
           </nav>
       </header>}
 
-      <main id="main-content" key={isPortfolio ? 'portfolio' : `${page}-${workSlug}`} className={`page-main ${page === 'work' ? 'detail-main' : ''} ${isPortfolio ? 'home-main' : ''}`}>
+      <main id="main-content" tabIndex={-1} key={isPortfolio ? 'portfolio' : `${page}-${workSlug}`} className={`page-main ${page === 'work' ? 'detail-main' : ''} ${isPortfolio ? 'home-main' : ''}`}>
         {isPortfolio && <HomeWorkSection />}
         {page === 'work' && <WorkDetailPage item={workItems.find((item) => item.slug === workSlug)} />}
         {page === 'project' && <ProjectInquiryPage />}
       </main>
 
-      {page !== 'home' && page !== 'project' && page !== 'work' && page !== 'index' && (
-        <footer className="site-footer section-wrap">
-          <a className="footer-mark" href="/">AH<span>✳</span></a>
-          <span>Designed &amp; built with care.</span>
-          <div className="footer-links">
-            <a href="https://github.com/alitcs" target="_blank" rel="noreferrer">GitHub <ArrowIcon /></a>
-            <a href="https://www.linkedin.com/in/ali-hamoudi/" target="_blank" rel="noreferrer">LinkedIn <ArrowIcon /></a>
-          </div>
-        </footer>
-      )}
     </div>
   )
 }
@@ -247,29 +235,29 @@ function HomePage() {
   return (
     <>
       <section className="home-hero" id="overview" aria-label="Portfolio introduction">
-        <h1 className="visually-hidden">Ali Hamoudi — Toronto Metropolitan University computer science student</h1>
         <div className="hero-blur" aria-hidden="true">
           <img src="/images/hero-flower.png" alt="" />
         </div>
-        <div className="hero-actions">
-          <a className="hero-cta" href="#work-gallery">
-            <span className="hero-action-number" aria-hidden="true">01</span><span className="hero-action-label">see my work</span>
-            <span className="hero-cta-arrow" aria-hidden="true"><ArrowIcon direction="down" /></span>
-          </a>
-          <a className="hero-build-cta" href="/start-project"><span className="hero-action-number" aria-hidden="true">02</span><span className="hero-action-label">want me to build something?</span><span className="hero-action-arrow" aria-hidden="true"><ArrowIcon /></span></a>
+        <div className="hero-intro">
+          <p className="hero-eyebrow">Software engineer · Toronto, Canada</p>
+          <h1>Ali Hamoudi</h1>
         </div>
+        <div className="hero-editorial">
+          <p className="hero-statement">Useful software.<br />Built for real people.</p>
+          <p>I believe what we build should move people, inspire possibility, and leave the world a little better.</p>
+        </div>
+        <nav className="hero-actions" aria-label="Explore my portfolio or start a project">
+          <a className="hero-cta" href="#work-gallery">
+            <span className="hero-action-label">See my work<small>Projects, client work &amp; experience</small></span>
+          </a>
+          <a className="hero-build-cta" href="/start-project"><span className="hero-action-label">Start a project<small>Tell me what you’d like me to build</small></span></a>
+        </nav>
         <div className="hero-image-frame" aria-hidden="true">
           <img src="/images/hero-flower.png" alt="" />
           <span className="hero-frame-cross">+</span>
         </div>
-        <div className="hero-editorial" aria-label="Portfolio introduction">
-          <p>building useful things for real people — from AI pipelines to client intake and management systems (CRM).</p>
-          <p>bringing ideas to life through software and design.</p>
-        </div>
         <div className="hero-footer">
-          <p className="hero-signature">Ali Hamoudi<span>Software engineer</span></p>
-          <p className="hero-location">toronto, canada</p>
-          <a className="hero-scroll" href="#work-gallery"><span>scroll to explore</span><span aria-hidden="true"><ArrowIcon direction="down" /></span></a>
+          <a className="hero-scroll" href="#work-gallery">Scroll to browse my work</a>
         </div>
       </section>
     </>
@@ -281,12 +269,16 @@ function HomeWorkSection() {
 }
 
 function WorkDetailPage({ item }: { item?: WorkItem }) {
+  useEffect(() => {
+    document.title = item ? `${item.galleryTitle || item.title} — Ali Hamoudi` : 'Project not found — Ali Hamoudi'
+  }, [item])
+
   if (!item) {
     return (
       <section className="work-not-found">
-        <p>404 / This frame is empty</p>
+        <p>Project not found</p>
         <h1>That work could not be found.</h1>
-        <a href="/">Return to the index <span aria-hidden="true"><ArrowIcon /></span></a>
+        <a href="/#work-gallery">Browse all work</a>
       </section>
     )
   }

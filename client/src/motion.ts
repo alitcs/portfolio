@@ -20,7 +20,7 @@ export function floatTo(element: HTMLElement, start = window.scrollY, durationMs
     return
   }
   const distance = destination - start
-  const duration = durationMs ?? Math.min(1500, 850 + Math.sqrt(Math.abs(distance)) * 9)
+  const duration = durationMs ?? Math.min(650, 300 + Math.sqrt(Math.abs(distance)) * 4)
   const began = performance.now()
   let frame = 0
   const stop = () => {
