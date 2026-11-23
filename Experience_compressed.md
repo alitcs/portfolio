@@ -100,6 +100,8 @@ Paid client software/website engagements, an owner-operated portfolio service, a
 - **Apartment Listing Filter & AI Scraper** ([source](https://github.com/alitcs/Apartment-Filter)): Paid client tool using Python/Selenium and the OpenAI API to find apartments matching the client's location, budget, and bedroom criteria, reject misleading two-bedroom descriptions, and retain a JSON shortlist with new-result markers. Saved hundreds of hours of manual searching and review, according to Ali's account.
 - **Tutoring — Private Freelance & Employed:** Tutored students ages **6–18** in **calculus, advanced functions, physics, mathematics, and English**, through private freelance clients and employment at **Little Genius Island** and **Best Brains**, adapting instruction to each learner's age and needs.
 
+- **fishn — Guided Fishing & Booking Requests** ([site](https://fishn.netlify.app/)): Client website for an Ontario fishing guide, built with React, TypeScript, and Vite. A validated four-step flow collects destination, preferred date, group size, duration, and contact details, with live CAD price estimates and Netlify Forms intake for guide follow-up. Responsive photography and a catch journal showcase shoreline and ice fishing. Live site and local source reviewed November 22, 2026; no request was submitted and no booking/conversion metrics are claimed.
+
 ## Community Involvement
 
 - **Under The Tree Charity:** Founded a winter charity initiative; raised over $1,000 through social media and distributed meals, clothing, and blankets.

@@ -231,7 +231,7 @@ function App() {
             <a href="https://github.com/alitcs" target="_blank" rel="noreferrer"><span className="home-link-index" aria-hidden="true">02</span><span className="home-nav-label">GitHub</span><span className="visually-hidden"> (opens in a new tab)</span></a>
             <a href="mailto:alihamoudiu18@gmail.com"><span className="home-link-index" aria-hidden="true">03</span><span className="home-nav-label">Email</span></a>
             <a href="tel:+14378694831" aria-label="Call 437-869-4831"><span className="home-link-index" aria-hidden="true">04</span><span className="home-nav-label">437-869-4831</span></a>
-            <a href="/AliHamoudi.pdf" download><span className="home-link-index" aria-hidden="true">05</span><span className="home-nav-label">Download résumé <small>PDF</small></span></a>
+            <a href="/AliHamoudi.pdf" download><span className="home-link-index" aria-hidden="true">05</span><span className="home-nav-label">Download resume <small>PDF</small></span></a>
           </nav>
       </header>}
 
@@ -258,7 +258,7 @@ function HomePage() {
         </div>
         <div className="hero-editorial">
           <p className="hero-statement">Useful software.<br />Built for real people.</p>
-          <p>I believe what we build should move people, inspire possibility, and leave the world a little better.</p>
+          <p>Engineering experiences</p>
         </div>
         <nav className="hero-actions" aria-label="Explore my portfolio or start a project">
           <a className="hero-cta" href="#work-gallery">

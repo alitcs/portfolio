@@ -536,6 +536,22 @@ Paid client software and website projects, plus an owner-operated portfolio-buil
 
 **Public source context:** The shared repository is a reusable template with institution-specific selectors, credentials, and SMS initialization/send logic left for configuration; the completed paid client workflow is described by Ali.
 
+## fishn — Guided Fishing Website & Booking Requests - https://fishn.netlify.app/
+
+**Review — November 22, 2026:** Inspected the live website and local source at `C:/Users/hamou/fishn`. Ali identified this as a client project for a fishing guide. No booking request was submitted during review.
+
+### Project Overview
+
+- Designed and deployed a React/TypeScript/Vite website for private guided shoreline and ice fishing in Ontario.
+- Built a four-step booking-request flow covering destination, preferred date, group size and duration, and contact details, with validation and live CAD price estimates.
+- Connected structured requests to Netlify Forms for guide follow-up. Dates are preferred requests; Nikita confirms availability and the final plan directly, and no online payment is collected.
+- Created a responsive photographic experience with destination-specific backdrops, geographic outlines, and a catch-photo journal.
+- Pre-rendered public routes with page-specific metadata and optimized responsive WebP imagery.
+
+### Business Value
+
+- Gives the guide an online client-intake channel that collects trip preferences and contact details for follow-up. No conversion metrics, confirmed bookings, or verified form-delivery results are claimed by this review.
+
 ## Interior Design R / Interior Studio Website - https://interiordesignr.netlify.app/
 
 **Source:** https://github.com/alitcs/interiordesignR

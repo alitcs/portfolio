@@ -72,6 +72,18 @@ export const workItems: readonly WorkItem[] = [
     links: [{ label: 'View project', href: 'https://github.com/alitcs/Course-Availability-Notifier' }],
   },
   {
+    slug: 'fishn',
+    title: 'fishn',
+    category: 'Freelance',
+    blurb: 'Guided fishing, from choosing the water to requesting a session.',
+    summary: 'Designed and deployed a website for an Ontario fishing guide, turning interest in private shoreline and ice fishing into structured booking requests.',
+    highlights: ['A four-step flow collects destination, preferred date, group size, duration, and contact details with live CAD price estimates.', 'Netlify Forms captures requests for guide follow-up; a photo journal showcases the experience.'],
+    technical: 'React, TypeScript, Vite, Netlify Forms, form validation, responsive photography.',
+    image: '/item-images/fishn.png',
+    previewUrl: 'https://fishn.netlify.app/',
+    links: [{ label: 'Visit website', href: 'https://fishn.netlify.app/' }],
+  },
+  {
     slug: 'interior-studio-website',
     title: 'Interior Design R',
     category: 'Freelance',
